@@ -86,6 +86,10 @@ export function PlotView({ areaId, showStatus = true }: { areaId: string; showSt
           {area.tracks.map((t) => (
             <TrackGlyph key={t.id} t={t} />
           ))}
+          <g transform="translate(95 6)" aria-hidden>
+            <path d="M0 -3.5 L1.6 1.5 L0 0.6 L-1.6 1.5 Z" fill="var(--ink-2)" />
+            <text y={5.6} textAnchor="middle" fontSize={2.4} fontFamily="var(--font-data)" fill="var(--ink-3)">N</text>
+          </g>
           <text x={2} y={68} fontSize={2.3} fontFamily="var(--font-data)" fill="var(--ink-3)">
             {area.subtitle} · positions illustrative
           </text>

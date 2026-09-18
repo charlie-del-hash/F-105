@@ -7,6 +7,7 @@ import { useWorkspace } from "@/layout-engine/store";
 import type { Layout } from "@/layout-engine/schema";
 import { Button } from "@/components/ui/Button";
 import { Tag } from "@/components/ui/Tag";
+import { Kicker } from "@/components/data/Kicker";
 import { LayoutThumb } from "@/components/content/LayoutThumb";
 
 function Card({ layout }: { layout: Layout }) {
@@ -32,12 +33,11 @@ function Card({ layout }: { layout: Layout }) {
       <button type="button" onClick={open} className="inset mb-3 flex items-center justify-center p-2 text-left hover:border-line-strong" aria-label={`Open ${layout.name}`}>
         <LayoutThumb layout={layout} width={200} />
       </button>
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-2">
         <h3 className="font-ui text-sm font-semibold text-ink">{layout.name}</h3>
-        {layout.preset ? <Tag>preset</Tag> : <Tag tone="accent">mine</Tag>}
         {activeId === layout.id && <Tag tone="up">active</Tag>}
-        {layout.theme && <Tag>{layout.theme}</Tag>}
       </div>
+      <Kicker className="mt-0.5" items={[layout.preset ? "preset" : "mine", layout.theme && `${layout.theme} theme`, `${layout.panels.length} panels`]} />
       <p className="mt-1 flex-1 font-ui text-xs leading-snug text-ink-2">{layout.description || "No description yet."}</p>
       <div className="mt-3 flex flex-wrap gap-1">
         <Button size="xs" variant="solid" onClick={open}>Open</Button>

@@ -3,7 +3,9 @@ import Link from "next/link";
 import { z } from "zod";
 import { fmtDate } from "@/data/format";
 import { useWorkspaceData } from "@/layout-engine/data-context";
-import { DeskTag, Empty, Tag } from "@/components/ui/Tag";
+import { Empty } from "@/components/ui/Tag";
+import { Kicker } from "@/components/data/Kicker";
+import { desk as deskOf, type DeskId } from "@/config/site";
 import { panelMetaMap } from "../catalog";
 import type { PanelDefinition } from "../types";
 
@@ -21,11 +23,7 @@ function ReaderPanel({ props }: { props: Props }) {
   const body = bodies[doc.slug];
   return (
     <article className="px-4 py-3">
-      <div className="flex items-center gap-1.5 font-data text-[10.5px] text-ink-3">
-        <DeskTag desk={doc.desk} />
-        <Tag tone={doc.kind === "brief" ? "accent" : "neutral"}>{doc.kind}</Tag>
-        <span className="ml-auto tabular">{fmtDate(doc.date, "long")}</span>
-      </div>
+      <Kicker items={[deskOf(doc.desk as DeskId)?.short, doc.kind, `${doc.readingTime} min`]} right={fmtDate(doc.date, "long")} />
       <h2 className="mt-2 font-ui text-lg font-semibold leading-tight text-ink">
         <Link href={doc.href}>{doc.title}</Link>
       </h2>

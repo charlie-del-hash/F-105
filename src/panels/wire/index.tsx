@@ -1,10 +1,12 @@
 "use client";
 import Link from "next/link";
 import { z } from "zod";
+import { desk as deskOf, type DeskId } from "@/config/site";
 import { fmtTime } from "@/data/format";
 import { useWorkspaceData } from "@/layout-engine/data-context";
 import { cn } from "@/lib/cn";
-import { DeskTag, Empty } from "@/components/ui/Tag";
+import { Kicker } from "@/components/data/Kicker";
+import { Empty } from "@/components/ui/Tag";
 import { panelMetaMap } from "../catalog";
 import type { PanelDefinition } from "../types";
 
@@ -13,6 +15,12 @@ const schema = z.object({
   limit: z.number().int().min(3).max(200).default(40),
 });
 type Props = z.infer<typeof schema>;
+
+export const priorityStatus = {
+  flash: { label: "Flash", tone: "alert" as const },
+  urgent: { label: "Urgent", tone: "warn" as const },
+  routine: undefined,
+};
 
 function WirePanel({ props }: { props: Props }) {
   const { wire } = useWorkspaceData();
@@ -23,23 +31,16 @@ function WirePanel({ props }: { props: Props }) {
       {items.map((w) => {
         const body = (
           <>
-            <div className="flex items-center gap-2 font-data text-[10.5px] text-ink-3">
-              <span className="tabular">{fmtTime(w.ts)}Z</span>
-              <DeskTag desk={w.desk} />
-              {w.priority !== "routine" && (
-                <span className={cn("caps", w.priority === "flash" ? "text-alert" : "text-warn")}>
-                  <span className={cn("led mr-1", w.priority === "flash" ? "led-alert" : "led-warn")} aria-hidden />
-                  {w.priority}
-                </span>
-              )}
+            <Kicker items={[`${fmtTime(w.ts)}Z`, deskOf(w.desk as DeskId)?.short]} status={priorityStatus[w.priority]} right={w.source && <span className="normal-case text-ink-3/80">{w.source}</span>} />
+            <div className={cn("mt-1 text-ink", w.priority === "flash" && "font-semibold")}>
+              {w.priority === "flash" && <span className="led led-alert mr-1.5 -mt-px" aria-hidden />}
+              {w.text}
             </div>
-            <div className={cn("mt-0.5 text-ink", w.priority === "flash" && "font-semibold")}>{w.text}</div>
-            {w.source && <div className="mt-0.5 text-[10.5px] text-ink-3">{w.source}</div>}
           </>
         );
         return (
-          <li key={w.id} className="px-3 py-2 hover:bg-bg-3">
-            {w.href ? <Link href={w.href}>{body}</Link> : body}
+          <li key={w.id} className="row px-3 py-2">
+            {w.href ? <Link href={w.href} className="block">{body}</Link> : body}
           </li>
         );
       })}

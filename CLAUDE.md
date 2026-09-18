@@ -14,6 +14,9 @@ honest: anything synthetic stays labelled synthetic.
   map it in `src/app/globals.css` `@theme inline`.
 - **Server reads content; clients get snapshots.** `src/content/loader.ts` is `server-only`.
   Pages pass serialisable summaries (and rendered MDX as React nodes) to client components.
+- **Design rules live in `docs/DESIGN.md`.** Metadata is a `Kicker` line, never a row of
+  tags; every price and change goes through `Price` / `Change`; provenance is `LiveDot`.
+  Quotes come from `useQuotes` (one shared poller); never `fetch("/api/quotes")` in a panel.
 - **Every panel is data-driven.** A panel = Zod schema + component + `fields` for its
   settings form + a catalog row. No panel writes its own settings UI.
 - **Layouts are JSON.** A user must be able to hand-author one; so must you.

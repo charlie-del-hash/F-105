@@ -2,16 +2,17 @@
 import Link from "next/link";
 import { z } from "zod";
 import { useWorkspaceData } from "@/layout-engine/data-context";
-import { Empty, Tag } from "@/components/ui/Tag";
+import { Empty } from "@/components/ui/Tag";
+import { Kicker } from "@/components/data/Kicker";
 import { panelMetaMap } from "../catalog";
 import type { PanelDefinition } from "../types";
 
 const schema = z.object({ slug: z.string().default("f-105-thunderchief") });
 type Props = z.infer<typeof schema>;
 
-const statusTone: Record<string, "up" | "neutral" | "warn" | "alert" | "accent"> = {
+const statusTone: Record<string, "up" | "warn" | "alert" | "accent"> = {
   active: "up",
-  retired: "neutral",
+  retired: "accent",
   planned: "accent",
   contested: "alert",
   watch: "warn",
@@ -54,10 +55,7 @@ function DossierPanel({ props }: { props: Props }) {
   if (!d) return <Empty>No dossier “{props.slug}”.</Empty>;
   return (
     <div className="px-3 py-2">
-      <div className="flex items-center gap-1.5">
-        <span className="font-data text-[11px] text-ink-3">{d.entity.toUpperCase()}</span>
-        <Tag tone={statusTone[d.status] ?? "neutral"}>{d.status}</Tag>
-      </div>
+      <Kicker items={[d.entity]} status={{ label: d.status, tone: statusTone[d.status] ?? "accent" }} />
       <h2 className="mt-1 font-ui text-base font-semibold leading-tight text-ink">
         <Link href={d.href}>{d.designation}</Link>
       </h2>

@@ -1,9 +1,11 @@
 "use client";
 import { z } from "zod";
+import { desk as deskOf, type DeskId } from "@/config/site";
 import { fmtDate } from "@/data/format";
 import { useWorkspaceData } from "@/layout-engine/data-context";
 import { cn } from "@/lib/cn";
-import { DeskTag, Empty } from "@/components/ui/Tag";
+import { Kicker } from "@/components/data/Kicker";
+import { Empty } from "@/components/ui/Tag";
 import { panelMetaMap } from "../catalog";
 import type { PanelDefinition } from "../types";
 
@@ -20,20 +22,17 @@ function CalendarPanel({ props }: { props: Props }) {
   return (
     <ol className="divide-y divide-line">
       {items.map((e) => (
-        <li key={e.id} className="flex gap-3 px-3 py-2">
-          <div className="w-[4.6rem] shrink-0 whitespace-nowrap font-data text-[11px] leading-tight text-ink-3">
+        <li key={e.id} className="row flex gap-3 px-3 py-2">
+          <div className="w-[4.6rem] shrink-0 whitespace-nowrap font-data text-[11px] leading-tight">
             <div className="tabular text-ink">{fmtDate(e.date)}</div>
-            <div>{e.time ? `${e.time} ${e.tz}` : "all day"}</div>
+            <div className="text-ink-3">{e.time ? `${e.time} ${e.tz}` : "all day"}</div>
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5">
               <span className={cn("led", e.importance === "high" ? "led-alert" : e.importance === "medium" ? "led-warn" : "")} aria-hidden />
               <span className="truncate font-ui text-[12.5px] font-medium text-ink">{e.title}</span>
             </div>
-            <div className="mt-0.5 flex items-center gap-1.5 font-ui text-[11px] text-ink-2">
-              <DeskTag desk={e.desk} />
-              {e.note && <span className="truncate">{e.note}</span>}
-            </div>
+            <Kicker className="mt-0.5" items={[deskOf(e.desk as DeskId)?.short, e.note && <span className="normal-case tracking-normal">{e.note}</span>]} />
           </div>
         </li>
       ))}
