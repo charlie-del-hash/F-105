@@ -2,14 +2,16 @@
 
 Ordered by leverage. Each item is a session or two of agentic work with the recipes in `CLAUDE.md`.
 
-1. **Real data, one provider at a time.** Energy first (ICE/EEX via a licensed feed),
-   then freight (Baltic via Clarksons SIN / SSY), then the indicators (AIS-derived transit
-   counts). Keep the mock as the fallback and for tests.
-2. **Persistence and identity.** Supabase: auth, a `workspaces` table holding the store's
-   persisted shape, RLS per user, a `StorageAdapter` behind the Zustand persist middleware.
-   Layout sharing by link follows for free.
-3. **Alerts.** `src/lib/notify/` with Slack, WhatsApp Business and email adapters; rules on
-   wire priority and indicator thresholds; a Vercel cron to evaluate them.
+1. ~~**Real data, one provider at a time.**~~ Done for the free sources (FRED, ECB) with a
+   composite router and visible provenance — `docs/DATA.md`. Next: licensed feeds for
+   energy futures (ICE/EEX), freight (Baltic via Clarksons SIN / SSY) and an AIS feed for
+   the transit indicators.
+2. ~~**Persistence and identity.**~~ Done: Supabase auth, `workspaces` row with RLS, sync
+   with last-write-wins — `docs/PERSISTENCE.md`. Next: share a layout by link; merge
+   instead of last-write-wins.
+3. ~~**Alerts.**~~ Done: JSON rules, Slack / WhatsApp Business / email adapters, cron
+   route with dry-run and test modes — `docs/ALERTS.md`. Next: per-user rules stored in
+   Supabase, and a threshold editor in the UI.
 4. **More panels.** News search (Bigdata.com), equity tearsheet (viaNexus), fixtures list,
    vessel tracker (real AIS in the plot), a "compare" chart (two instruments indexed to 100,
    never dual-axis).

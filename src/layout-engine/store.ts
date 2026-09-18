@@ -14,6 +14,15 @@ import { findFreeSpot, movePanel as gridMove, resizePanel as gridResize, compact
 import { defaultLayoutId, getPreset, presetLayouts } from "./presets";
 import { newId, parseLayout, type Layout, type PanelInstance } from "./schema";
 
+/** Exactly what is persisted (on-device and, when signed in, in Supabase). */
+export interface PersistedShape {
+  theme: ThemeId;
+  layouts: Layout[];
+  activeId: string;
+  notes: Record<string, string>;
+  watchlist: string[];
+}
+
 export interface WorkspaceState {
   hydrated: boolean;
   theme: ThemeId;
@@ -41,6 +50,12 @@ export interface WorkspaceState {
   nudgePanel(panelId: string, dir: -1 | 1): void;
   setNote(panelId: string, text: string): void;
   toggleWatch(symbol: string): void;
+  /** Replace persisted fields with a remote copy (sync pull). Validates layouts; ignores junk. */
+  applyRemote(shape: Partial<PersistedShape>): void;
+}
+
+export function persistedShape(s: WorkspaceState): PersistedShape {
+  return { theme: s.theme, layouts: s.layouts, activeId: s.activeId, notes: s.notes, watchlist: s.watchlist };
 }
 
 function stamp(layout: Layout): Layout {
@@ -160,6 +175,28 @@ export const useWorkspace = create<WorkspaceState>()(
           set((s) => ({
             watchlist: s.watchlist.includes(symbol) ? s.watchlist.filter((x) => x !== symbol) : [...s.watchlist, symbol],
           })),
+        applyRemote: (shape) => {
+          const layouts: Layout[] = [];
+          for (const raw of shape.layouts ?? []) {
+            try {
+              layouts.push(parseLayout({ ...raw, preset: false }));
+            } catch {
+              /* skip a corrupt layout rather than lose the rest */
+            }
+          }
+          set((s) => ({
+            theme: isThemeId(shape.theme) ? shape.theme : s.theme,
+            layouts: shape.layouts ? layouts : s.layouts,
+            activeId: typeof shape.activeId === "string" ? shape.activeId : s.activeId,
+            notes: shape.notes && typeof shape.notes === "object" ? shape.notes : s.notes,
+            watchlist: Array.isArray(shape.watchlist) ? shape.watchlist.filter((x) => typeof x === "string") : s.watchlist,
+          }));
+          const theme = get().theme;
+          try {
+            localStorage.setItem(THEME_STORAGE_KEY, theme);
+            document.documentElement.setAttribute("data-theme", theme);
+          } catch {}
+        },
       };
     },
     {
@@ -167,7 +204,7 @@ export const useWorkspace = create<WorkspaceState>()(
       version: 1,
       storage: createJSONStorage(() => localStorage),
       skipHydration: true,
-      partialize: (s) => ({ theme: s.theme, layouts: s.layouts, activeId: s.activeId, notes: s.notes, watchlist: s.watchlist }),
+      partialize: persistedShape,
       onRehydrateStorage: () => (state) => state?.setHydrated(),
     },
   ),

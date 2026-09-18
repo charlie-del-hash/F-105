@@ -28,7 +28,9 @@ pnpm check        # tokens → lint → typecheck → content → layouts → te
 pnpm build && pnpm start
 ```
 
-Node ≥ 20.9. No environment variables are required for the demo; see `.env.example`.
+Node ≥ 20.9. No environment variables are required for the demo; see `.env.example` for
+the optional ones: a free FRED key for live energy and FX, Supabase for sign-in and sync,
+and the alert channels.
 
 ## What is in the box
 
@@ -40,15 +42,18 @@ Node ≥ 20.9. No environment variables are required for the demo; see `.env.exa
 | **Themes** | `src/design/tokens.json` | Terminal, Phosphor, Cockpit, Bridge, Paper, Glass. One JSON → generated CSS. Functional skeuomorphism: bezels, LEDs, scanlines and glow are tokens a theme can turn to zero. |
 | **Command bar** | ⌘K or `/` | Search everything, or type mnemonics: `GP TTF`, `DES F-105`, `THEME PAPER`, `LAYOUT BRIDGE`, `WIRE SHP`. |
 | **Content** | `content/**` | Articles, briefs (with a bottom line), dossiers (with spec sheet and dual-use notes), wire items, calendar events. MDX + JSON, Zod-validated. |
-| **Data** | `src/data/*`, `/api/quotes`, `/api/series/:symbol` | Instrument registry and a provider interface. The demo provider is deterministic synthetic data; swap it for ICE, Baltic/Clarksons/SSY, viaNexus, etc. |
-| **Messaging** | `src/lib/share.ts` | No in-app chat. Share sheet to WhatsApp, email, Slack (formatted copy), system share. Alert adapters are documented for server-side push. |
+| **Data** | `src/data/*`, `/api/quotes`, `/api/series/:symbol`, `/api/status` | Instrument registry and a composite provider: FRED (free key) and ECB rates where they cover a symbol, deterministic synthetic data for the rest, provenance shown everywhere. Licensed vendors are one adapter each. |
+| **Persistence** | `src/lib/supabase`, `src/layout-engine/sync.ts`, `/account` | On-device by default. With a Supabase project: email sign-in and cross-device sync of layouts, theme, notes, watchlist. |
+| **Messaging** | `src/lib/share.ts`, `src/lib/notify`, `content/alerts/rules.json` | No in-app chat. Share sheet to WhatsApp, email, Slack, system share. Server-side alerts (Slack, WhatsApp Business, email) from JSON rules on a cron. |
 | **Kit** | `/kit` | Every primitive in the current theme. The Forstall page: if it is not here, it is not a component. |
 
 ## Deploy to Vercel
 
 1. Push this repository to GitHub (done if you are reading this there).
 2. In Vercel: **Add New → Project → Import** the repo. Framework is detected as Next.js; no settings needed.
-3. Optionally set `NEXT_PUBLIC_SITE_URL` to the production domain so share links are absolute.
+3. Optionally set `NEXT_PUBLIC_SITE_URL` to the production domain so share links are absolute,
+   `FRED_API_KEY` for live energy series, the Supabase variables for sync, and `CRON_SECRET`
+   plus channel credentials for alerts (`vercel.json` schedules the daily run).
 
 Every push to the production branch redeploys; every other branch gets a preview URL.
 
@@ -57,23 +62,27 @@ Every push to the production branch redeploys; every other branch gets a preview
 ```
 content/           articles/ briefs/ dossiers/ (MDX) · wire/ events/ (JSON)
 layouts/           preset layouts (JSON)
-docs/              ARCHITECTURE · DESIGN · CONTENT · LAYOUTS · ROADMAP
+docs/              ARCHITECTURE · DESIGN · CONTENT · LAYOUTS · DATA · PERSISTENCE · ALERTS · ROADMAP
+supabase/          migrations (workspaces, alert_log) and setup notes
 scripts/           tokens-to-css · validate-content · check-layouts
 src/
   app/             routes: / read/ dossier/ wire/ markets/ desk/ layouts/ kit/ api/
   components/      shell (topbar, status bar, command bar, share) · ui · charts · content
   config/site.ts   name, desks, channels — rebrand here
+  alerts/          rules · schema · evaluate · dedupe
   content/         schema.ts (Zod) · loader.ts (server) · mdx.tsx (in-article kit)
-  data/            instruments.ts · mock.ts · providers/ · format.ts · types.ts
+  data/            instruments.ts · mock.ts · derive.ts · providers/ (fred, ecb, composite, mock)
   design/          tokens.json (source of truth) · tokens.ts · themes.css (generated)
   layout-engine/   schema · grid maths · store · WorkspaceGrid · PanelFrame · settings
   panels/          catalog.ts (server-safe) · registry.tsx (client) · one folder per panel
-  lib/             hooks and helpers
+  lib/             hooks and helpers · supabase/ clients · notify/ channels
+  proxy.ts         Next.js 16 proxy: refreshes the Supabase session cookie
 ```
 
 ## Status
 
-This is the architecture and a demo. The content is placeholder (labelled as such in the
-UI), the numbers are synthetic, and persistence is on-device. `docs/ROADMAP.md` lists what
-comes next: real data adapters, Supabase persistence and auth, alerts to WhatsApp/Slack/email,
-and the iOS build.
+This is the architecture and a demo. The content is placeholder and labelled as such in
+the UI. Numbers are live where a free source covers them (ECB rates out of the box, FRED
+with a key) and synthetic elsewhere, always marked. Persistence, sign-in and alerts switch
+on with environment variables. `docs/ROADMAP.md` lists what comes next: licensed data
+feeds, layout sharing, per-user alert rules, and the iOS build.

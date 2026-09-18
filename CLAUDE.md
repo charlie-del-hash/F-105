@@ -53,8 +53,20 @@ honest: anything synthetic stays labelled synthetic.
 real source it should eventually come from. The mock provider picks it up automatically.
 
 ### Add a real data provider
-Implement `MarketDataProvider` (`src/data/types.ts`) in `src/data/providers/<id>.ts`,
-register it in `providers/index.ts`, set `MARKET_DATA_PROVIDER=<id>`. Keep the mock.
+`docs/DATA.md`. Implement `create<Id>Provider(opts)` in `src/data/providers/<id>.ts` with an
+injectable `fetchImpl`, add it to `liveAdapters` in `providers/index.ts` in priority order,
+and add a fixture test to `providers.test.ts`. Never strip `provider` / `synthetic` /
+`asOf` from a quote: the UI's honesty depends on them.
+
+### Add an alert rule or channel
+Rules are JSON in `content/alerts/rules.json` (`docs/ALERTS.md`); the build validates them.
+A channel is a `NotifierFactory` in `src/lib/notify/<id>.ts` registered in `getNotifiers`,
+with a stub-fetch test in `src/alerts/alerts.test.ts`.
+
+### Persistence
+`docs/PERSISTENCE.md`. Anything new that the user customises goes into `PersistedShape` in
+the store (and therefore into `localStorage` and the Supabase row automatically). Validate
+it in `applyRemote` so a bad remote row cannot poison a device.
 
 ### Add a layout preset
 Write `layouts/<id>.json` (see `docs/LAYOUTS.md`), import it in
@@ -69,4 +81,5 @@ Set `placeholder: false` only when a human has verified the piece.
 ```
 pnpm dev · pnpm build · pnpm check
 pnpm tokens · pnpm content:check · pnpm layouts:check · pnpm test
+curl -H "Authorization: Bearer $CRON_SECRET" "http://localhost:3000/api/alerts/run?dryRun=1"
 ```

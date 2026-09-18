@@ -61,9 +61,11 @@ export function ChartBlock({ symbol, initialRange = "3m", tall = false }: { symb
           <Empty>Loading…</Empty>
         )}
       </div>
-      <div className="flex justify-between px-3 pb-1.5 font-data text-[10px] text-ink-3">
-        <span>{inst.name}</span>
-        <span>{inst.source}</span>
+      <div className="flex justify-between gap-3 px-3 pb-1.5 font-data text-[10px] text-ink-3">
+        <span className="truncate">{inst.name}</span>
+        <span className="truncate">
+          {series ? (series.synthetic ? "synthetic demo series" : `${series.provider.toUpperCase()} · as of ${series.points[series.points.length - 1]?.d}`) : inst.source}
+        </span>
       </div>
     </div>
   );

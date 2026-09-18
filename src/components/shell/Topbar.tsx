@@ -9,6 +9,7 @@ import { getInstrument } from "@/data/instruments";
 import { useQuotes } from "@/lib/useQuotes";
 import { cn } from "@/lib/cn";
 import { useWorkspace } from "@/layout-engine/store";
+import { useSyncStatus } from "@/layout-engine/sync";
 
 const nav = [
   { href: "/", label: "Desk" },
@@ -43,6 +44,7 @@ export function Topbar({ onCommand }: { onCommand: () => void }) {
   const pathname = usePathname();
   const theme = useWorkspace((s) => s.theme);
   const setTheme = useWorkspace((s) => s.setTheme);
+  const sync = useSyncStatus((s) => s.state);
   return (
     <header className="sticky top-0 z-30 border-b border-line bg-bg/95 backdrop-blur">
       <div className="mx-auto flex h-11 max-w-[1800px] items-center gap-3 px-3">
@@ -72,6 +74,10 @@ export function Topbar({ onCommand }: { onCommand: () => void }) {
           <span className="hidden sm:inline">Search or command</span>
           <span className="kbd hidden sm:inline">⌘K</span>
         </button>
+        <Link href="/account" className="flex h-7 shrink-0 items-center gap-1.5 rounded-[var(--radius)] border border-line bg-bg-3 px-2 font-ui text-xs text-ink-3 hover:text-ink" title="Account and sync">
+          <span className={cn("led", sync === "synced" && "led-ok", sync === "error" && "led-alert", sync === "syncing" && "led-warn")} aria-hidden />
+          <span className="hidden md:inline">{sync === "synced" ? "Synced" : "Account"}</span>
+        </Link>
         <select
           aria-label="Theme"
           value={theme}

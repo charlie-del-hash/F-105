@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useWorkspace } from "@/layout-engine/store";
 import type { CommandIndex } from "@/content/loader";
+import { WorkspaceSync } from "@/layout-engine/sync";
 import { CommandBar } from "./CommandBar";
 import { StatusBar } from "./StatusBar";
 import { Topbar } from "./Topbar";
@@ -38,6 +39,7 @@ export function Shell({ index, children }: { index: CommandIndex; children: Reac
 
   return (
     <>
+      <WorkspaceSync />
       <Topbar onCommand={() => setCmd(true)} />
       <main className="flex-1">{children}</main>
       <StatusBar />

@@ -19,7 +19,11 @@ type Props = z.infer<typeof schema>;
 export function QuoteTable({ symbols, compact = false }: { symbols: string[]; compact?: boolean }) {
   const { quotes, error } = useQuotes(symbols);
   if (error) return <Empty>Quotes unavailable: {error}</Empty>;
+  const loaded = symbols.map((s) => quotes[s]).filter(Boolean);
+  const liveCount = loaded.filter((q) => !q.synthetic).length;
+  const sources = Array.from(new Set(loaded.filter((q) => !q.synthetic).map((q) => q.provider.toUpperCase())));
   return (
+    <>
     <table className="w-full border-collapse font-data text-xs">
       <thead className="sticky top-0 bg-bg-2">
         <tr className="caps text-ink-3">
@@ -40,7 +44,10 @@ export function QuoteTable({ symbols, compact = false }: { symbols: string[]; co
             <tr key={s} className="border-t border-line hover:bg-bg-3">
               <td className="px-3 py-1.5">
                 <Link href={`/markets/${s}`} className="block">
-                  <div className="font-medium text-ink">{s}</div>
+                  <div className="font-medium text-ink">
+                    {s}
+                    {q?.synthetic && <span className="ml-1 text-[9px] font-normal text-ink-3" title="Synthetic demo series">demo</span>}
+                  </div>
                   {!compact && <div className="truncate font-ui text-[10.5px] text-ink-3">{inst?.name ?? "—"}</div>}
                 </Link>
               </td>
@@ -62,6 +69,13 @@ export function QuoteTable({ symbols, compact = false }: { symbols: string[]; co
         })}
       </tbody>
     </table>
+    {loaded.length > 0 && (
+      <div className="px-3 py-1.5 font-data text-[10px] text-ink-3">
+        {liveCount > 0 ? `${liveCount} live · ${sources.join(", ")}` : "all synthetic"}
+        {liveCount > 0 && loaded.length > liveCount ? ` · ${loaded.length - liveCount} synthetic` : ""}
+      </div>
+    )}
+    </>
   );
 }
 
