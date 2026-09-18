@@ -1,0 +1,16 @@
+{
+  "id": "bridge",
+  "name": "Bridge",
+  "description": "Shipping and the dual-use edge: the Hormuz plot, freight board, transit indicators, VLCC rates and the shipping wire.",
+  "desk": "shipping",
+  "theme": "bridge",
+  "panels": [
+    { "id": "plot", "type": "plot", "x": 0, "y": 0, "w": 6, "h": 8, "props": { "area": "hormuz" } },
+    { "id": "qb", "type": "quotes", "x": 6, "y": 0, "w": 6, "h": 8, "props": { "symbols": ["TD3C", "VLCC.TCE", "CAPE.5TC", "BDI", "LNGF.174", "SCFI", "SHIPX", "USDCNY"] } },
+    { "id": "ind", "type": "indicators", "x": 0, "y": 8, "w": 6, "h": 3, "props": { "symbols": ["HORMUZ.TX", "BAB.TX", "WAR.RS"] } },
+    { "id": "td3", "type": "chart", "x": 6, "y": 8, "w": 6, "h": 6, "props": { "symbol": "TD3C", "range": "6m" } },
+    { "id": "wire", "type": "wire", "x": 0, "y": 11, "w": 3, "h": 9, "props": { "desk": "shipping", "limit": 30 } },
+    { "id": "des", "type": "dossier", "x": 3, "y": 11, "w": 3, "h": 9, "props": { "slug": "strait-of-hormuz" } },
+    { "id": "top", "type": "headlines", "x": 6, "y": 14, "w": 6, "h": 6, "props": { "desk": "shipping", "limit": 6 } }
+  ]
+}

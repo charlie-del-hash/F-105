@@ -1,0 +1,51 @@
+"use client";
+import Link from "next/link";
+import { z } from "zod";
+import { fmtDate } from "@/data/format";
+import { useWorkspaceData } from "@/layout-engine/data-context";
+import { DeskTag, Empty, Tag } from "@/components/ui/Tag";
+import { panelMetaMap } from "../catalog";
+import type { PanelDefinition } from "../types";
+
+const schema = z.object({
+  /** A slug, or "featured" to follow whatever is marked featured. */
+  slug: z.string().default("featured"),
+});
+type Props = z.infer<typeof schema>;
+
+function ReaderPanel({ props }: { props: Props }) {
+  const { docs, bodies, bottomLines } = useWorkspaceData();
+  const readable = docs.filter((d) => d.kind !== "dossier");
+  const doc = props.slug === "featured" ? readable.find((d) => d.featured) ?? readable[0] : docs.find((d) => d.slug === props.slug);
+  if (!doc) return <Empty>No piece with slug “{props.slug}”.</Empty>;
+  const body = bodies[doc.slug];
+  return (
+    <article className="px-4 py-3">
+      <div className="flex items-center gap-1.5 font-data text-[10.5px] text-ink-3">
+        <DeskTag desk={doc.desk} />
+        <Tag tone={doc.kind === "brief" ? "accent" : "neutral"}>{doc.kind}</Tag>
+        <span className="ml-auto tabular">{fmtDate(doc.date, "long")}</span>
+      </div>
+      <h2 className="mt-2 font-ui text-lg font-semibold leading-tight text-ink">
+        <Link href={doc.href}>{doc.title}</Link>
+      </h2>
+      <p className="mt-1 font-read text-[15px] leading-snug text-ink-2">{doc.dek}</p>
+      {bottomLines[doc.slug] && (
+        <div className="mt-3 border-l-2 border-accent bg-bg-3 px-3 py-2 font-ui text-sm">
+          <div className="caps text-ink-3">Bottom line</div>
+          <div className="text-ink">{bottomLines[doc.slug]}</div>
+        </div>
+      )}
+      <div className="prose-read mt-4 text-[15px] leading-[1.6]">{body ?? <Link href={doc.href} className="text-accent">Open the full piece →</Link>}</div>
+    </article>
+  );
+}
+
+export const readerDefinition: PanelDefinition<Props> = {
+  meta: panelMetaMap.get("reader")!,
+  schema,
+  fields: [{ key: "slug", label: "Piece", kind: "slug", hint: "“featured” follows the featured story" }],
+  component: ReaderPanel,
+  defaultTitle: (p) => (p.slug === "featured" ? "Reader · featured" : `Reader · ${p.slug}`),
+  href: (p) => (p.slug === "featured" ? undefined : `/read/${p.slug}`),
+};

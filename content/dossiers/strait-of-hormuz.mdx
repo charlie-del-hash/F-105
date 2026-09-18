@@ -1,0 +1,44 @@
+---
+title: "Strait of Hormuz"
+dek: "The 21-nautical-mile gap between Iran and the Musandam peninsula through which roughly a fifth of the world's traded oil and LNG passes. The single most consequential chokepoint for the energy and freight desks."
+date: 2026-09-14
+desk: geo
+tags: ["hormuz", "chokepoint", "tankers", "lng", "iran"]
+byline: "Geopolitics desk · reference"
+entity: chokepoint
+designation: "Hormuz"
+status: watch
+instruments: ["HORMUZ.TX", "TD3C", "WAR.RS", "BRENT", "JKM"]
+related: ["vlcc-rates-hormuz", "gas-is-geopolitics", "red-sea-diversions"]
+specs:
+  - { label: "Narrowest width", value: "~21 nm" }
+  - { label: "Traffic separation", value: "2 nm in, 2 nm out", note: "2 nm buffer between" }
+  - { label: "Crude & products", value: "~20 mb/d", note: "approx. 1/5 of global consumption" }
+  - { label: "LNG share", value: "~20%", note: "of global trade; Qatar, UAE" }
+  - { label: "Bypass, crude", value: "~2.5 mb/d", note: "Saudi East-West, ADCOP" }
+  - { label: "Bypass, LNG", value: "none" }
+  - { label: "Littoral states", value: "Iran, Oman, UAE" }
+dualUse:
+  civil: "A traffic-separation scheme handling roughly a hundred large-vessel transits a day, most of them tankers loading at Gulf terminals for Asia. Its economics are freight rates, insurance premiums and terminal queues."
+  military: "A closure does not require sinking ships; a credible mine datum or a single seized tanker moves the insurance market and reroutes what can be rerouted. Naval presence is a message to underwriters as much as to the other side."
+timeline:
+  title: "Incidents that moved the market"
+  items:
+    - { date: "1984–88", title: "Tanker War", text: "Iraq and Iran attack merchant shipping; Operation Earnest Will reflags Kuwaiti tankers." }
+    - { date: "Jul 1988", title: "Iran Air 655", text: "USS Vincennes shoots down an airliner over the strait." }
+    - { date: "2019", title: "Tanker seizures and limpet attacks", text: "Insurance premiums spike; convoy talk returns.", key: true }
+    - { date: "2026", title: "Watch", text: "Transit counts and war-risk quotes are the indicators this desk tracks daily." }
+sources:
+  - "US Energy Information Administration, <em>World Oil Transit Chokepoints</em> (public; verify latest figures)."
+  - "IMO, Hormuz traffic separation scheme documentation."
+---
+
+The strait connects the Gulf to the Gulf of Oman and the open Indian Ocean. Every tanker loading at Ras Tanura, Kharg, Fujairah's inner terminals or Ras Laffan passes through it, in one of two lanes each two nautical miles wide, separated by a buffer, within Omani and Iranian waters.
+
+## Why the plot matters
+
+The Plot panel in the Bridge layout draws the strait schematically: the two lanes, a handful of tracks, and a datum where a mine or an incident has been reported. It is not a map. It is a way of seeing, at a glance, whether the flow through the lanes looks normal. The daily transit count (<Sym s="HORMUZ.TX" />) is the number behind the picture.
+
+## The bypasses, and their limits
+
+Saudi Arabia's East-West pipeline and the UAE's line to Fujairah can move a few million barrels a day around the strait. There is no equivalent for Qatari LNG. This asymmetry is why a Hormuz scare shows up in <Sym s="JKM" /> and <Sym s="TTF" /> at least as sharply as in <Sym s="BRENT" />.

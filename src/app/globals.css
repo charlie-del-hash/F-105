@@ -1,0 +1,161 @@
+@import "tailwindcss";
+@import "../design/themes.css";
+
+/* Map theme tokens (CSS variables set per [data-theme]) onto Tailwind utilities.
+   Use `bg-bg-2 text-ink border-line font-data` etc. Never hard-code a colour in a component. */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-2: var(--bg-2);
+  --color-bg-3: var(--bg-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-up: var(--up);
+  --color-down: var(--down);
+  --color-warn: var(--warn);
+  --color-alert: var(--alert);
+  --color-series-1: var(--series-1);
+  --color-series-2: var(--series-2);
+  --color-series-3: var(--series-3);
+  --color-series-4: var(--series-4);
+  --color-series-5: var(--series-5);
+  --color-series-6: var(--series-6);
+  --color-series-7: var(--series-7);
+  --color-series-8: var(--series-8);
+  --font-ui: var(--font-ui);
+  --font-data: var(--font-data);
+  --font-read: var(--font-read);
+  --radius-panel: var(--radius);
+}
+
+/* ------------------------------------------------------------------ base */
+html {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: calc(15px * var(--density));
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  line-height: 1.45;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: var(--selection); color: var(--bg); }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* thin scrollbars, themed */
+* { scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 4px; }
+
+/* ------------------------------------------------- skeuomorphic primitives
+   Functional skeuomorphism: the bezel tells you where a panel ends, the LED
+   tells you a feed is alive, the inset tells you an area is a screen. Nothing
+   is decorative for its own sake. Every effect is a token so a theme can turn
+   it down to zero (Paper) or up (Phosphor). */
+@layer components {
+  .bezel {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--ink) calc(7% * var(--fx-bezel)), transparent),
+      inset 0 -1px 0 color-mix(in srgb, #000 calc(35% * var(--fx-bezel)), transparent),
+      0 1px 2px color-mix(in srgb, #000 calc(40% * var(--fx-bezel)), transparent);
+  }
+  .inset {
+    background: var(--bg-3);
+    border: 1px solid var(--line);
+    border-radius: calc(var(--radius) - 1px);
+    box-shadow: inset 0 2px 8px color-mix(in srgb, #000 calc(45% * var(--fx-bezel)), transparent);
+  }
+  .glow { text-shadow: 0 0 12px var(--glow); }
+  .hairline { border-color: var(--line); }
+  .tabular { font-variant-numeric: tabular-nums; }
+  .caps {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.68rem;
+    font-weight: 500;
+  }
+  .kbd {
+    font-family: var(--font-data);
+    font-size: 0.68rem;
+    padding: 0.05rem 0.35rem;
+    border: 1px solid var(--line-strong);
+    border-bottom-width: 2px;
+    border-radius: 3px;
+    background: var(--bg-3);
+    color: var(--ink-2);
+  }
+  .led {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: var(--ink-3);
+    box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.6);
+    vertical-align: middle;
+  }
+  .led-ok { background: var(--up); box-shadow: 0 0 6px var(--up); }
+  .led-warn { background: var(--warn); box-shadow: 0 0 6px var(--warn); }
+  .led-alert { background: var(--alert); box-shadow: 0 0 6px var(--alert); animation: led-blink 1.1s steps(1) infinite; }
+  .led-live { background: var(--up); box-shadow: 0 0 6px var(--up); animation: led-pulse 2.4s ease-in-out infinite; }
+  @keyframes led-blink { 50% { opacity: 0.35; } }
+  @keyframes led-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+
+  /* CRT furniture — opacity driven entirely by theme tokens */
+  .crt { position: relative; }
+  .crt::before {
+    content: "";
+    position: fixed; inset: 0; z-index: 60; pointer-events: none;
+    opacity: var(--fx-scanlines);
+    background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 1) 0 1px, transparent 1px 3px);
+    transform: translateZ(0);
+  }
+  .crt::after {
+    content: "";
+    position: fixed; inset: 0; z-index: 61; pointer-events: none;
+    opacity: var(--fx-vignette);
+    background: radial-gradient(ellipse 95% 85% at 50% 45%, transparent 60%, rgba(0, 0, 0, 1) 100%);
+    transform: translateZ(0);
+  }
+
+  /* editorial measure for long-form reading */
+  .prose-read {
+    font-family: var(--font-read);
+    font-size: 1.08rem;
+    line-height: 1.68;
+    max-width: 42rem;
+  }
+  .prose-read p { margin: 0 0 1.1em; }
+  .prose-read h2 { font-family: var(--font-ui); font-size: 1.05rem; font-weight: 600; letter-spacing: 0.02em; margin: 2em 0 0.7em; text-transform: uppercase; }
+  .prose-read h3 { font-family: var(--font-ui); font-size: 1rem; font-weight: 600; margin: 1.6em 0 0.5em; }
+  .prose-read blockquote { margin: 1.4em 0; padding-left: 1rem; border-left: 3px double var(--line-strong); color: var(--ink-2); }
+  .prose-read ul, .prose-read ol { padding-left: 1.3em; margin: 0 0 1.1em; }
+  .prose-read li { margin: 0.25em 0; }
+  .prose-read a { color: var(--accent); border-bottom: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); }
+  .prose-read strong { font-weight: 600; }
+  .prose-read hr { border: 0; border-top: 1px solid var(--line); margin: 2em 0; }
+  .prose-read table { border-collapse: collapse; width: 100%; font-family: var(--font-data); font-size: 0.85rem; margin: 1.2em 0; }
+  .prose-read th, .prose-read td { text-align: left; padding: 0.4em 0.6em; border-bottom: 1px solid var(--line); }
+  .prose-read th { color: var(--ink-3); font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.68rem; }
+  .prose-read code { font-family: var(--font-data); font-size: 0.9em; background: var(--bg-3); padding: 0.05em 0.3em; border-radius: 3px; }
+}
+
+/* Reduced motion: LEDs stop blinking, nothing else animates. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

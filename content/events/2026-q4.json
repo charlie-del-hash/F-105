@@ -1,0 +1,14 @@
+[
+  { "id": "e-01", "date": "2026-09-22", "time": "09:00", "tz": "GST", "desk": "geo", "title": "Gulf naval exercise begins (demo)", "note": "Transit counts usually dip on day one", "importance": "high", "instruments": ["HORMUZ.TX", "WAR.RS"] },
+  { "id": "e-02", "date": "2026-09-24", "time": "15:30", "tz": "UTC", "desk": "energy", "title": "EIA weekly natural gas storage", "importance": "medium", "instruments": ["HH"] },
+  { "id": "e-03", "date": "2026-09-25", "time": "12:00", "tz": "CET", "desk": "energy", "title": "GIE AGSI+ monthly storage review", "importance": "low", "instruments": ["EU.GASSTOR", "TTF"] },
+  { "id": "e-04", "date": "2026-09-29", "time": "13:00", "tz": "UTC", "desk": "shipping", "title": "Baltic Exchange tanker routes review (demo)", "note": "Possible TD3C description change", "importance": "medium", "instruments": ["TD3C"] },
+  { "id": "e-05", "date": "2026-10-01", "desk": "shipping", "title": "Norwegian gas field maintenance window closes (demo)", "importance": "medium", "instruments": ["TTF", "NBP"] },
+  { "id": "e-06", "date": "2026-10-05", "time": "14:00", "tz": "CET", "desk": "energy", "title": "OPEC+ ministerial monitoring meeting (demo)", "importance": "high", "instruments": ["BRENT", "WTI"] },
+  { "id": "e-07", "date": "2026-10-08", "time": "10:00", "tz": "BST", "desk": "industry", "title": "Parliamentary hearing: strategic sealift charter renewal (demo)", "importance": "medium", "instruments": ["SHIPX"] },
+  { "id": "e-08", "date": "2026-10-14", "desk": "air", "title": "Air power symposium: SEAD at sixty (demo)", "note": "Editorial coverage planned", "importance": "low" },
+  { "id": "e-09", "date": "2026-10-22", "time": "13:15", "tz": "CET", "desk": "energy", "title": "ECB rate decision", "importance": "medium", "instruments": ["EURUSD"] },
+  { "id": "e-10", "date": "2026-10-28", "desk": "geo", "title": "IMO Maritime Safety Committee session (demo)", "note": "Red Sea routing guidance on agenda", "importance": "medium", "instruments": ["BAB.TX"] },
+  { "id": "e-11", "date": "2026-11-03", "desk": "shipping", "title": "Q3 results: listed tanker owners (demo)", "importance": "low", "instruments": ["SHIPX", "VLCC.TCE"] },
+  { "id": "e-12", "date": "2026-11-15", "desk": "air", "title": "Dubai Airshow opens (demo)", "importance": "medium", "instruments": ["ADX30"] }
+]

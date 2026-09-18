@@ -1,0 +1,49 @@
+{
+  "name": "f105-terminal",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "tokens": "node scripts/tokens-to-css.mjs",
+    "prebuild": "node scripts/tokens-to-css.mjs",
+    "content:check": "tsx scripts/validate-content.ts",
+    "layouts:check": "tsx scripts/check-layouts.ts",
+    "test": "tsx --test src/**/*.test.ts",
+    "check": "pnpm tokens && pnpm lint && pnpm typecheck && pnpm content:check && pnpm layouts:check && pnpm test"
+  },
+  "dependencies": {
+    "@fontsource-variable/source-serif-4": "^5.3.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "cmdk": "^1.1.1",
+    "geist": "^1.7.2",
+    "gray-matter": "^4.0.3",
+    "lucide-react": "^1.47.0",
+    "next": "16.3.5",
+    "next-mdx-remote": "^6.0.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "server-only": "^0.0.1",
+    "zod": "^4.6.5",
+    "zustand": "^5.0.15"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.5",
+    "tailwindcss": "^4",
+    "tsx": "^4.23.13",
+    "typescript": "^5"
+  },
+  "packageManager": "pnpm@10.33.0",
+  "description": "F-105 — an intelligence terminal: composable panels, user-built layouts, six instrument themes. Next.js 16 on Vercel.",
+  "engines": {
+    "node": ">=20.9"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "reader",
+  "name": "Reader",
+  "description": "One story, full width, with the desk's headlines and a quiet quote strip beside it. Pairs well with Paper.",
+  "theme": "paper",
+  "panels": [
+    { "id": "read", "type": "reader", "x": 0, "y": 0, "w": 8, "h": 16, "props": { "slug": "featured" } },
+    { "id": "top", "type": "headlines", "x": 8, "y": 0, "w": 4, "h": 9, "props": { "limit": 10 } },
+    { "id": "qb", "type": "quotes", "x": 8, "y": 9, "w": 4, "h": 7, "props": { "symbols": ["BRENT", "TTF", "TD3C", "EURUSD"], "compact": true } }
+  ]
+}
