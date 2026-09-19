@@ -19,6 +19,10 @@ agentically: every extension point is a file with a schema and a documented reci
 |---|---|
 | ![](docs/screenshots/reader-paper.png) | ![](docs/screenshots/command-bar.png) |
 
+| A blank layout starts here | Keyboard help (`?`) |
+|---|---|
+| ![](docs/screenshots/empty-layout.png) | ![](docs/screenshots/keyboard-help.png) |
+
 ## Run it
 
 ```sh
@@ -45,7 +49,14 @@ and the alert channels.
 | **Data** | `src/data/*`, `/api/quotes`, `/api/series/:symbol`, `/api/status` | Instrument registry and a composite provider: FRED (free key) and ECB rates where they cover a symbol, deterministic synthetic data for the rest, provenance shown everywhere. Licensed vendors are one adapter each. |
 | **Persistence** | `src/lib/supabase`, `src/layout-engine/sync.ts`, `/account` | On-device by default. With a Supabase project: email sign-in and cross-device sync of layouts, theme, notes, watchlist. |
 | **Messaging** | `src/lib/share.ts`, `src/lib/notify`, `content/alerts/rules.json` | No in-app chat. Share sheet to WhatsApp, email, Slack, system share. Server-side alerts (Slack, WhatsApp Business, email) from JSON rules on a cron. |
+| **Reading** | `/read/:slug`, `/dossier/:slug` | A reading surface: progress line, S/M/L type size, one tap to the Paper theme and back, a drop cap on Paper, and a masthead that gets out of the way on phones. |
 | **Kit** | `/kit` | Every primitive in the current theme. The Forstall page: if it is not here, it is not a component. |
+
+## Keyboard
+
+`?` shows every shortcut. The ones worth memorising: `⌘K` command bar, `E` edit the
+layout, `[` and `]` to cycle layouts, `T` next theme. In edit mode, Tab to a panel header
+and use the arrows to move it, shift-arrows to resize.
 
 ## Deploy to Vercel
 

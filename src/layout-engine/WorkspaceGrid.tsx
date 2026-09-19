@@ -9,6 +9,7 @@ import { useMediaQuery } from "@/lib/useMediaQuery";
 import { useSize } from "@/lib/useSize";
 import { GRID_COLS, GRID_GAP, ROW_HEIGHT } from "./constants";
 import { gridHeight, readingOrder } from "./grid";
+import { EmptyLayout } from "./EmptyLayout";
 import { PanelFrame } from "./PanelFrame";
 import { useWorkspace } from "./store";
 import type { Layout, PanelInstance } from "./schema";
@@ -54,16 +55,7 @@ export function WorkspaceGrid({ layout }: { layout: Layout }) {
     setDraggingId(null);
   };
 
-  if (layout.panels.length === 0) {
-    return (
-      <div className="bezel flex min-h-48 items-center justify-center p-6 text-center">
-        <div>
-          <div className="caps text-ink-3">Empty layout</div>
-          <p className="mt-2 max-w-sm font-ui text-sm text-ink-2">Add a panel from the toolbar, or press <span className="kbd">⌘K</span> and type a mnemonic like <span className="font-data text-ink">GP TTF</span>.</p>
-        </div>
-      </div>
-    );
-  }
+  if (layout.panels.length === 0) return <EmptyLayout layout={layout} />;
 
   if (mobile) {
     return (

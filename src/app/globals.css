@@ -126,10 +126,13 @@ button, a, select, input { transition: color 120ms ease, background-color 120ms 
 
   /* segmented control (range pickers, mode switches) */
   .seg {
-    display: inline-flex; align-items: center; gap: 2px; padding: 2px;
+    display: flex; width: max-content; max-width: 100%; align-items: center; gap: 2px; padding: 2px;
+    overflow-x: auto; scrollbar-width: none;
     border: 1px solid var(--line); border-radius: calc(var(--radius) + 2px); background: var(--bg-3);
   }
+  .seg::-webkit-scrollbar { display: none; }
   .seg > button {
+    flex: none;
     height: 18px; padding: 0 7px; border-radius: var(--radius);
     font-family: var(--font-data); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase;
     color: var(--ink-3);
@@ -197,6 +200,18 @@ button, a, select, input { transition: color 120ms ease, background-color 120ms 
     font-size: 1.08rem;
     line-height: 1.68;
     max-width: 42rem;
+    text-wrap: pretty;
+    overflow-wrap: anywhere;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
+  [data-readsize="S"] .prose-read { font-size: 0.98rem; line-height: 1.6; }
+  [data-readsize="L"] .prose-read { font-size: 1.22rem; line-height: 1.72; }
+  .prose-read h2, .prose-read h3 { text-wrap: balance; -webkit-hyphens: manual; hyphens: manual; }
+  /* Broadsheet opening on Paper only: one drop cap, then the column settles. */
+  [data-theme="paper"] .prose-read > p:first-of-type::first-letter {
+    float: left; font-size: 3.4em; line-height: 0.82; padding: 0.06em 0.1em 0 0;
+    font-weight: 600; color: var(--ink);
   }
   .prose-read p { margin: 0 0 1.1em; }
   .prose-read h2 { font-family: var(--font-ui); font-size: 1.05rem; font-weight: 600; letter-spacing: 0.02em; margin: 2em 0 0.7em; text-transform: uppercase; }
@@ -207,7 +222,7 @@ button, a, select, input { transition: color 120ms ease, background-color 120ms 
   .prose-read a { color: var(--accent); border-bottom: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); }
   .prose-read strong { font-weight: 600; }
   .prose-read hr { border: 0; border-top: 1px solid var(--line); margin: 2em 0; }
-  .prose-read table { border-collapse: collapse; width: 100%; font-family: var(--font-data); font-size: 0.85rem; margin: 1.2em 0; }
+  .prose-read table { border-collapse: collapse; width: 100%; font-family: var(--font-data); font-size: 0.85rem; margin: 1.2em 0; display: block; max-width: 100%; overflow-x: auto; }
   .prose-read th, .prose-read td { text-align: left; padding: 0.4em 0.6em; border-bottom: 1px solid var(--line); }
   .prose-read th { color: var(--ink-3); font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.68rem; }
   .prose-read code { font-family: var(--font-data); font-size: 0.9em; background: var(--bg-3); padding: 0.05em 0.3em; border-radius: 3px; }

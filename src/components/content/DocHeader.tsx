@@ -3,27 +3,32 @@ import { site } from "@/config/site";
 import { fmtDate } from "@/data/format";
 import { ShareSheet } from "@/components/shell/ShareSheet";
 import { Kicker } from "@/components/data/Kicker";
-import { Tag } from "@/components/ui/Tag";
+import { ReadingControls } from "@/components/reading/ReadingControls";
 import type { Doc } from "@/content/schema";
 
 export function DocHeader({ doc, extra }: { doc: Doc; extra?: React.ReactNode }) {
   const desk = site.desks.find((d) => d.id === doc.data.desk);
   return (
     <header className="mb-8">
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-        <Kicker items={[desk?.name, doc.kind, doc.readingTime ? `${doc.readingTime} min` : undefined]} />
+      <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2">
+        <Kicker
+          wrap
+          items={[desk?.name, doc.kind, doc.readingTime ? `${doc.readingTime} min` : undefined]}
+          status={doc.data.placeholder ? { label: "demo content · verify before use", tone: "warn" } : undefined}
+        />
         {extra}
-        {doc.data.placeholder && <Tag tone="warn">demo content · verify before use</Tag>}
         <span className="ml-auto flex items-center gap-2 font-data text-[11px] text-ink-3">
           <span className="tabular">{fmtDate(doc.data.date, "long")}</span>
-          <ShareSheet title={doc.data.title} text={doc.data.dek} path={doc.href} size="xs" />
+          <ShareSheet title={doc.data.title} text={doc.data.dek} path={doc.href} size="sm" />
         </span>
       </div>
+      <ReadingControls className="mt-3" />
       <h1 className="mt-5 font-ui text-3xl font-semibold leading-[1.08] tracking-[-0.01em] text-ink md:text-[2.6rem]">{doc.data.title}</h1>
       <p className="mt-4 max-w-2xl font-read text-lg leading-snug text-ink-2">{doc.data.dek}</p>
-      <div className="mt-3 flex items-center gap-2 font-ui text-xs text-ink-3">
+      <div className="mt-3 flex flex-wrap items-center gap-2 font-ui text-xs text-ink-3">
         <span>{doc.data.byline}</span>
-        {desk && (
+        {/* The byline usually names the desk already; only add the link when it does not. */}
+        {desk && !doc.data.byline.toLowerCase().includes(desk.name.toLowerCase()) && (
           <>
             <span aria-hidden>·</span>
             <Link href={`/desk/${desk.id}`} className="hover:text-accent">{desk.name} desk →</Link>

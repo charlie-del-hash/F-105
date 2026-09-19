@@ -17,6 +17,9 @@ honest: anything synthetic stays labelled synthetic.
 - **Design rules live in `docs/DESIGN.md`.** Metadata is a `Kicker` line, never a row of
   tags; every price and change goes through `Price` / `Change`; provenance is `LiveDot`.
   Quotes come from `useQuotes` (one shared poller); never `fetch("/api/quotes")` in a panel.
+- **No browser dialogs.** `window.prompt`, `confirm` and `alert` are banned; use
+  `dialogs.prompt` / `dialogs.confirm` from `src/components/ui/dialogs.tsx`, and `Modal` for
+  anything else that overlays the page.
 - **Every panel is data-driven.** A panel = Zod schema + component + `fields` for its
   settings form + a catalog row. No panel writes its own settings UI.
 - **Layouts are JSON.** A user must be able to hand-author one; so must you.

@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { Check, Copy, Download, MoreHorizontal, Pencil, Plus, Trash2, Upload } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { Button, IconButton } from "@/components/ui/Button";
+import { dialogs } from "@/components/ui/dialogs";
 import { panelCatalog } from "@/panels/catalog";
 import { presetLayouts } from "./presets";
 import { selectActiveLayout, useWorkspace } from "./store";
@@ -108,7 +109,7 @@ export function LayoutTabs() {
     try {
       importLayout(JSON.parse(await file.text()));
     } catch (e) {
-      alert(`Could not import: ${(e as Error).message}`);
+      dialogs.confirm({ title: "Could not import", body: (e as Error).message, confirm: "OK" });
     }
   };
 
@@ -133,7 +134,7 @@ export function LayoutTabs() {
             <Plus size={14} />
           </button>
           <Menu open={plus} onClose={() => setPlus(false)} align="left" className="w-60">
-            <button type="button" role="menuitem" className="menu-item" onClick={() => { createLayout(prompt("Name the new layout", "My desk") || "My desk"); setPlus(false); }}>
+            <button type="button" role="menuitem" className="menu-item" onClick={async () => { setPlus(false); const name = await dialogs.prompt({ title: "New layout", label: "Name", defaultValue: "My desk", confirm: "Create" }); if (name) createLayout(name); }}>
               <Plus size={13} /> New blank layout
             </button>
             <button type="button" role="menuitem" className="menu-item" onClick={() => { if (layout.preset) forkPreset(layout.id); else importLayout({ ...layout, name: `${layout.name} copy` }); setPlus(false); }}>
@@ -164,7 +165,7 @@ export function LayoutTabs() {
             </div>
             <div className="menu-sep" />
             {!layout.preset && (
-              <button type="button" role="menuitem" className="menu-item" onClick={() => { const n = prompt("Layout name", layout.name); if (n) renameLayout(layout.id, n); setMore(false); }}>
+              <button type="button" role="menuitem" className="menu-item" onClick={async () => { setMore(false); const n = await dialogs.prompt({ title: "Rename layout", label: "Name", defaultValue: layout.name, confirm: "Rename" }); if (n) renameLayout(layout.id, n); }}>
                 <Pencil size={13} /> Rename
               </button>
             )}
@@ -172,7 +173,7 @@ export function LayoutTabs() {
               <Download size={13} /> Export JSON
             </button>
             {!layout.preset && (
-              <button type="button" role="menuitem" className="menu-item hover:text-alert" onClick={() => { if (confirm(`Delete “${layout.name}”?`)) deleteLayout(layout.id); setMore(false); }}>
+              <button type="button" role="menuitem" className="menu-item hover:text-alert" onClick={async () => { setMore(false); if (await dialogs.confirm({ title: `Delete “${layout.name}”?`, body: "This removes the layout from this device and, if you are signed in, from your account. Export it first if you want a copy.", confirm: "Delete", danger: true })) deleteLayout(layout.id); }}>
                 <Trash2 size={13} /> Delete
               </button>
             )}

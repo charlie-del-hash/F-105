@@ -6,7 +6,7 @@ import { useWorkspace } from "@/layout-engine/store";
 import { useSyncStatus } from "@/layout-engine/sync";
 import type { DataStatus } from "@/data/providers";
 
-export function StatusBar() {
+export function StatusBar({ onHelp }: { onHelp?: () => void }) {
   const theme = useWorkspace((s) => s.theme);
   const sync = useSyncStatus();
   const now = useNow();
@@ -41,7 +41,10 @@ export function StatusBar() {
         <span className="tabular">UTC {utc}</span>
         <span>THEME {theme.toUpperCase()}</span>
         <span className="hidden sm:inline">{site.name} {site.product} v{site.version}</span>
-        <span className="ml-auto hidden md:inline">{site.motto}</span>
+        <button type="button" onClick={onHelp} className="ml-auto hidden items-center gap-1.5 hover:text-ink md:inline-flex" title="Keyboard shortcuts">
+          <span className="kbd">?</span> keys
+        </button>
+        <span className="hidden md:inline">{site.motto}</span>
       </div>
     </footer>
   );

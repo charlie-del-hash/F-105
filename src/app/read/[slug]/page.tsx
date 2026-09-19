@@ -5,6 +5,8 @@ import { renderMdx } from "@/content/mdx";
 import { Timeline } from "@/components/ui/Timeline";
 import { Tag } from "@/components/ui/Tag";
 import { DocFooter, DocHeader } from "@/components/content/DocHeader";
+import { ReadingProgress } from "@/components/reading/ReadingProgress";
+import { ReadingSurface } from "@/components/reading/ReadingSurface";
 import { QuoteTable } from "@/panels/quotes";
 import type { Article, Brief } from "@/content/schema";
 
@@ -32,8 +34,9 @@ export default async function ReadPage({ params }: Params) {
   const timeline = doc.kind === "article" ? (doc.data as Article).timeline : undefined;
 
   return (
-    <div className="mx-auto grid max-w-6xl gap-10 px-4 py-8 md:grid-cols-[minmax(0,1fr)_260px] md:px-6">
-      <article>
+    <ReadingSurface className="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)] gap-10 px-4 py-6 md:grid-cols-[minmax(0,1fr)_260px] md:px-6 md:py-8">
+      <ReadingProgress />
+      <article className="min-w-0">
         <DocHeader doc={doc} extra={brief && <Tag tone={stanceTone[brief.stance]}>{brief.stance} · {brief.horizon}</Tag>} />
         {brief && (
           <div className="mb-8 border-l-2 border-accent bg-bg-3 px-4 py-3">
@@ -45,7 +48,7 @@ export default async function ReadPage({ params }: Params) {
         {timeline && <Timeline title={timeline.title} items={timeline.items} />}
         <DocFooter doc={doc} related={related} />
       </article>
-      <aside className="space-y-4 md:sticky md:top-14 md:self-start">
+      <aside className="min-w-0 space-y-4 md:sticky md:top-14 md:self-start">
         {doc.data.instruments.length > 0 && (
           <section className="bezel overflow-hidden">
             <div className="caps border-b border-line px-3 py-1.5 text-ink-3">Instruments in this piece</div>
@@ -53,10 +56,10 @@ export default async function ReadPage({ params }: Params) {
           </section>
         )}
         <section className="bezel p-3 font-ui text-xs text-ink-2">
-          <div className="caps mb-1 text-ink-3">Read it your way</div>
-          Add this piece to a workspace with <span className="kbd">⌘K</span> → <span className="font-data text-ink">READ {doc.slug}</span>. Switch to the Paper theme for print-like reading.
+          <div className="caps mb-1 text-ink-3">On the desk</div>
+          <span className="kbd">⌘K</span> → <span className="font-data text-ink">READ {doc.slug}</span> adds this piece as a panel.
         </section>
       </aside>
-    </div>
+    </ReadingSurface>
   );
 }

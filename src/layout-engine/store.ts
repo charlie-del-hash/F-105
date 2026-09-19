@@ -42,6 +42,8 @@ export interface WorkspaceState {
   renameLayout(id: string, name: string, description?: string): void;
   importLayout(raw: unknown): Layout;
   addPanel(type: string, props?: Record<string, unknown>, title?: string): void;
+  /** Copy a preset's panels into the active layout (the empty-layout starter). */
+  adoptPreset(presetId: string): void;
   removePanel(panelId: string): void;
   movePanel(panelId: string, x: number, y: number): void;
   resizePanel(panelId: string, w: number, h: number): void;
@@ -141,6 +143,11 @@ export const useWorkspace = create<WorkspaceState>()(
             const panel: PanelInstance = { id: newId(type), type, title, x, y, ...meta.defaultSize, props };
             return { ...l, panels: compact([...l.panels, panel]) };
           }),
+        adoptPreset: (presetId) => {
+          const preset = getPreset(presetId);
+          if (!preset) return;
+          update((l) => ({ ...l, theme: l.theme ?? preset.theme, panels: structuredClone(preset.panels) }));
+        },
         removePanel: (panelId) => update((l) => ({ ...l, panels: compact(l.panels.filter((p) => p.id !== panelId)) })),
         movePanel: (panelId, x, y) => update((l) => ({ ...l, panels: gridMove(l.panels, panelId, x, y) })),
         resizePanel: (panelId, w, h) =>

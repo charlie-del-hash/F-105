@@ -33,6 +33,29 @@
    No fake scanlines outside the two themes built for them.
 7. **The first item is bigger.** Headline lists lead with a heavier title, then settle.
 
+## Reading
+
+Long-form pages (`/read`, `/dossier`) are a reading surface first. The masthead slides
+away on phones as the reader scrolls down and returns on the first scroll up; a 2 px
+accent progress line sits at the top. `ReadingControls` in the header set the type size
+(S / M / L, remembered on the device) and switch to the Paper theme with one tap, then
+back to whatever the reader had. Paper opens with a single drop cap; no other theme does.
+Paragraphs use `text-wrap: pretty`, hyphenation and `overflow-wrap: anywhere`; headings
+balance. Tables scroll sideways rather than break the column.
+
+## Dialogs and overlays
+
+One `Modal` primitive. Naming, renaming and deleting go through the promise-based
+`dialogs.prompt` / `dialogs.confirm` so they look like the product and never like the
+browser. Keyboard help and the command bar share the same overlay treatment.
+
+## Keyboard
+
+`?` opens the help overlay. `⌘K` / `/` command bar, `E` edit, `[` `]` cycle layouts,
+`T` next theme, `Esc` leaves edit mode. With a panel header focused in edit mode: arrows
+move, shift-arrows resize, backspace removes. Never bind a single letter that would fire
+while someone is typing; the shell checks the focused element.
+
 ## Primitives
 
 | Primitive | Where | Use |
@@ -46,6 +69,8 @@
 | `.panel-head`, `.panel-actions` | `globals.css` | panel chrome and hover-revealed actions |
 | `.menu`, `.menu-item` | `globals.css` | popover menus (theme picker, layout menu, add panel) |
 | `.dot`, `.led` | `globals.css` | provenance and liveness |
+| `Modal`, `dialogs` | `components/ui/Modal.tsx`, `components/ui/dialogs.tsx` | every overlay; every prompt and confirm |
+| `ReadingSurface`, `ReadingControls`, `ReadingProgress` | `components/reading/` | long-form pages |
 
 ## Tokens
 

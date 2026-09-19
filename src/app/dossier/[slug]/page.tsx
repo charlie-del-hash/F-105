@@ -5,6 +5,8 @@ import { renderMdx } from "@/content/mdx";
 import { Timeline } from "@/components/ui/Timeline";
 import { Tag } from "@/components/ui/Tag";
 import { DocFooter, DocHeader } from "@/components/content/DocHeader";
+import { ReadingProgress } from "@/components/reading/ReadingProgress";
+import { ReadingSurface } from "@/components/reading/ReadingSurface";
 import { DualUse, SpecSheet } from "@/panels/dossier";
 import { QuoteTable } from "@/panels/quotes";
 
@@ -31,8 +33,9 @@ export default async function DossierPage({ params }: Params) {
   const tone = { active: "up", retired: "neutral", planned: "accent", contested: "alert", watch: "warn" } as const;
 
   return (
-    <div className="mx-auto grid max-w-6xl gap-10 px-4 py-8 md:grid-cols-[minmax(0,1fr)_300px] md:px-6">
-      <article>
+    <ReadingSurface className="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)] gap-10 px-4 py-6 md:grid-cols-[minmax(0,1fr)_300px] md:px-6 md:py-8">
+      <ReadingProgress />
+      <article className="min-w-0">
         <DocHeader doc={doc} extra={<><Tag>{d.entity}</Tag><Tag tone={tone[d.status]}>{d.status}</Tag></>} />
         {d.dualUse && (
           <section className="mb-8">
@@ -67,7 +70,7 @@ export default async function DossierPage({ params }: Params) {
         {d.timeline && <Timeline title={d.timeline.title} items={d.timeline.items} />}
         <DocFooter doc={doc} related={related} />
       </article>
-      <aside className="space-y-4 md:sticky md:top-14 md:self-start">
+      <aside className="min-w-0 space-y-4 md:sticky md:top-14 md:self-start">
         <section className="bezel p-3">
           <div className="caps mb-2 text-ink-3">{d.designation} · spec sheet</div>
           <SpecSheet specs={d.specs} />
@@ -79,6 +82,6 @@ export default async function DossierPage({ params }: Params) {
           </section>
         )}
       </aside>
-    </div>
+    </ReadingSurface>
   );
 }
