@@ -74,8 +74,11 @@ This is the only target that runs the API routes, the session proxy and the aler
 
 ### GitHub Pages — the static demo
 
-`.github/workflows/pages.yml` publishes on every push and turns Pages on the first time it runs.
-Nothing to configure.
+**Live: https://charlie-del-hash.github.io/F-105/**
+
+`.github/workflows/pages.yml` rebuilds and republishes on every push to the default branch.
+It pushes the export to the generated `gh-pages` branch, which is what Pages serves. Never
+edit that branch; it is build output.
 
 `pnpm build:static` produces the same thing locally. It moves the server-only files aside,
 exports with `output: "export"`, and puts them back, so the working tree is untouched either way.
