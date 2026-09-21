@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { getBrowserSupabase } from "@/lib/supabase/client";
 import { useSyncStatus } from "@/layout-engine/sync";
@@ -8,14 +9,17 @@ import { Button } from "@/components/ui/Button";
 import { Field, Input } from "@/components/ui/Field";
 import { Tag } from "@/components/ui/Tag";
 
-export function AccountPanel({ configured, error }: { configured: boolean; error?: string }) {
+export function AccountPanel({ configured }: { configured: boolean }) {
   const sync = useSyncStatus();
   const layouts = useWorkspace((s) => s.layouts.length);
   const [user, setUser] = useState<User | null>(null);
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [phase, setPhase] = useState<"idle" | "sent" | "busy">("idle");
-  const [msg, setMsg] = useState<string | null>(error ?? null);
+  const [msg, setMsg] = useState<string | null>(null);
+  // Set by /auth/callback when the magic link fails.
+  const urlError = useSearchParams().get("error");
+  const note = msg ?? urlError;
 
   useEffect(() => {
     const sb = getBrowserSupabase();
@@ -65,7 +69,7 @@ export function AccountPanel({ configured, error }: { configured: boolean; error
           <p className="mt-2 font-ui text-xs text-ink-2">{sync.detail ?? "Every change is pushed a moment after you make it. Last write wins."}</p>
           <p className="mt-1 font-ui text-xs text-ink-3">{layouts} custom layout{layouts === 1 ? "" : "s"} · theme · notes · watchlist</p>
         </div>
-        {msg && <p className="font-ui text-xs text-ink-2">{msg}</p>}
+        {note && <p className="font-ui text-xs text-ink-2">{note}</p>}
       </div>
     );
   }
@@ -93,7 +97,7 @@ export function AccountPanel({ configured, error }: { configured: boolean; error
             <Button variant="solid" onClick={sendLink} disabled={!email.includes("@") || phase === "busy"}>Send link</Button>
           )}
         </div>
-        {msg && <p className="font-ui text-xs text-ink-2">{msg}</p>}
+        {note && <p className="font-ui text-xs text-ink-2">{note}</p>}
       </div>
     </div>
   );

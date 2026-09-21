@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useShallow } from "zustand/shallow";
 import { subscribeQuotes, useQuoteStore } from "@/data/quote-store";
+import { isStaticDemo } from "@/data/static-demo";
 import type { Quote, Range, Series } from "@/data/types";
 
 /** Quotes for a set of symbols, shared with every other panel through the quote store. */
@@ -27,10 +28,16 @@ function loadSeries(symbol: string, range: Range) {
   const key = `${symbol}:${range}`;
   const hit = seriesCache.get(key);
   if (hit && Date.now() - hit.at < SERIES_TTL) return hit.value;
-  const value = fetch(`/api/series/${encodeURIComponent(symbol)}?range=${range}`).then(async (r) => {
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    return (await r.json()) as Series;
-  });
+  const value = isStaticDemo
+    ? import("@/data/mock").then(({ mockSeries }) => {
+        const s = mockSeries(symbol, range);
+        if (!s) throw new Error(`Unknown symbol ${symbol}`);
+        return s;
+      })
+    : fetch(`/api/series/${encodeURIComponent(symbol)}?range=${range}`).then(async (r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return (await r.json()) as Series;
+      });
   value.catch(() => seriesCache.delete(key));
   seriesCache.set(key, { at: Date.now(), value });
   return value;

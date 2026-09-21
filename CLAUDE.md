@@ -27,6 +27,12 @@ honest: anything synthetic stays labelled synthetic.
   ring, hairline solid gridlines, text in text tokens never series colour, one axis, series
   colours in fixed order (`--series-1..8`), status colours (`up/down/warn/alert`) always paired
   with a glyph or label.
+- **Two builds.** The default build is the full app for Vercel. `pnpm build:static` is the
+  GitHub Pages demo: `output: "export"` with `src/app/api`, `src/app/auth` and `src/proxy.ts`
+  moved aside by `scripts/static-export.mjs`. So: keep pages statically exportable (no
+  `await searchParams` in a page — read query params client-side), give any new metadata
+  route `dynamic = "force-static"`, and when a client needs server data, branch on
+  `isStaticDemo` from `src/data/static-demo.ts` rather than assuming `/api` exists.
 - **Next.js 16**: `params`/`searchParams` are Promises; Turbopack is the bundler; read
   `node_modules/next/dist/docs/` before using an API you are not sure about.
 - Prefer `useSyncExternalStore` over setState-in-effect for clocks, media queries, etc.
@@ -85,7 +91,7 @@ Set `placeholder: false` only when a human has verified the piece.
 ## Commands
 
 ```
-pnpm dev · pnpm build · pnpm check
+pnpm dev · pnpm build · pnpm build:static · pnpm check
 pnpm tokens · pnpm content:check · pnpm layouts:check · pnpm test
 curl -H "Authorization: Bearer $CRON_SECRET" "http://localhost:3000/api/alerts/run?dryRun=1"
 ```

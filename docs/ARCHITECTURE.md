@@ -94,6 +94,19 @@ They live in `src/lib/notify/<channel>.ts` behind `dispatch(events)`, driven by 
 `content/alerts/rules.json` and the `/api/alerts/run` route on a Vercel cron. De-duplication
 uses Supabase's `alert_log` when configured. See `docs/ALERTS.md`.
 
+## Two builds
+
+`next.config.ts` branches on `STATIC_EXPORT`. The default build is the full app: API routes,
+the Supabase session proxy, the alert cron. Vercel runs this one.
+
+The static build (`pnpm build:static`, and the Pages workflow) exports to `out/`. Route
+handlers and a proxy cannot exist in an export, so `scripts/static-export.mjs` parks
+`src/app/api`, `src/app/auth` and `src/proxy.ts` outside the source tree for the duration of
+the build and restores them afterwards, pass or fail. The client compensates: when
+`NEXT_PUBLIC_STATIC_DEMO=1`, the quote store and `useSeries` call the deterministic mock
+generator directly instead of fetching, so the demo ticks without a server. Everything that
+genuinely needs a server — live adapters, alerts, sign-in — is simply absent and labelled so.
+
 ## Platforms
 
 - **Web, desktop and mobile** — this app. Responsive layouts, PWA manifest, installable.

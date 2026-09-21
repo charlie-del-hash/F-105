@@ -5,6 +5,7 @@
  * panel shows the same tick and the server sees one request instead of nine.
  */
 import { create } from "zustand";
+import { isStaticDemo } from "./static-demo";
 import type { Quote } from "./types";
 
 interface QuoteState {
@@ -22,6 +23,19 @@ let pending: ReturnType<typeof setTimeout> | null = null;
 
 async function load(symbols: string[]) {
   if (!symbols.length) return;
+  if (isStaticDemo) {
+    // No server to ask: the same deterministic generator runs in the browser,
+    // so the demo still ticks once a minute.
+    const { mockQuote } = await import("./mock");
+    const now = new Date();
+    const quotes = symbols.map((s) => mockQuote(s, now)).filter((q): q is Quote => !!q);
+    useQuoteStore.setState((s) => ({
+      quotes: { ...s.quotes, ...Object.fromEntries(quotes.map((q) => [q.symbol, q])) },
+      ts: now.toISOString(),
+      error: null,
+    }));
+    return;
+  }
   try {
     const res = await fetch(`/api/quotes?symbols=${encodeURIComponent(symbols.join(","))}`, { cache: "no-store" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
