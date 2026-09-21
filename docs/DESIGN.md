@@ -14,6 +14,64 @@
 5. **One design system, many instruments.** A theme changes the mood; it never changes
    the layout, the type scale or the semantics.
 
+## The rules that keep it from looking generated
+
+1. **Metadata is a kicker line, not a row of pills.** `AIR · BRIEF · HORMUZ` in small
+   caps, one line, with the date on the right. A bordered `Tag` is reserved for a state
+   that needs to interrupt: FLASH, URGENT, WATCH, "demo content".
+2. **Provenance is a dot.** ● observed, ◌ synthetic, beside every symbol, with the legend
+   in the panel footer. Never a word like "demo" glued to a symbol.
+3. **Direction is a glyph plus colour**, rendered by one component (`Change`), so every
+   change on every screen reads the same.
+4. **Chrome recedes.** Panel actions appear on hover (always on touch). Headers sit one
+   step towards `bg-3`. Rows lift with a 6 % accent wash, not a grey block.
+5. **One accent, used as a line.** The active tab and layout tab carry a 2 px accent
+   underline with a soft glow; nothing else is filled with the accent except the primary
+   button and the LED that matters.
+6. **Terminal details, not terminal cosplay.** The dashed last-price line with its value
+   tag, the segmented range control, the tabular figures — things a trader would miss.
+   No fake scanlines outside the two themes built for them.
+7. **The first item is bigger.** Headline lists lead with a heavier title, then settle.
+
+## Reading
+
+Long-form pages (`/read`, `/dossier`) are a reading surface first. The masthead slides
+away on phones as the reader scrolls down and returns on the first scroll up; a 2 px
+accent progress line sits at the top. `ReadingControls` in the header set the type size
+(S / M / L, remembered on the device) and switch to the Paper theme with one tap, then
+back to whatever the reader had. Paper opens with a single drop cap; no other theme does.
+Paragraphs use `text-wrap: pretty`, hyphenation and `overflow-wrap: anywhere`; headings
+balance. Tables scroll sideways rather than break the column.
+
+## Dialogs and overlays
+
+One `Modal` primitive. Naming, renaming and deleting go through the promise-based
+`dialogs.prompt` / `dialogs.confirm` so they look like the product and never like the
+browser. Keyboard help and the command bar share the same overlay treatment.
+
+## Keyboard
+
+`?` opens the help overlay. `⌘K` / `/` command bar, `E` edit, `[` `]` cycle layouts,
+`T` next theme, `Esc` leaves edit mode. With a panel header focused in edit mode: arrows
+move, shift-arrows resize, backspace removes. Never bind a single letter that would fire
+while someone is typing; the shell checks the focused element.
+
+## Primitives
+
+| Primitive | Where | Use |
+|---|---|---|
+| `Kicker` | `components/data/Kicker.tsx` | the metadata line above any headline |
+| `Change`, `Price` | `components/data/Change.tsx` | every price and change |
+| `LiveDot` | `components/data/LiveDot.tsx` | provenance beside a symbol |
+| `.seg` | `globals.css` | segmented control (range, desk filter) |
+| `.tab` | `globals.css` | masthead nav and layout tabs, accent underline |
+| `.row` | `globals.css` | hover wash on list rows and table rows |
+| `.panel-head`, `.panel-actions` | `globals.css` | panel chrome and hover-revealed actions |
+| `.menu`, `.menu-item` | `globals.css` | popover menus (theme picker, layout menu, add panel) |
+| `.dot`, `.led` | `globals.css` | provenance and liveness |
+| `Modal`, `dialogs` | `components/ui/Modal.tsx`, `components/ui/dialogs.tsx` | every overlay; every prompt and confirm |
+| `ReadingSurface`, `ReadingControls`, `ReadingProgress` | `components/reading/` | long-form pages |
+
 ## Tokens
 
 | Token | Role |

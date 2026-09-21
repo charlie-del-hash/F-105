@@ -1,9 +1,11 @@
 "use client";
 import Link from "next/link";
 import { z } from "zod";
+import { desk as deskOf, type DeskId } from "@/config/site";
 import { fmtDate } from "@/data/format";
 import { useWorkspaceData } from "@/layout-engine/data-context";
-import { DeskTag, Empty, Tag } from "@/components/ui/Tag";
+import { Kicker } from "@/components/data/Kicker";
+import { Empty } from "@/components/ui/Tag";
 import { panelMetaMap } from "../catalog";
 import type { PanelDefinition } from "../types";
 
@@ -19,15 +21,11 @@ function HeadlinesPanel({ props }: { props: Props }) {
   if (!items.length) return <Empty>Nothing filed yet.</Empty>;
   return (
     <ol className="divide-y divide-line">
-      {items.map((d) => (
-        <li key={d.slug} className="hover:bg-bg-3">
-          <Link href={d.href} className="block px-3 py-2">
-            <div className="flex items-center gap-1.5 font-data text-[10.5px] text-ink-3">
-              <DeskTag desk={d.desk} />
-              <Tag tone={d.kind === "dossier" ? "accent" : "neutral"}>{d.kind}</Tag>
-              <span className="ml-auto tabular">{fmtDate(d.date)}</span>
-            </div>
-            <div className="mt-1 font-ui text-[13px] font-medium leading-snug text-ink">{d.title}</div>
+      {items.map((d, i) => (
+        <li key={d.slug} className="row">
+          <Link href={d.href} className="block px-3 py-2.5">
+            <Kicker items={[deskOf(d.desk as DeskId)?.short, d.kind, d.designation]} right={fmtDate(d.date)} />
+            <div className={i === 0 ? "mt-1 font-ui text-[14px] font-semibold leading-snug text-ink" : "mt-1 font-ui text-[13px] font-medium leading-snug text-ink"}>{d.title}</div>
             <div className="mt-0.5 line-clamp-2 font-ui text-[11.5px] leading-snug text-ink-2">{d.dek}</div>
           </Link>
         </li>

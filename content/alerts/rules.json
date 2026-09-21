@@ -1,0 +1,51 @@
+[
+  {
+    "id": "flash-wire",
+    "kind": "wire",
+    "priorities": ["flash"],
+    "channels": ["slack", "whatsapp", "email"],
+    "note": "Every flash item goes everywhere."
+  },
+  {
+    "id": "urgent-wire",
+    "kind": "wire",
+    "priorities": ["urgent"],
+    "desks": ["energy", "shipping", "geo"],
+    "channels": ["slack"],
+    "note": "Urgent items from the market desks reach Slack only."
+  },
+  {
+    "id": "red-sea-premium",
+    "kind": "threshold",
+    "symbol": "WAR.RS",
+    "op": ">=",
+    "value": 1.0,
+    "channels": ["slack", "email"],
+    "note": "Red Sea war-risk premium at or above 1% of hull value."
+  },
+  {
+    "id": "hormuz-transits",
+    "kind": "threshold",
+    "symbol": "HORMUZ.TX",
+    "op": "<=",
+    "value": 55,
+    "channels": ["slack", "whatsapp"],
+    "note": "Seven-day Hormuz tanker transits below the normal band."
+  },
+  {
+    "id": "ttf-move",
+    "kind": "move",
+    "symbol": "TTF",
+    "pct": 5,
+    "channels": ["slack"],
+    "note": "TTF front month moves 5% or more day on day."
+  },
+  {
+    "id": "td3c-move",
+    "kind": "move",
+    "symbol": "TD3C",
+    "pct": 8,
+    "channels": ["slack"],
+    "note": "VLCC benchmark moves 8% or more day on day."
+  }
+]

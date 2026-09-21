@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { desk as deskOf, type DeskId } from "@/config/site";
 import { getInstrument, groupNames, instruments } from "@/data/instruments";
 import { getDocs, getWire } from "@/content/loader";
 import { fmtDate, fmtTime } from "@/data/format";
 import { ChartBlock } from "@/panels/chart";
 import { ShareSheet } from "@/components/shell/ShareSheet";
-import { DeskTag, Tag } from "@/components/ui/Tag";
+import { Kicker } from "@/components/data/Kicker";
 
 type Params = { params: Promise<{ symbol: string }> };
 
@@ -28,13 +29,17 @@ export default async function InstrumentPage({ params }: Params) {
   const wire = (await getWire({ limit: 200 })).filter((w) => w.instruments.includes(inst.symbol)).slice(0, 8);
   return (
     <div className="mx-auto max-w-[1400px] px-3 py-4">
-      <div className="mb-3 flex flex-wrap items-center gap-2">
+      <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1">
         <h1 className="font-data text-xl text-ink">{inst.symbol}</h1>
         <span className="font-ui text-sm text-ink-2">{inst.name}</span>
-        <Tag>{groupNames[inst.group]}</Tag>
-        {inst.desks.map((d) => (
-          <Link key={d} href={`/desk/${d}`}><DeskTag desk={d} /></Link>
-        ))}
+        <Kicker
+          items={[
+            groupNames[inst.group],
+            ...inst.desks.map((d) => (
+              <Link key={d} href={`/desk/${d}`} className="hover:text-accent">{deskOf(d as DeskId)?.name ?? d} desk</Link>
+            )),
+          ]}
+        />
         <span className="ml-auto"><ShareSheet title={`${inst.symbol} · ${inst.name}`} path={`/markets/${inst.symbol}`} /></span>
       </div>
       <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_320px]">

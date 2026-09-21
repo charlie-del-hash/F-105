@@ -14,10 +14,6 @@ export function Tag({ children, tone = "neutral", className }: { children: React
   );
 }
 
-export function DeskTag({ desk }: { desk: string }) {
-  const short: Record<string, string> = { air: "AIR", energy: "NRG", shipping: "SHP", geo: "GEO", industry: "IND" };
-  return <Tag>{short[desk] ?? desk.toUpperCase()}</Tag>;
-}
 
 export function Empty({ children }: { children: React.ReactNode }) {
   return <div className="flex h-full min-h-16 items-center justify-center p-4 text-center text-xs text-ink-3">{children}</div>;

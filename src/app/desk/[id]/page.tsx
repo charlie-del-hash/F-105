@@ -6,7 +6,7 @@ import { getDocs, getEvents, getWire } from "@/content/loader";
 import { instruments } from "@/data/instruments";
 import { fmtDate, fmtTime } from "@/data/format";
 import { QuoteTable } from "@/panels/quotes";
-import { Tag } from "@/components/ui/Tag";
+import { Kicker } from "@/components/data/Kicker";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -39,9 +39,9 @@ export default async function DeskLanding({ params }: Params) {
           <h2 className="caps mb-2 text-ink-3">Filed</h2>
           <ul className="grid gap-3 sm:grid-cols-2">
             {docs.map((d) => (
-              <li key={d.slug} className="bezel p-4">
-                <Link href={d.href}>
-                  <div className="flex items-center gap-1.5 font-data text-[10.5px] text-ink-3"><Tag tone={d.kind === "dossier" ? "accent" : "neutral"}>{d.kind}</Tag><span className="ml-auto">{fmtDate(d.data.date)}</span></div>
+              <li key={d.slug} className="bezel row">
+                <Link href={d.href} className="block p-4">
+                  <Kicker items={[d.kind]} right={fmtDate(d.data.date)} />
                   <div className="mt-2 font-ui text-base font-medium leading-snug text-ink">{d.data.title}</div>
                   <div className="mt-1 line-clamp-3 font-ui text-xs text-ink-2">{d.data.dek}</div>
                 </Link>
@@ -51,7 +51,7 @@ export default async function DeskLanding({ params }: Params) {
           <h2 className="caps mb-2 mt-8 text-ink-3">Wire</h2>
           <ol className="bezel divide-y divide-line">
             {wire.map((w) => (
-              <li key={w.id} className="px-3 py-2 font-ui text-sm text-ink">
+              <li key={w.id} className="row px-3 py-2 font-ui text-sm text-ink">
                 <span className="tabular mr-2 font-data text-[10.5px] text-ink-3">{fmtDate(w.ts)} {fmtTime(w.ts)}Z</span>{w.text}
               </li>
             ))}

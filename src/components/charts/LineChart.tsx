@@ -1,11 +1,11 @@
 "use client";
 /**
- * Single-series daily line chart. Follows the house dataviz rules:
- * 2px line, 10% area wash, ≥8px end marker with a surface ring, hairline
- * solid gridlines, text in text tokens, a crosshair + tooltip on hover,
- * and a hit target that is the whole plot. One axis, always.
+ * Single-series daily line chart. House dataviz rules: 2px line, a light area
+ * wash, ≥8px end marker with a surface ring, hairline solid gridlines, text in
+ * text tokens, crosshair + tooltip over the whole plot, one axis. The terminal
+ * detail: a dashed last-price line with its value tag in the right margin.
  */
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { useSize } from "@/lib/useSize";
 import { indexTicks, niceTicks } from "@/lib/ticks";
 import { fmtDate, fmtNum } from "@/data/format";
@@ -17,30 +17,39 @@ export function LineChart({
   unit = "",
   color = "var(--series-1)",
   minHeight = 120,
+  lastTag = true,
+  lastValue,
 }: {
   points: SeriesPoint[];
   decimals?: number;
   unit?: string;
   color?: string;
   minHeight?: number;
+  lastTag?: boolean;
+  /** Live last price for the dashed line and tag; defaults to the final point. */
+  lastValue?: number;
 }) {
   const [ref, size] = useSize<HTMLDivElement>();
   const [hover, setHover] = useState<number | null>(null);
+  const gradId = useId();
 
   const W = Math.max(size.width, 10);
   const H = Math.max(size.height, minHeight);
-  const m = { top: 10, right: 12, bottom: 22, left: 8 };
+  const last = points[points.length - 1];
+  const mark = lastValue ?? last?.v;
+  const tagW = lastTag && mark !== undefined ? Math.max(fmtNum(mark, decimals).length, 4) * 6.4 + 10 : 0;
+  const m = { top: 10, right: 10 + tagW, bottom: 22, left: 8 };
 
   const model = useMemo(() => {
     if (points.length < 2 || size.width < 40) return null;
     const vs = points.map((p) => p.v);
-    const lo = Math.min(...vs);
-    const hi = Math.max(...vs);
+    const lo = Math.min(...vs, mark ?? Infinity);
+    const hi = Math.max(...vs, mark ?? -Infinity);
     const padV = (hi - lo || Math.abs(hi) || 1) * 0.08;
     const yMin = lo - padV;
     const yMax = hi + padV;
     const ticks = niceTicks(yMin, yMax, 4);
-    const labelW = Math.max(...ticks.map((t) => fmtNum(t, decimals).length), 3) * 6.6 + 6;
+    const labelW = Math.max(...ticks.map((t) => fmtNum(t, decimals).length), 3) * 6.4 + 6;
     const left = m.left + labelW;
     const iw = Math.max(1, W - left - m.right);
     const ih = H - m.top - m.bottom;
@@ -49,24 +58,29 @@ export function LineChart({
     const path = points.map((p, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(p.v).toFixed(1)}`).join(" ");
     const area = `${path} L${x(points.length - 1).toFixed(1)},${(m.top + ih).toFixed(1)} L${left.toFixed(1)},${(m.top + ih).toFixed(1)} Z`;
     return { ticks, left, iw, ih, x, y, path, area, xTicks: indexTicks(points.length, W < 360 ? 3 : 5) };
-  }, [points, W, H, size.width, decimals, m.left, m.right, m.top, m.bottom]);
+  }, [points, W, H, size.width, decimals, mark, m.left, m.right, m.top, m.bottom]);
 
   const onMove = (e: React.PointerEvent<SVGRectElement>) => {
     if (!model) return;
     const rect = e.currentTarget.getBoundingClientRect();
-    const px = e.clientX - rect.left;
-    const i = Math.round((px / rect.width) * (points.length - 1));
+    const i = Math.round(((e.clientX - rect.left) / rect.width) * (points.length - 1));
     setHover(Math.max(0, Math.min(points.length - 1, i)));
   };
 
-  const last = points[points.length - 1];
   const hp = hover != null ? points[hover] : null;
+  const lastY = model && last ? model.y(last.v) : 0;
+  const markY = model && mark !== undefined ? model.y(mark) : 0;
 
   return (
     <div ref={ref} className="relative h-full w-full min-h-[120px] select-none">
       {model && (
         <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="block" role="img" aria-label={`Line chart, ${points.length} daily points`}>
-          {/* gridlines + y labels */}
+          <defs>
+            <linearGradient id={gradId} x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stopColor={color} stopOpacity={0.16} />
+              <stop offset="1" stopColor={color} stopOpacity={0} />
+            </linearGradient>
+          </defs>
           {model.ticks.map((t) => (
             <g key={t}>
               <line x1={model.left} x2={model.left + model.iw} y1={model.y(t)} y2={model.y(t)} stroke="var(--line)" strokeWidth={1} shapeRendering="crispEdges" />
@@ -75,24 +89,29 @@ export function LineChart({
               </text>
             </g>
           ))}
-          {/* x labels */}
           {model.xTicks.map((i) => (
             <text key={i} x={model.x(i)} y={H - 6} textAnchor={i === 0 ? "start" : i === points.length - 1 ? "end" : "middle"} fontSize={10} fontFamily="var(--font-data)" fill="var(--ink-3)">
               {fmtDate(points[i].d)}
             </text>
           ))}
-          {/* series */}
-          <path d={model.area} fill={color} opacity={0.1} />
+          <path d={model.area} fill={`url(#${gradId})`} />
           <path d={model.path} fill="none" stroke={color} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
-          <circle cx={model.x(points.length - 1)} cy={model.y(last.v)} r={4} fill={color} stroke="var(--bg-2)" strokeWidth={2} />
-          {/* crosshair */}
+          {lastTag && mark !== undefined && (
+            <g pointerEvents="none">
+              <line x1={model.left} x2={W - tagW - 6} y1={markY} y2={markY} stroke="var(--ink-3)" strokeWidth={1} strokeDasharray="3 3" opacity={0.8} />
+              <rect x={W - tagW - 4} y={markY - 8} width={tagW} height={16} rx={2} fill="var(--bg-3)" stroke="var(--line-strong)" />
+              <text x={W - 4 - tagW / 2} y={markY + 3.5} textAnchor="middle" fontSize={10} fontFamily="var(--font-data)" fill="var(--ink)" className="tabular">
+                {fmtNum(mark, decimals)}
+              </text>
+            </g>
+          )}
+          <circle cx={model.x(points.length - 1)} cy={lastY} r={4} fill={color} stroke="var(--bg-2)" strokeWidth={2} />
           {hp && hover != null && (
             <g pointerEvents="none">
               <line x1={model.x(hover)} x2={model.x(hover)} y1={m.top} y2={m.top + model.ih} stroke="var(--ink-3)" strokeWidth={1} strokeDasharray="2 3" />
               <circle cx={model.x(hover)} cy={model.y(hp.v)} r={4.5} fill={color} stroke="var(--bg-2)" strokeWidth={2} />
             </g>
           )}
-          {/* hit target = the whole plot */}
           <rect x={model.left} y={m.top} width={model.iw} height={model.ih} fill="transparent" onPointerMove={onMove} onPointerLeave={() => setHover(null)} style={{ cursor: "crosshair", touchAction: "none" }} />
         </svg>
       )}

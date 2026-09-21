@@ -22,8 +22,8 @@ inside it. Everything else — routing, content, data — exists to feed panels.
 │ store (persist) · frame    │ schema + component + settings fields │
 ├────────────────────────────┴─────────────────────────────────────┤
 │ Content layer (server)       │ Data layer                        │
-│ Zod schemas · MDX loader ·   │ instruments · provider interface · │
-│ in-article kit               │ mock series · /api/quotes, series  │
+│ Zod schemas · MDX loader ·   │ instruments · composite provider   │
+│ in-article kit · alert rules │ (FRED, ECB, synthetic) · /api/*    │
 ├──────────────────────────────────────────────────────────────────┤
 │ Design system   tokens.json → themes.css · Tailwind @theme · kit  │
 └──────────────────────────────────────────────────────────────────┘
@@ -47,13 +47,13 @@ an editorial product: publishing is a git push and a Vercel build.
 
 ### Data layer (`src/data`)
 An instrument registry (the securities master), a `MarketDataProvider` interface, and a
-mock provider that generates deterministic series from a seeded PRNG (same symbol, same
-history, every machine). Route handlers under `/api` expose quotes and series; client
-hooks poll them. Swapping in a real provider is one file and one environment variable.
-Candidates: ICE/EEX for energy, Baltic Exchange via Clarksons SIN or SSY for freight,
-viaNexus for equities and macro, Bigdata.com for news and filings. The `indicator` group
-(transit counts, war-risk premiums, storage fill) is the kind of series a Bloomberg does
-not carry and this product should.
+composite provider that routes each symbol to the first live adapter covering it — FRED
+(with a free key) and ECB reference rates today — and to the deterministic synthetic
+provider for everything else. Every quote and series carries `provider`, `synthetic` and
+`asOf`, and the UI always shows it. Route handlers under `/api` expose quotes, series and
+`/api/status`. Adding a vendor is one file plus a fixture test; see `docs/DATA.md`. The
+`indicator` group (transit counts, war-risk premiums, storage fill) is the kind of series
+a Bloomberg does not carry and this product should.
 
 ### Layout engine (`src/layout-engine`)
 - `schema.ts` — `Layout` and `PanelInstance` (x, y, w, h on a 12-column grid, props).
@@ -90,8 +90,9 @@ wire item, an indicator crossing a threshold) are a small adapter each:
 | WhatsApp | WhatsApp Business Cloud API, template messages | `WHATSAPP_BUSINESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID` |
 | Email | Resend (or SES) transactional API | `RESEND_API_KEY` |
 
-They belong in `src/lib/notify/<channel>.ts` behind one `notify(event)` function, driven
-by a route handler or a Vercel cron. Not built yet; see ROADMAP.
+They live in `src/lib/notify/<channel>.ts` behind `dispatch(events)`, driven by rules in
+`content/alerts/rules.json` and the `/api/alerts/run` route on a Vercel cron. De-duplication
+uses Supabase's `alert_log` when configured. See `docs/ALERTS.md`.
 
 ## Platforms
 
@@ -114,12 +115,19 @@ by a route handler or a Vercel cron. Not built yet; see ROADMAP.
 3. **Content in git, not a CMS.** Editorial review is a pull request. A CMS can be added
    as a second loader without touching panels.
 4. **Mock data is deterministic.** Reproducible screenshots and tests; no flaky demos.
-5. **On-device persistence first.** The store's persisted shape is the future database row.
-   Supabase (auth + a `workspaces` table + RLS) is the planned adapter.
+5. **On-device persistence first, Supabase when configured.** The store's persisted shape
+   is exactly the `workspaces` row; sync is last-write-wins and optional. See
+   `docs/PERSISTENCE.md`.
 6. **No custom chart library.** SVG line charts and sparklines are a few hundred lines
    and follow the house dataviz rules exactly; a library would fight the themes.
 7. **`cmdk` for the command bar, `zustand` for state, `zod` for every boundary.** Small,
    boring, well-known — good for agents.
 
+### Persistence and alerts
+`src/lib/supabase` (clients, env), `src/proxy.ts` (session refresh), `src/layout-engine/sync.ts`
+(workspace sync), `src/alerts` (rules, evaluation, de-duplication), `src/lib/notify`
+(channels), `src/app/api/alerts/run` (cron). All optional: without their environment
+variables the app is the on-device demo.
+
 ## Extension points, in order of how often you will touch them
-content → layouts → panels → instruments → themes → providers → routes.
+content → layouts → alert rules → panels → instruments → themes → providers → routes.

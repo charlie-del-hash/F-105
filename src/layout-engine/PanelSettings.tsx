@@ -44,6 +44,7 @@ export function PanelSettings({ panel, onClose }: { panel: PanelInstance; onClos
   const setPanelTitle = useWorkspace((s) => s.setPanelTitle);
   const [title, setTitle] = useState(panel.title ?? "");
   const [draft, setDraft] = useState<Record<string, unknown>>({ ...panel.props });
+  const [problem, setProblem] = useState<string | null>(null);
   if (!def) return null;
 
   const set = (k: string, v: unknown) => setDraft((d) => ({ ...d, [k]: v }));
@@ -107,7 +108,7 @@ export function PanelSettings({ panel, onClose }: { panel: PanelInstance; onClos
     const clean = Object.fromEntries(Object.entries(draft).filter(([, val]) => val !== undefined && val !== ""));
     const check = def.schema.safeParse(clean);
     if (!check.success) {
-      alert(check.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("\n"));
+      setProblem(check.error.issues.map((i) => `${i.path.join(".") || "settings"}: ${i.message}`).join(" · "));
       return;
     }
     setPanelProps(panel.id, clean);
@@ -126,6 +127,7 @@ export function PanelSettings({ panel, onClose }: { panel: PanelInstance; onClos
           {render(f)}
         </Field>
       ))}
+      {problem && <p className="m-0 border-l-2 border-alert bg-bg-3 px-2 py-1.5 font-ui text-xs text-ink-2">{problem}</p>}
       <div className="mt-auto flex justify-end gap-2 pt-2">
         <Button variant="ghost" onClick={onClose}>Cancel</Button>
         <Button variant="solid" onClick={save}>Save</Button>

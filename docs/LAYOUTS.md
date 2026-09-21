@@ -19,6 +19,12 @@ A layout is JSON. Presets live in `layouts/`; user layouts live in the browser
 Grid: 12 columns, rows of 44 px with an 8 px gap. `x + w ≤ 12`. Panels must not overlap;
 the engine compacts upward. Under 768 px panels stack in reading order (y, then x).
 
+## A blank layout
+
+A layout with no panels shows the starter: copy any preset's panels into it, add a first
+panel from the catalog, or import JSON. `adoptPreset(id)` in the store is what "copy a
+preset" calls; it keeps the layout's name and forks nothing.
+
 ## Panels
 
 | type | mnemonic | props | default size |

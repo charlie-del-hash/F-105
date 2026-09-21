@@ -12,7 +12,7 @@ export default function MarketsPage() {
     <div className="mx-auto max-w-[1800px] px-3 py-4">
       <div className="mb-3 flex items-baseline justify-between">
         <h1 className="caps text-ink-3">Markets</h1>
-        <span className="font-data text-[11px] text-ink-3">All series synthetic · provider: mock</span>
+        <span className="font-data text-[11px] text-ink-3">● observed · ◌ synthetic — provenance on every row</span>
       </div>
       <section className="bezel mb-3 h-36 overflow-hidden">
         <div className="caps border-b border-line px-3 py-1.5 text-ink-3">Indicators</div>

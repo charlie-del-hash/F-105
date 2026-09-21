@@ -111,7 +111,10 @@ export function mockQuote(symbol: string, now = new Date()): Quote | undefined {
     high: round(Math.max(last, prevClose) + dayRange * 0.4, inst.decimals),
     low: round(Math.min(last, prevClose) - dayRange * 0.4, inst.decimals),
     ts: now.toISOString(),
+    asOf: h[h.length - 1].d,
     spark,
+    provider: "mock",
+    synthetic: true,
   };
 }
 
@@ -128,6 +131,8 @@ export function mockSeries(symbol: string, range: Range): Series | undefined {
     max: Math.max(...vs),
     first: vs[0],
     last: vs[vs.length - 1],
+    provider: "mock",
+    synthetic: true,
   };
 }
 

@@ -53,6 +53,7 @@ body {
 ::selection { background: var(--selection); color: var(--bg); }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; }
+button, a, select, input { transition: color 120ms ease, background-color 120ms ease, border-color 120ms ease, opacity 120ms ease, box-shadow 120ms ease; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 /* thin scrollbars, themed */
@@ -116,6 +117,66 @@ button { font: inherit; color: inherit; }
   @keyframes led-blink { 50% { opacity: 0.35; } }
   @keyframes led-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
 
+  /* ● observed · ◌ synthetic — the provenance cue beside every symbol */
+  .dot {
+    display: inline-block; width: 6px; height: 6px; border-radius: 999px;
+    border: 1px solid var(--ink-3); vertical-align: middle; flex: none;
+  }
+  .dot-live { background: var(--up); border-color: var(--up); box-shadow: 0 0 4px color-mix(in srgb, var(--up) 55%, transparent); }
+
+  /* segmented control (range pickers, mode switches) */
+  .seg {
+    display: flex; width: max-content; max-width: 100%; align-items: center; gap: 2px; padding: 2px;
+    overflow-x: auto; scrollbar-width: none;
+    border: 1px solid var(--line); border-radius: calc(var(--radius) + 2px); background: var(--bg-3);
+  }
+  .seg::-webkit-scrollbar { display: none; }
+  .seg > button {
+    flex: none;
+    height: 18px; padding: 0 7px; border-radius: var(--radius);
+    font-family: var(--font-data); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .seg > button:hover { color: var(--ink); }
+  .seg > button[aria-pressed="true"] { background: var(--bg-2); color: var(--accent); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35); }
+
+  /* tabs with an accent underline (masthead nav, layout tabs) */
+  .tab {
+    position: relative; display: inline-flex; align-items: center; height: 100%; padding: 0 10px;
+    font-family: var(--font-ui); font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-3); white-space: nowrap;
+  }
+  .tab::after {
+    content: ""; position: absolute; left: 8px; right: 8px; bottom: -1px; height: 2px;
+    background: transparent; border-radius: 1px; transition: background-color 120ms ease;
+  }
+  .tab:hover { color: var(--ink); }
+  .tab[aria-current="page"], .tab[aria-selected="true"] { color: var(--ink); }
+  .tab[aria-current="page"]::after, .tab[aria-selected="true"]::after { background: var(--accent); box-shadow: 0 0 8px var(--glow); }
+
+  /* a warm row highlight, one step above bg-2 */
+  .row { transition: background-color 100ms ease; }
+  .row:hover { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+
+  /* panel chrome */
+  .panel-head { background: color-mix(in srgb, var(--bg-2) 80%, var(--bg-3)); }
+  .panel-actions { opacity: 1; transition: opacity 120ms ease; }
+  @media (hover: hover) {
+    .panel:not([data-editing="true"]) .panel-actions { opacity: 0; }
+    .panel:hover .panel-actions, .panel:focus-within .panel-actions { opacity: 1; }
+  }
+  .panel[data-editing="true"] { outline: 1px dashed color-mix(in srgb, var(--accent) 45%, transparent); outline-offset: 1px; }
+  .panel[data-dragging="true"] { outline: 1px solid var(--accent); box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45); }
+
+  /* popover menus */
+  .menu { min-width: 12rem; padding: 4px; }
+  .menu-item {
+    display: flex; width: 100%; align-items: center; gap: 8px; padding: 6px 8px; text-align: left;
+    border-radius: var(--radius); font-family: var(--font-ui); font-size: 12px; color: var(--ink-2);
+  }
+  .menu-item:hover, .menu-item[data-active="true"] { background: var(--bg-3); color: var(--ink); }
+  .menu-sep { height: 1px; margin: 4px 0; background: var(--line); }
+
   /* CRT furniture — opacity driven entirely by theme tokens */
   .crt { position: relative; }
   .crt::before {
@@ -139,6 +200,18 @@ button { font: inherit; color: inherit; }
     font-size: 1.08rem;
     line-height: 1.68;
     max-width: 42rem;
+    text-wrap: pretty;
+    overflow-wrap: anywhere;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
+  [data-readsize="S"] .prose-read { font-size: 0.98rem; line-height: 1.6; }
+  [data-readsize="L"] .prose-read { font-size: 1.22rem; line-height: 1.72; }
+  .prose-read h2, .prose-read h3 { text-wrap: balance; -webkit-hyphens: manual; hyphens: manual; }
+  /* Broadsheet opening on Paper only: one drop cap, then the column settles. */
+  [data-theme="paper"] .prose-read > p:first-of-type::first-letter {
+    float: left; font-size: 3.4em; line-height: 0.82; padding: 0.06em 0.1em 0 0;
+    font-weight: 600; color: var(--ink);
   }
   .prose-read p { margin: 0 0 1.1em; }
   .prose-read h2 { font-family: var(--font-ui); font-size: 1.05rem; font-weight: 600; letter-spacing: 0.02em; margin: 2em 0 0.7em; text-transform: uppercase; }
@@ -149,7 +222,7 @@ button { font: inherit; color: inherit; }
   .prose-read a { color: var(--accent); border-bottom: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); }
   .prose-read strong { font-weight: 600; }
   .prose-read hr { border: 0; border-top: 1px solid var(--line); margin: 2em 0; }
-  .prose-read table { border-collapse: collapse; width: 100%; font-family: var(--font-data); font-size: 0.85rem; margin: 1.2em 0; }
+  .prose-read table { border-collapse: collapse; width: 100%; font-family: var(--font-data); font-size: 0.85rem; margin: 1.2em 0; display: block; max-width: 100%; overflow-x: auto; }
   .prose-read th, .prose-read td { text-align: left; padding: 0.4em 0.6em; border-bottom: 1px solid var(--line); }
   .prose-read th { color: var(--ink-3); font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.68rem; }
   .prose-read code { font-family: var(--font-data); font-size: 0.9em; background: var(--bg-3); padding: 0.05em 0.3em; border-radius: 3px; }
