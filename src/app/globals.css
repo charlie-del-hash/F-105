@@ -151,7 +151,9 @@ button, a, select, input { transition: color 120ms ease, background-color 120ms 
     flex: none;
     height: 18px; padding: 0 7px; border-radius: var(--radius);
     font-family: var(--font-data); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--ink-3);
+    /* ink-3 on bg-3 falls under 3:1 on the light themes, which left the unselected
+       ranges nearly invisible on Paper and Glass. */
+    color: var(--ink-2);
   }
   .seg > button:hover { color: var(--ink); }
   .seg > button[aria-pressed="true"] {

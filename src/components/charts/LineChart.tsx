@@ -34,14 +34,21 @@ export function LineChart({
   const gradId = useId();
 
   const W = Math.max(size.width, 10);
-  const H = Math.max(size.height, minHeight);
+  // The slot decides the height. Forcing a floor here made the SVG taller than
+  // its flex slot in a short panel and painted over whatever sat beneath it;
+  // minHeight is only the fallback for the frame before the first measurement.
+  const H = size.height > 0 ? size.height : minHeight;
   const last = points[points.length - 1];
   const mark = lastValue ?? last?.v;
   const tagW = lastTag && mark !== undefined ? Math.max(fmtNum(mark, decimals).length, 4) * 6.4 + 10 : 0;
-  const m = { top: 10, right: 10 + tagW, bottom: 22, left: 8 };
+  // A short plot drops the date axis rather than overlapping whatever sits under
+  // it. The panel below still carries the "as of" date, so nothing is lost.
+  const showDates = H >= 150;
+  const m = { top: 10, right: 10 + tagW, bottom: showDates ? 22 : 6, left: 8 };
 
   const model = useMemo(() => {
-    if (points.length < 2 || size.width < 40) return null;
+    // Below a usable plot height there is nothing honest to draw.
+    if (points.length < 2 || size.width < 40 || H < 48) return null;
     const vs = points.map((p) => p.v);
     const lo = Math.min(...vs, mark ?? Infinity);
     const hi = Math.max(...vs, mark ?? -Infinity);
@@ -72,7 +79,7 @@ export function LineChart({
   const markY = model && mark !== undefined ? model.y(mark) : 0;
 
   return (
-    <div ref={ref} className="relative h-full w-full min-h-[120px] select-none">
+    <div ref={ref} className="relative h-full w-full select-none">
       {model && (
         <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="block" role="img" aria-label={`Line chart, ${points.length} daily points`}>
           <defs>
@@ -100,7 +107,7 @@ export function LineChart({
               </text>
             </g>
           ))}
-          {model.xTicks.map((i) => (
+          {showDates && model.xTicks.map((i) => (
             <text key={i} x={model.x(i)} y={H - 6} textAnchor={i === 0 ? "start" : i === points.length - 1 ? "end" : "middle"} fontSize={10} fontFamily="var(--font-data)" fill="var(--ink-3)">
               {fmtDate(points[i].d)}
             </text>

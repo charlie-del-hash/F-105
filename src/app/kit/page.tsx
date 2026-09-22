@@ -114,6 +114,53 @@ export default function KitPage() {
         </div>
       </Section>
 
+      <Section
+        title="Theme contact sheet"
+        note="the same three blocks in all six themes — compare, do not take on trust"
+      >
+        <p className="mb-3 max-w-2xl font-ui text-xs text-ink-3">
+          Each tile below is scoped with its own <code className="font-data">data-theme</code>, so the
+          tokens, the chrome dials and the series palette are exactly what that theme ships. Two
+          things do not survive the nesting and have to be judged on the real page:{" "}
+          <code className="font-data">--density</code> (rem resolves against the document root, not
+          the nearest ancestor) and the CRT scanline and vignette overlays, which are fixed to the
+          viewport.
+        </p>
+        <div className="grid gap-3 lg:grid-cols-2 xl:grid-cols-3">
+          {themes.map((t) => (
+            <div key={t.id} data-theme={t.id} className="bezel overflow-hidden bg-bg p-2">
+              <div className="mb-2 flex items-baseline gap-2 px-1">
+                <span className="font-ui text-sm font-medium text-ink">{t.name}</span>
+                <span className="font-data text-[10px] uppercase tracking-wider text-ink-3">{t.scheme}</span>
+                <span className="ml-auto flex gap-0.5" aria-hidden>
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                    <span key={i} className="h-2.5 w-2.5 rounded-[1px]" style={{ background: `var(--series-${i})` }} />
+                  ))}
+                </span>
+              </div>
+              <div className="bezel mb-2 h-60 overflow-hidden">
+                <div className="panel-head caps flex items-center gap-1 border-b border-line px-2 py-1 text-ink-2">
+                  <span className="font-data text-[10px] tracking-[0.12em] text-ink-3">GP</span>
+                  <span className="h-3 w-px bg-line" />
+                  <span>Brent</span>
+                </div>
+                <div className="h-[calc(100%-1.75rem)]">
+                  <ChartBlock symbol="BRENT" />
+                </div>
+              </div>
+              <div className="bezel overflow-hidden">
+                <div className="panel-head caps flex items-center gap-1 border-b border-line px-2 py-1 text-ink-2">
+                  <span className="font-data text-[10px] tracking-[0.12em] text-ink-3">QB</span>
+                  <span className="h-3 w-px bg-line" />
+                  <span>Quote board</span>
+                </div>
+                <QuoteTable symbols={["BRENT", "TTF", "TD3C"]} compact />
+              </div>
+            </div>
+          ))}
+        </div>
+      </Section>
+
       <Section title="In-article kit" note="src/content/mdx.tsx">
         <div className="prose-read">
           <Factbox rows={[["Label", "Value"], ["Another", "12.5 kn"]]} />
