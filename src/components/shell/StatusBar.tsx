@@ -4,6 +4,8 @@ import { site } from "@/config/site";
 import { useNow } from "@/lib/useNow";
 import { useWorkspace } from "@/layout-engine/store";
 import { useSyncStatus } from "@/layout-engine/sync";
+import { isStaticDemo } from "@/data/static-demo";
+import { instruments } from "@/data/instruments";
 import type { DataStatus } from "@/data/providers";
 
 export function StatusBar({ onHelp }: { onHelp?: () => void }) {
@@ -11,8 +13,13 @@ export function StatusBar({ onHelp }: { onHelp?: () => void }) {
   const sync = useSyncStatus();
   const now = useNow();
   const utc = now ? now.toISOString().slice(11, 19) : "--:--:--";
-  const [data, setData] = useState<DataStatus | null>(null);
+  // In the static demo there is no /api/status to ask, and the answer is known
+  // at build time: everything is synthetic.
+  const [data, setData] = useState<DataStatus | null>(
+    isStaticDemo ? { mode: "static", adapters: [], live: [], synthetic: instruments.map((i) => i.symbol), degraded: [] } : null,
+  );
   useEffect(() => {
+    if (isStaticDemo) return;
     fetch("/api/status", { cache: "no-store" })
       .then((r) => r.json())
       .then((j) => setData(j.data as DataStatus))

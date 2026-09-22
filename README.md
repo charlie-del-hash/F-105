@@ -58,15 +58,41 @@ and the alert channels.
 layout, `[` and `]` to cycle layouts, `T` next theme. In edit mode, Tab to a panel header
 and use the arrows to move it, shift-arrows to resize.
 
-## Deploy to Vercel
+## Deploying
 
-1. Push this repository to GitHub (done if you are reading this there).
-2. In Vercel: **Add New → Project → Import** the repo. Framework is detected as Next.js; no settings needed.
-3. Optionally set `NEXT_PUBLIC_SITE_URL` to the production domain so share links are absolute,
+Two builds come out of this one repository.
+
+### Vercel — the full app (recommended)
+
+1. In Vercel: **Add New → Project → Import** this repo. Framework is detected as Next.js; no settings needed.
+2. Optionally set `NEXT_PUBLIC_SITE_URL` to the production domain so share links are absolute,
    `FRED_API_KEY` for live energy series, the Supabase variables for sync, and `CRON_SECRET`
    plus channel credentials for alerts (`vercel.json` schedules the daily run).
 
 Every push to the production branch redeploys; every other branch gets a preview URL.
+This is the only target that runs the API routes, the session proxy and the alert cron.
+
+### GitHub Pages — the static demo
+
+**Live: https://charlie-del-hash.github.io/F-105/**
+
+`.github/workflows/pages.yml` rebuilds and republishes on every push to the default branch.
+It pushes the export to the generated `gh-pages` branch, which is what Pages serves. Never
+edit that branch; it is build output.
+
+`pnpm build:static` produces the same thing locally. It moves the server-only files aside,
+exports with `output: "export"`, and puts them back, so the working tree is untouched either way.
+The client falls back to the deterministic mock generator, which means the demo still ticks
+once a minute. What it cannot have:
+
+| Works | Does not |
+|---|---|
+| Every panel, layout, theme and page | Live sources: everything reads synthetic |
+| Quotes and charts, ticking | Alerts: no cron, no channels |
+| Editing layouts, saved on the device | Sign-in and cross-device sync |
+| The command bar and keyboard | |
+
+The status bar says `DEMO DATA · synthetic series` throughout, so nobody mistakes it for the real thing.
 
 ## Structure
 

@@ -13,7 +13,8 @@
     "content:check": "tsx scripts/validate-content.ts",
     "layouts:check": "tsx scripts/check-layouts.ts",
     "test": "tsx --test \"src/**/*.test.ts\"",
-    "check": "pnpm tokens && pnpm lint && pnpm typecheck && pnpm content:check && pnpm layouts:check && pnpm test"
+    "check": "pnpm tokens && pnpm lint && pnpm typecheck && pnpm content:check && pnpm layouts:check && pnpm test",
+    "build:static": "node scripts/static-export.mjs"
   },
   "dependencies": {
     "@fontsource-variable/source-serif-4": "^5.3.0",
