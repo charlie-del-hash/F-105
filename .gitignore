@@ -33,6 +33,9 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# ...and the documented example is exactly that opt-in: it carries no secrets,
+# only the names, and README.md points at it.
+!.env.example
 
 # vercel
 .vercel
