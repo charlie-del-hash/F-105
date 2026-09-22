@@ -21,6 +21,11 @@
    that needs to interrupt: FLASH, URGENT, WATCH, "demo content".
 2. **Provenance is a dot.** ● observed, ◌ synthetic, beside every symbol, with the legend
    in the panel footer. Never a word like "demo" glued to a symbol.
+2b. **A lamp only where there is a state.** A panel header carries its command mnemonic
+   (`QB`, `GP`, `TOP`, `DES`), not an LED — a lamp on every panel says nothing, and
+   provenance is already the dot beside each symbol. LEDs are for a state that changes:
+   a flash wire item, an alert, a degraded feed, sync. The mnemonic is the same token
+   `⌘K` parses, so the chrome teaches the keyboard.
 3. **Direction is a glyph plus colour**, rendered by one component (`Change`), so every
    change on every screen reads the same.
 4. **Chrome recedes.** Panel actions appear on hover (always on touch). Headers sit one
@@ -81,22 +86,43 @@ while someone is typing; the shell checks the focused element.
 | `ink`, `ink-2`, `ink-3` | primary · secondary · muted |
 | `accent`, `accent-ink` | the one brand colour and text on it |
 | `up`, `down`, `warn`, `alert` | status; always paired with a glyph or label |
-| `series-1…8` | categorical data colours in fixed, validated order |
+| `series-1…8` | categorical data colours in fixed, validated order — **per theme** |
 | `glow` | text-shadow colour for brand/phosphor text |
 | `font-ui`, `font-data`, `font-read` | interface · numbers · long-form |
 | `radius`, `density` | corner radius · type scale multiplier |
-| `fx-scanlines`, `fx-vignette`, `fx-bezel` | 0–1 dials |
+| `fx-scanlines`, `fx-vignette`, `fx-bezel` | 0–1 dials: CRT furniture · panel depth |
+| `fx-headfill` | 0–1: panel header as a filled bar (1) or a bare rule (0) |
+| `fx-gridline` | 0–1: how present chart gridlines are |
+| `fx-ticks` | 0–1: instrument tick marks along the top edge of an inset |
+
+### Series colours are per theme
+
+Each theme declares its own `series` ring in `tokens.json`, and slot 1 is that theme's
+signature data colour — the line a single-series chart draws. Terminal draws amber,
+Phosphor draws P1 green, Cockpit cyan, Bridge blue-white, Paper the one red, Glass iOS
+blue. A theme that declares none falls back to the scheme-level list.
+
+Each ring is the validated reference palette **rotated** so slot 1 lands on the theme's
+hue. OKLab ΔE is rotation-invariant in the (a,b) plane, so a rotation inherits the
+reference's normal-vision separations exactly; CVD simulation is not, so every ring was
+re-validated against its own theme's `bg-2` with the dataviz validator, and repaired
+where needed. Adding or editing a ring means re-running that validator — `pnpm tokens`
+enforces the structural invariants (key parity, 8 valid hexes, ink contrast and ink-scale
+separation against `bg-2`) but cannot check a categorical palette.
 
 ## Themes
 
-| Theme | Scheme | For | Notes |
-|---|---|---|---|
-| Terminal | dark | the default desk | amber on black, Plex Mono for data |
-| Phosphor | dark | the scope | green P1, scanlines, mono everywhere |
-| Cockpit | dark | Hangar | grey panel, cyan cues, Geist Mono |
-| Bridge | dark | shipping and the plot | blue-white phosphor, brass accent, vignette |
-| Paper | light | reading | broadsheet stock, one red, no bezels |
-| Glass | light | phone | white cards, iOS blue, 12 px radius |
+A theme changes the mood *and the chrome's character* — never the layout, the type scale
+or the semantics. "Chrome" below is what the `fx` dials do to a panel.
+
+| Theme | Scheme | For | Chrome | Notes |
+|---|---|---|---|---|
+| Terminal | dark | the default desk | bezelled box, filled header | amber on black, Plex Mono for data |
+| Phosphor | dark | the scope | no bezel, no header fill — one continuous surface | green P1, scanlines, mono everywhere |
+| Cockpit | dark | Hangar | bezel, filled header, inset ticks, plotted grid | grey panel, cyan cues, Geist Mono |
+| Bridge | dark | shipping and the plot | bezel, half-tint header, strong grid | blue-white phosphor, brass accent, vignette |
+| Paper | light | reading | no bezel, no header fill, almost no grid | broadsheet stock, one red |
+| Glass | light | phone | soft shallow bezel | white cards, iOS blue, 12 px radius |
 
 ## Type
 

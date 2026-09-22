@@ -37,7 +37,9 @@ export function PanelFrame({ panel, edit, mobile, style, onDragStart, onResizeSt
   const meta = panelMetaMap.get(panel.type);
   const title = panelTitle(panel);
   const href = panelHref(panel);
-  const live = meta?.category === "markets";
+  // "WIRE | WIRE" reads as a stutter, so the slug is dropped when the title
+  // already opens with it.
+  const showMnemonic = !!meta && !title.toUpperCase().startsWith(meta.mnemonic.toUpperCase());
 
   const onKey = (e: React.KeyboardEvent) => {
     if (!edit || mobile) return;
@@ -72,8 +74,20 @@ export function PanelFrame({ panel, edit, mobile, style, onDragStart, onResizeSt
         title={edit && !mobile ? "Drag to move · arrows move · shift+arrows resize · delete removes" : undefined}
       >
         {edit && !mobile && <GripVertical size={13} className="-ml-1 text-ink-3" aria-hidden />}
-        <span className={cn("led", live ? "led-live" : "led-ok")} aria-hidden />
-        <h3 className="caps ml-1 min-w-0 flex-1 truncate text-ink-2" title={title}>
+        {/* The panel's command mnemonic, not a lamp. A lamp on every panel says
+            nothing; the mnemonic is the same token the command bar parses
+            (⌘K → "GP BRENT"), so the chrome teaches the keyboard. Liveness is
+            carried where it is actually known: the LiveDot beside each symbol
+            and the provenance line in the panel footer. */}
+        {showMnemonic && (
+          <>
+            <span className="shrink-0 font-data text-[10px] uppercase tracking-[0.12em] text-ink-3" aria-hidden>
+              {meta!.mnemonic}
+            </span>
+            <span className="h-3 w-px shrink-0 bg-line" aria-hidden />
+          </>
+        )}
+        <h3 className="caps min-w-0 flex-1 truncate text-ink-2" title={title}>
           {title}
         </h3>
         <div className="panel-actions flex items-center" onPointerDown={(e) => e.stopPropagation()}>

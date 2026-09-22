@@ -83,7 +83,18 @@ export function LineChart({
           </defs>
           {model.ticks.map((t) => (
             <g key={t}>
-              <line x1={model.left} x2={model.left + model.iw} y1={model.y(t)} y2={model.y(t)} stroke="var(--line)" strokeWidth={1} shapeRendering="crispEdges" />
+              <line
+                x1={model.left}
+                x2={model.left + model.iw}
+                y1={model.y(t)}
+                y2={model.y(t)}
+                stroke="var(--line)"
+                strokeWidth={1}
+                shapeRendering="crispEdges"
+                /* How present the grid is, is a theme dial: a plotted Cockpit or
+                   Bridge grid, almost none on Paper. */
+                style={{ strokeOpacity: "var(--fx-gridline)" }}
+              />
               <text x={model.left - 6} y={model.y(t) + 3.5} textAnchor="end" fontSize={10} fontFamily="var(--font-data)" fill="var(--ink-3)" className="tabular">
                 {fmtNum(t, decimals)}
               </text>
