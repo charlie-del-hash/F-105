@@ -9,6 +9,7 @@ import { ReadingProgress } from "@/components/reading/ReadingProgress";
 import { ReadingSurface } from "@/components/reading/ReadingSurface";
 import { DualUse, SpecSheet } from "@/panels/dossier";
 import { QuoteTable } from "@/panels/quotes";
+import { Card } from "@/components/ui/Card";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -76,10 +77,9 @@ export default async function DossierPage({ params }: Params) {
           <SpecSheet specs={d.specs} />
         </section>
         {d.instruments.length > 0 && (
-          <section className="bezel overflow-hidden">
-            <div className="caps border-b border-line px-3 py-1.5 text-ink-3">Related instruments</div>
+          <Card slug="QB" title="Related instruments">
             <QuoteTable symbols={d.instruments} compact />
-          </section>
+          </Card>
         )}
       </aside>
     </ReadingSurface>

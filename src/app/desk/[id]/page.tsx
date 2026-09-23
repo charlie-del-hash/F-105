@@ -6,6 +6,7 @@ import { getDocs, getEvents, getWire } from "@/content/loader";
 import { instruments } from "@/data/instruments";
 import { fmtDate, fmtTime } from "@/data/format";
 import { QuoteTable } from "@/panels/quotes";
+import { Card } from "@/components/ui/Card";
 import { Kicker } from "@/components/data/Kicker";
 
 type Params = { params: Promise<{ id: string }> };
@@ -59,10 +60,9 @@ export default async function DeskLanding({ params }: Params) {
         </section>
         <aside className="space-y-4">
           {syms.length > 0 && (
-            <section className="bezel overflow-hidden">
-              <div className="caps border-b border-line px-3 py-1.5 text-ink-3">Instruments</div>
+            <Card slug="QB" title="Instruments">
               <QuoteTable symbols={syms} compact />
-            </section>
+            </Card>
           )}
           {events.length > 0 && (
             <section className="bezel p-3">

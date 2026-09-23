@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { themes } from "@/design/tokens";
 import { Button, IconButton } from "@/components/ui/Button";
 import { Tag } from "@/components/ui/Tag";
+import { Card } from "@/components/ui/Card";
 import { Field, Input, Select } from "@/components/ui/Field";
 import { ChartBlock } from "@/panels/chart";
 import { QuoteTable } from "@/panels/quotes";
@@ -106,11 +107,21 @@ export default function KitPage() {
 
       <Section title="Data blocks" note="live from /api">
         <div className="grid gap-3 lg:grid-cols-2">
-          <div className="bezel h-72 overflow-hidden"><div className="caps border-b border-line px-3 py-1.5 text-ink-3">Chart</div><div className="h-[calc(100%-2rem)]"><ChartBlock symbol="TTF" /></div></div>
-          <div className="bezel h-72 overflow-auto"><div className="caps border-b border-line px-3 py-1.5 text-ink-3">Quote board</div><QuoteTable symbols={["BRENT", "TTF", "JKM", "TD3C", "BDI"]} /></div>
-          <div className="bezel h-40 overflow-hidden"><div className="caps border-b border-line px-3 py-1.5 text-ink-3">Stat tiles</div><div className="h-[calc(100%-2rem)]"><StatTiles symbols={["HORMUZ.TX", "BAB.TX", "WAR.RS"]} /></div></div>
-          <div className="bezel h-40 overflow-hidden"><div className="caps border-b border-line px-3 py-1.5 text-ink-3">World clocks</div><div className="h-[calc(100%-2rem)]"><Clocks names={["London", "Dubai", "Singapore", "New York"]} /></div></div>
-          <div className="bezel h-96 overflow-hidden lg:col-span-2"><div className="caps border-b border-line px-3 py-1.5 text-ink-3">Plot</div><div className="h-[calc(100%-2rem)]"><PlotView areaId="hormuz" /></div></div>
+          <Card slug="GP" title="Chart" className="h-72">
+            <ChartBlock symbol="TTF" />
+          </Card>
+          <Card slug="QB" title="Quote board" className="h-72" bodyClassName="overflow-auto">
+            <QuoteTable symbols={["BRENT", "TTF", "JKM", "TD3C", "BDI"]} />
+          </Card>
+          <Card slug="IND" title="Stat tiles" className="h-40">
+            <StatTiles symbols={["HORMUZ.TX", "BAB.TX", "WAR.RS"]} />
+          </Card>
+          <Card slug="WCLK" title="World clocks" className="h-40">
+            <Clocks names={["London", "Dubai", "Singapore", "New York"]} />
+          </Card>
+          <Card slug="PLOT" title="Plot" className="h-96 lg:col-span-2">
+            <PlotView areaId="hormuz" />
+          </Card>
         </div>
       </Section>
 
@@ -138,24 +149,12 @@ export default function KitPage() {
                   ))}
                 </span>
               </div>
-              <div className="bezel mb-2 h-60 overflow-hidden">
-                <div className="panel-head caps flex items-center gap-1 border-b border-line px-2 py-1 text-ink-2">
-                  <span className="font-data text-[10px] tracking-[0.12em] text-ink-3">GP</span>
-                  <span className="h-3 w-px bg-line" />
-                  <span>Brent</span>
-                </div>
-                <div className="h-[calc(100%-1.75rem)]">
-                  <ChartBlock symbol="BRENT" />
-                </div>
-              </div>
-              <div className="bezel overflow-hidden">
-                <div className="panel-head caps flex items-center gap-1 border-b border-line px-2 py-1 text-ink-2">
-                  <span className="font-data text-[10px] tracking-[0.12em] text-ink-3">QB</span>
-                  <span className="h-3 w-px bg-line" />
-                  <span>Quote board</span>
-                </div>
+              <Card slug="GP" title="Brent" className="mb-2 h-60">
+                <ChartBlock symbol="BRENT" />
+              </Card>
+              <Card slug="QB" title="Quote board">
                 <QuoteTable symbols={["BRENT", "TTF", "TD3C"]} compact />
-              </div>
+              </Card>
             </div>
           ))}
         </div>

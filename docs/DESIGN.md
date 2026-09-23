@@ -76,6 +76,17 @@ back to whatever the reader had. Paper opens with a single drop cap; no other th
 Paragraphs use `text-wrap: pretty`, hyphenation and `overflow-wrap: anywhere`; headings
 balance. Tables scroll sideways rather than break the column.
 
+## Panels and panel-shaped blocks
+
+There is one panel chrome, in `components/ui/Card.tsx`. `PanelFrame` on the dashboard and
+every panel-shaped block on a static page — the market boards, a desk's instruments, the
+reading-page aside, the kit — share `CardHead`, so the theme dials and the mnemonic slug
+reach all of them. Never hand-roll `bezel` + a `caps border-b` header: ten copies of it
+meant Paper went boxless on the dashboard and kept its boxes everywhere else.
+
+`Card` is a flex column, so a card given a height passes what is left to its body. Do not
+size a body with `calc(100% - 2rem)` against a header whose height moves with `--density`.
+
 ## Dialogs and overlays
 
 One `Modal` primitive. Naming, renaming and deleting go through the promise-based
@@ -101,6 +112,7 @@ while someone is typing; the shell checks the focused element.
 | `BottomBar` | `components/shell/BottomBar.tsx` | phone navigation, thumb zone |
 | `.safe-t`, `.safe-b` | `globals.css` | notch and home-indicator insets |
 | `.row` | `globals.css` | hover wash on list rows and table rows |
+| `Card`, `CardHead` | `components/ui/Card.tsx` | panel chrome — the only place it is written |
 | `.panel-head`, `.panel-actions` | `globals.css` | panel chrome and hover-revealed actions |
 | `.menu`, `.menu-item` | `globals.css` | popover menus (theme picker, layout menu, add panel) |
 | `.dot`, `.led` | `globals.css` | provenance and liveness |
