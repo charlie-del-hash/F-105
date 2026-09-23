@@ -7,6 +7,7 @@
  */
 import { useId, useMemo, useState } from "react";
 import { useSize } from "@/lib/useSize";
+import { useRootFontSize } from "@/lib/useRootFontSize";
 import { indexTicks, niceTicks } from "@/lib/ticks";
 import { fmtDate, fmtNum } from "@/data/format";
 import type { SeriesPoint } from "@/data/types";
@@ -33,6 +34,18 @@ export function LineChart({
   const [hover, setHover] = useState<number | null>(null);
   const gradId = useId();
 
+  /**
+   * The SVG is drawn in measured pixels, so its labels cannot use rem and were
+   * pinned at 10px — the last thing in the app still ignoring `--density`.
+   * Everything derived from the label size (the mono advance used to reserve the
+   * axis gutter and the price tag, the baseline offsets, the tag box) scales with
+   * it, or the margins stop matching the text they are reserving room for.
+   */
+  const rootPx = useRootFontSize();
+  const labelPx = rootPx * 0.75; // the same step as text-xs
+  const charW = labelPx * 0.64; // mono advance; 6.4px at the old fixed 10px
+  const tagH = Math.round(labelPx * 1.6);
+
   const W = Math.max(size.width, 10);
   // The slot decides the height. Forcing a floor here made the SVG taller than
   // its flex slot in a short panel and painted over whatever sat beneath it;
@@ -40,11 +53,11 @@ export function LineChart({
   const H = size.height > 0 ? size.height : minHeight;
   const last = points[points.length - 1];
   const mark = lastValue ?? last?.v;
-  const tagW = lastTag && mark !== undefined ? Math.max(fmtNum(mark, decimals).length, 4) * 6.4 + 10 : 0;
+  const tagW = lastTag && mark !== undefined ? Math.max(fmtNum(mark, decimals).length, 4) * charW + 10 : 0;
   // A short plot drops the date axis rather than overlapping whatever sits under
   // it. The panel below still carries the "as of" date, so nothing is lost.
   const showDates = H >= 150;
-  const m = { top: 10, right: 10 + tagW, bottom: showDates ? 22 : 6, left: 8 };
+  const m = { top: 10, right: 10 + tagW, bottom: showDates ? labelPx * 2.2 : 6, left: 8 };
 
   const model = useMemo(() => {
     // Below a usable plot height there is nothing honest to draw.
@@ -56,7 +69,7 @@ export function LineChart({
     const yMin = lo - padV;
     const yMax = hi + padV;
     const ticks = niceTicks(yMin, yMax, 4);
-    const labelW = Math.max(...ticks.map((t) => fmtNum(t, decimals).length), 3) * 6.4 + 6;
+    const labelW = Math.max(...ticks.map((t) => fmtNum(t, decimals).length), 3) * charW + 6;
     const left = m.left + labelW;
     const iw = Math.max(1, W - left - m.right);
     const ih = H - m.top - m.bottom;
@@ -65,7 +78,7 @@ export function LineChart({
     const path = points.map((p, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(p.v).toFixed(1)}`).join(" ");
     const area = `${path} L${x(points.length - 1).toFixed(1)},${(m.top + ih).toFixed(1)} L${left.toFixed(1)},${(m.top + ih).toFixed(1)} Z`;
     return { ticks, left, iw, ih, x, y, path, area, xTicks: indexTicks(points.length, W < 360 ? 3 : 5) };
-  }, [points, W, H, size.width, decimals, mark, m.left, m.right, m.top, m.bottom]);
+  }, [points, W, H, size.width, decimals, mark, charW, m.left, m.right, m.top, m.bottom]);
 
   const onMove = (e: React.PointerEvent<SVGRectElement>) => {
     if (!model) return;
@@ -102,13 +115,13 @@ export function LineChart({
                    Bridge grid, almost none on Paper. */
                 style={{ strokeOpacity: "var(--fx-gridline)" }}
               />
-              <text x={model.left - 6} y={model.y(t) + 3.5} textAnchor="end" fontSize={10} fontFamily="var(--font-data)" fill="var(--ink-3)" className="tabular">
+              <text x={model.left - 6} y={model.y(t) + labelPx * 0.35} textAnchor="end" fontSize={labelPx} fontFamily="var(--font-data)" fill="var(--ink-3)" className="tabular">
                 {fmtNum(t, decimals)}
               </text>
             </g>
           ))}
           {showDates && model.xTicks.map((i) => (
-            <text key={i} x={model.x(i)} y={H - 6} textAnchor={i === 0 ? "start" : i === points.length - 1 ? "end" : "middle"} fontSize={10} fontFamily="var(--font-data)" fill="var(--ink-3)">
+            <text key={i} x={model.x(i)} y={H - labelPx * 0.6} textAnchor={i === 0 ? "start" : i === points.length - 1 ? "end" : "middle"} fontSize={labelPx} fontFamily="var(--font-data)" fill="var(--ink-3)">
               {fmtDate(points[i].d)}
             </text>
           ))}
@@ -117,8 +130,8 @@ export function LineChart({
           {lastTag && mark !== undefined && (
             <g pointerEvents="none">
               <line x1={model.left} x2={W - tagW - 6} y1={markY} y2={markY} stroke="var(--ink-3)" strokeWidth={1} strokeDasharray="3 3" opacity={0.8} />
-              <rect x={W - tagW - 4} y={markY - 8} width={tagW} height={16} rx={2} fill="var(--bg-3)" stroke="var(--line-strong)" />
-              <text x={W - 4 - tagW / 2} y={markY + 3.5} textAnchor="middle" fontSize={10} fontFamily="var(--font-data)" fill="var(--ink)" className="tabular">
+              <rect x={W - tagW - 4} y={markY - tagH / 2} width={tagW} height={tagH} rx={2} fill="var(--bg-3)" stroke="var(--line-strong)" />
+              <text x={W - 4 - tagW / 2} y={markY + labelPx * 0.35} textAnchor="middle" fontSize={labelPx} fontFamily="var(--font-data)" fill="var(--ink)" className="tabular">
                 {fmtNum(mark, decimals)}
               </text>
             </g>

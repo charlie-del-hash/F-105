@@ -98,11 +98,16 @@ export function PlotView({ areaId, showStatus }: { areaId: string; showStatus?: 
             <path d="M0 -3.5 L1.6 1.5 L0 0.6 L-1.6 1.5 Z" fill="var(--ink-2)" />
             <text y={5.6} textAnchor="middle" fontSize={2.4} fontFamily="var(--font-data)" fill="var(--ink-3)">N</text>
           </g>
-          <text x={2} y={68} fontSize={2.3} fontFamily="var(--font-data)" fill="var(--ink-3)">
-            {area.subtitle} · positions illustrative
-          </text>
         </svg>
       </div>
+      {/* The map's own labels belong in the viewBox — they are anchored to
+          features and should scale with the drawing. This one is not a label,
+          it is the honesty line, and inside the viewBox it shrank to about 8.6px
+          in a phone-width panel. Out here it is HTML on the rem ladder, so it
+          stays legible and scales with the theme like every other caption. */}
+      <p className="m-0 px-3 pb-1 font-data text-xs leading-tight text-ink-3">
+        {area.subtitle} · positions illustrative
+      </p>
       {withStatus && (
         <div className="flex flex-wrap gap-x-4 gap-y-1 px-3 pb-2 font-data text-meta">
           {area.instruments.map((s) => {

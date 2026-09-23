@@ -80,6 +80,15 @@ wrapped too. A hand-written rule that is *state* rather than hover — `.menu-it
 Corners come from `rounded-panel`, the Tailwind token bound to `--radius`. Not
 `rounded-[var(--radius)]`: the token existed and had zero uses against 21 raw ones.
 
+**Text inside an SVG.** A chart drawn in measured pixels (`LineChart`) cannot use rem, so
+it converts by hand from `useRootFontSize()` — a fixed `fontSize={10}` opts out of
+`--density` exactly as a `text-[10px]` class did. Everything derived from the label size
+scales with it too: the mono advance that reserves the axis gutter and the price tag, the
+baseline offsets, the tag box. A *viewBox-scaled* SVG is different: the plot is a schematic,
+its labels are anchored to features and should scale with the drawing, so they stay in user
+units. What does not belong in a viewBox is a caption — the plot's "positions illustrative"
+line shrank to about 8.6px in a phone-width panel, and is HTML underneath the map now.
+
 ## Which theme you get
 
 A theme is decided in one place, `Shell`, in precedence order:
