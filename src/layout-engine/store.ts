@@ -10,7 +10,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { THEME_STORAGE_KEY, defaultTheme, isThemeId, type ThemeId } from "@/design/tokens";
 import { panelMetaMap } from "@/panels/catalog";
-import { findFreeSpot, movePanel as gridMove, resizePanel as gridResize, compact, readingOrder } from "./grid";
+import { findFreeSpot, movePanel as gridMove, resizePanel as gridResize, compact, swapInReadingOrder } from "./grid";
 import { defaultLayoutId, getPreset, presetLayouts } from "./presets";
 import { newId, parseLayout, type Layout, type PanelInstance } from "./schema";
 
@@ -161,21 +161,10 @@ export const useWorkspace = create<WorkspaceState>()(
         setPanelTitle: (panelId, title) =>
           update((l) => ({ ...l, panels: l.panels.map((p) => (p.id === panelId ? { ...p, title } : p)) })),
         nudgePanel: (panelId, dir) =>
-          update((l) => {
-            // Mobile reorder: swap with the neighbour in reading order, then re-lay out as a single column.
-            const order = readingOrder(l.panels);
-            const i = order.findIndex((p) => p.id === panelId);
-            const j = i + dir;
-            if (i < 0 || j < 0 || j >= order.length) return l;
-            [order[i], order[j]] = [order[j], order[i]];
-            let y = 0;
-            const relaid = order.map((p) => {
-              const np = { ...p, x: 0, y };
-              y += p.h;
-              return np;
-            });
-            return { ...l, panels: l.panels.map((p) => relaid.find((q) => q.id === p.id)!) };
-          }),
+          // Phone reorder. This used to re-lay every panel to x:0 full width, so one
+          // tap of "move down" permanently flattened a 12-column desk — and because
+          // the edit forks a preset first, the flattened version was what got saved.
+          update((l) => ({ ...l, panels: swapInReadingOrder(l.panels, panelId, dir) })),
 
         setNote: (panelId, text) => set((s) => ({ notes: { ...s.notes, [panelId]: text } })),
         toggleWatch: (symbol) =>

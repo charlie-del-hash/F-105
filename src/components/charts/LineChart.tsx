@@ -130,7 +130,23 @@ export function LineChart({
               <circle cx={model.x(hover)} cy={model.y(hp.v)} r={4.5} fill={color} stroke="var(--bg-2)" strokeWidth={2} />
             </g>
           )}
-          <rect x={model.left} y={m.top} width={model.iw} height={model.ih} fill="transparent" onPointerMove={onMove} onPointerLeave={() => setHover(null)} style={{ cursor: "crosshair", touchAction: "none" }} />
+          <rect
+            x={model.left}
+            y={m.top}
+            width={model.iw}
+            height={model.ih}
+            fill="transparent"
+            onPointerMove={onMove}
+            onPointerLeave={() => setHover(null)}
+            onPointerUp={() => setHover(null)}
+            onPointerCancel={() => setHover(null)}
+            /* pan-y, not none: the crosshair only ever tracks horizontally, so the
+               browser keeps vertical scrolling. With touch-action none a swipe that
+               started inside a chart dragged the crosshair instead of scrolling the
+               page, and in the stacked phone layout a chart fills most of a panel —
+               every chart was a scroll trap. */
+            style={{ cursor: "crosshair", touchAction: "pan-y" }}
+          />
         </svg>
       )}
       {model && hp && hover != null && (
