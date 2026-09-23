@@ -21,22 +21,24 @@
    that needs to interrupt: FLASH, URGENT, WATCH, "demo content".
 2. **Provenance is a dot.** ● observed, ◌ synthetic, beside every symbol, with the legend
    in the panel footer. Never a word like "demo" glued to a symbol.
-2b. **A lamp only where there is a state.** A panel header carries its command mnemonic
+3. **A lamp only where there is a state.** A panel header carries its command mnemonic
    (`QB`, `GP`, `TOP`, `DES`), not an LED — a lamp on every panel says nothing, and
    provenance is already the dot beside each symbol. LEDs are for a state that changes:
    a flash wire item, an alert, a degraded feed, sync. The mnemonic is the same token
    `⌘K` parses, so the chrome teaches the keyboard.
-3. **Direction is a glyph plus colour**, rendered by one component (`Change`), so every
+4. **Direction is a glyph plus colour**, rendered by one component (`Change`), so every
    change on every screen reads the same.
-4. **Chrome recedes.** Panel actions appear on hover (always on touch). Headers sit one
-   step towards `bg-3`. Rows lift with a 6 % accent wash, not a grey block.
-5. **One accent, used as a line.** The active tab and layout tab carry a 2 px accent
-   underline with a soft glow; nothing else is filled with the accent except the primary
-   button and the LED that matters.
-6. **Terminal details, not terminal cosplay.** The dashed last-price line with its value
+5. **Chrome recedes.** Panel actions appear on hover (always on touch). How far a header
+   sits towards `bg-3` is `--fx-headfill`, so Paper and Phosphor have none at all. Rows
+   lift with a 6 % accent wash, not a grey block.
+6. **One accent, used as a line.** The active masthead tab and the active phone-bar item
+   carry a 2 px accent line with a soft glow; the selected segment of a `.seg` takes the
+   accent as text. Nothing else is filled with it except the primary button and the LED
+   that matters.
+7. **Terminal details, not terminal cosplay.** The dashed last-price line with its value
    tag, the segmented range control, the tabular figures — things a trader would miss.
    No fake scanlines outside the two themes built for them.
-7. **The first item is bigger.** Headline lists lead with a heavier title, then settle.
+8. **The first item is bigger.** Headline lists lead with a heavier title, then settle.
 
 ## Chrome
 
@@ -94,8 +96,10 @@ while someone is typing; the shell checks the focused element.
 | `Kicker` | `components/data/Kicker.tsx` | the metadata line above any headline |
 | `Change`, `Price` | `components/data/Change.tsx` | every price and change |
 | `LiveDot` | `components/data/LiveDot.tsx` | provenance beside a symbol |
-| `.seg` | `globals.css` | segmented control (range, desk filter) |
-| `.tab` | `globals.css` | masthead nav and layout tabs, accent underline |
+| `.seg` | `globals.css` | segmented control (range, desk filter, layout switcher) |
+| `.tab` | `globals.css` | masthead nav, accent underline — navigation only |
+| `BottomBar` | `components/shell/BottomBar.tsx` | phone navigation, thumb zone |
+| `.safe-t`, `.safe-b` | `globals.css` | notch and home-indicator insets |
 | `.row` | `globals.css` | hover wash on list rows and table rows |
 | `.panel-head`, `.panel-actions` | `globals.css` | panel chrome and hover-revealed actions |
 | `.menu`, `.menu-item` | `globals.css` | popover menus (theme picker, layout menu, add panel) |
