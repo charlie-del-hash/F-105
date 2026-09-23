@@ -28,7 +28,8 @@ export const LayoutSchema = z.object({
   description: z.string().default(""),
   /** Which desk this layout serves; used for grouping in the gallery. */
   desk: z.enum(deskIds).optional(),
-  /** A layout may carry a preferred theme; the user's choice still wins. */
+  /** The instrument this layout is built for. Applied whenever the reader has not
+   *  pinned a theme of their own — see Shell. */
   theme: z.enum(themeIds as [string, ...string[]]).optional(),
   /** Presets are read-only; editing one forks it into the user's collection. */
   preset: z.boolean().default(false),

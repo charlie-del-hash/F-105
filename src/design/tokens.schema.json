@@ -3,7 +3,7 @@
   "title": "F-105 design tokens",
   "description": "Shape only — an editor validates as you type. The checks a schema cannot express (every theme carrying the same keys, ink contrast against bg-2, ink-scale separation) live in scripts/tokens-to-css.mjs and run in `pnpm check`. Categorical series palettes are validated separately against the dataviz validator; see docs/DESIGN.md.",
   "type": "object",
-  "required": ["version", "defaultTheme", "fonts", "series", "themes"],
+  "required": ["version", "defaultTheme", "auto", "fonts", "series", "themes"],
   "additionalProperties": false,
   "properties": {
     "$schema": { "type": "string" },
@@ -12,6 +12,14 @@
     "seriesNote": { "type": "string" },
     "fxNote": { "type": "string" },
     "defaultTheme": { "type": "string" },
+    "autoNote": { "type": "string" },
+    "auto": {
+      "type": "object",
+      "description": "Which theme the Auto choice resolves to, per OS colour scheme.",
+      "required": ["dark", "light"],
+      "additionalProperties": false,
+      "properties": { "dark": { "type": "string" }, "light": { "type": "string" } }
+    },
     "fonts": {
       "type": "object",
       "description": "Named font stacks a theme can point at.",

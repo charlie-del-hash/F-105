@@ -9,7 +9,7 @@ import { Command } from "cmdk";
 import { site } from "@/config/site";
 import { panelCatalog } from "@/panels/catalog";
 import { getInstrument } from "@/data/instruments";
-import { isThemeId } from "@/design/tokens";
+import { isThemeChoice } from "@/design/tokens";
 import { useWorkspace } from "@/layout-engine/store";
 import { parseMnemonic, type Command as Mnemonic } from "@/commands/mnemonics";
 import type { CommandIndex } from "@/content/loader";
@@ -46,7 +46,7 @@ export function CommandBar({ open, onClose, index }: { open: boolean; onClose: (
   const runMnemonic = (m: Mnemonic) => {
     switch (m.kind) {
       case "theme":
-        if (isThemeId(m.id)) setTheme(m.id);
+        if (isThemeChoice(m.id)) setTheme(m.id);
         close();
         break;
       case "layout":
@@ -76,7 +76,7 @@ export function CommandBar({ open, onClose, index }: { open: boolean; onClose: (
     out.push({ id: "act:edit", label: editMode ? "Finish editing layout" : "Edit layout", group: "Actions", keywords: ["edit", "move", "resize"], run: () => { setEditMode(!editMode); go("/"); } });
     for (const p of panelCatalog) out.push({ id: `add:${p.type}`, label: `Add ${p.name.toLowerCase()} panel`, hint: p.description, group: "Actions", keywords: [p.mnemonic, "add", "panel"], run: () => { addPanel(p.type); setEditMode(true); go("/"); } });
     for (const l of index.layouts) out.push({ id: `layout:${l.id}`, label: `Layout · ${l.name}`, hint: l.description, group: "Layouts", keywords: ["layout"], run: () => { setActive(l.id); go("/"); } });
-    for (const t of index.themes) out.push({ id: `theme:${t.id}`, label: `Theme · ${t.name}`, hint: t.tagline, group: "Themes", keywords: ["theme"], run: () => { if (isThemeId(t.id)) setTheme(t.id); close(); } });
+    for (const t of index.themes) out.push({ id: `theme:${t.id}`, label: `Theme · ${t.name}`, hint: t.tagline, group: "Themes", keywords: ["theme"], run: () => { if (isThemeChoice(t.id)) setTheme(t.id); close(); } });
     for (const i of index.instruments) out.push({ id: `inst:${i.symbol}`, label: `${i.symbol} · ${i.name}`, hint: `${i.group} · ${i.unit}`, group: "Instruments", keywords: [i.symbol, i.group], run: () => go(`/markets/${i.symbol}`) });
     for (const d of index.docs) out.push({ id: `doc:${d.slug}`, label: d.title, hint: `${d.kind} · ${d.desk}`, group: "Content", keywords: [d.kind, d.desk, ...d.tags, d.designation ?? ""], run: () => go(d.href) });
     return out;

@@ -70,6 +70,30 @@ Touch sizing is a `@media (pointer: coarse)` block in `globals.css`, not a break
 the desk stays dense on a pointer and grows only where the pointer is a finger. Safe
 areas are `.safe-t` / `.safe-b`, because `viewportFit` is `cover`.
 
+## Which theme you get
+
+A theme is decided in one place, `Shell`, in precedence order:
+
+1. an **in-page override** — the reading surface's "read on Paper", which lasts only while
+   a reading page is mounted;
+2. the reader's **pinned** pick, once they have made one;
+3. the **active layout's** declared theme — Pocket asks for Glass, Bridge for Bridge,
+   Hangar for Cockpit. The field had been in the layout schema all along and nothing read
+   it;
+4. that pick as a fallback, which unpinned means **Auto** → `tokens.json`'s `auto` pair,
+   Terminal when the system is dark and Glass when it is light.
+
+Picking a theme in the picker pins it; "Follow the layout instead" hands it back. Only the
+pick and the pin are persisted, so an unpinned device derives its own theme from whatever
+layout it is showing and never pushes that to another device — which is why binding did not
+need a separate per-device override.
+
+The override is its own non-persisted store (`lib/useThemeOverride.ts`), not part of the
+workspace. It lived in the workspace briefly and that was a data-loss bug: the workspace
+persists with `skipHydration`, React runs child effects before parent ones, so a reading
+page setting the override on mount wrote defaults to localStorage before `Shell` had read
+the saved state back. **Never put ephemeral state in the persisted store.**
+
 ## Reading
 
 Long-form pages (`/read`, `/dossier`) are a reading surface first. The masthead slides
