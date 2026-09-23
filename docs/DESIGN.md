@@ -98,9 +98,11 @@ the saved state back. **Never put ephemeral state in the persisted store.**
 
 Long-form pages (`/read`, `/dossier`) are a reading surface first. The masthead slides
 away on phones as the reader scrolls down and returns on the first scroll up; a 2 px
-accent progress line sits at the top. `ReadingControls` in the header set the type size
-(S / M / L, remembered on the device) and switch to the Paper theme with one tap, then
-back to whatever the reader had. Paper opens with a single drop cap; no other theme does.
+accent progress line sits at the top. `ReadingControls` under the byline — not above the
+headline, where they used to push the piece a control row down a phone — set the type size
+(S / M / L, remembered on the device) and switch to Paper with one tap. That switch is
+scoped to the reading surface: see "Which theme you get". Paper opens with a single drop
+cap; no other theme does.
 Paragraphs use `text-wrap: pretty`, hyphenation and `overflow-wrap: anywhere`; headings
 balance. Tables scroll sideways rather than break the column.
 
