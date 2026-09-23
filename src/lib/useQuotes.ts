@@ -58,3 +58,50 @@ export function useSeries(symbol: string, range: Range) {
   }, [symbol, range, key]);
   return useMemo(() => (result.key === key ? { series: result.series, error: result.error } : { series: null, error: null }), [result, key]);
 }
+
+/**
+ * Several daily series at once, for a chart that compares instruments.
+ *
+ * Hooks cannot be called in a loop, so a comparison panel cannot just map
+ * `useSeries` over its symbols. This goes through the same cached `loadSeries`,
+ * which means a symbol already on screen in a `GP` panel at the same range costs
+ * nothing to add here.
+ *
+ * Partial results are the normal case, not an error: one unknown symbol should
+ * not blank a comparison of four. Each entry resolves independently and the
+ * failures come back named, for the panel to report.
+ */
+export function useSeriesSet(symbols: string[], range: Range) {
+  const key = `${symbols.join(",")}:${range}`;
+  const [result, setResult] = useState<{ key: string; series: Series[]; errors: Record<string, string> }>({ key, series: [], errors: {} });
+  useEffect(() => {
+    let alive = true;
+    const list = key.split(":")[0] ? key.split(":")[0].split(",") : [];
+    Promise.all(
+      list.map((symbol) =>
+        loadSeries(symbol, range).then(
+          (s) => ({ symbol, series: s, error: null as string | null }),
+          (e: Error) => ({ symbol, series: null, error: e.message }),
+        ),
+      ),
+    ).then((settled) => {
+      if (!alive) return;
+      const errors: Record<string, string> = {};
+      const series: Series[] = [];
+      for (const r of settled) {
+        if (r.series) series.push(r.series);
+        else if (r.error) errors[r.symbol] = r.error;
+      }
+      setResult({ key, series, errors });
+    });
+    return () => {
+      alive = false;
+    };
+  }, [key, range]);
+  // A stale set belongs to the previous symbols; showing it under the new title
+  // would mislabel the lines.
+  return useMemo(
+    () => (result.key === key ? { series: result.series, errors: result.errors } : { series: [], errors: {} }),
+    [result, key],
+  );
+}

@@ -8,6 +8,7 @@ import type { PanelDefinition } from "./types";
 import { wireDefinition } from "./wire";
 import { quotesDefinition } from "./quotes";
 import { chartDefinition } from "./chart";
+import { compareDefinition } from "./compare";
 import { headlinesDefinition } from "./headlines";
 import { readerDefinition } from "./reader";
 import { dossierDefinition } from "./dossier";
@@ -22,6 +23,7 @@ const defs: PanelDefinition<any>[] = [
   wireDefinition,
   quotesDefinition,
   chartDefinition,
+  compareDefinition,
   headlinesDefinition,
   readerDefinition,
   dossierDefinition,

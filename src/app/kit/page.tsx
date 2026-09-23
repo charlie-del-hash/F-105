@@ -5,6 +5,7 @@ import { Tag } from "@/components/ui/Tag";
 import { Card } from "@/components/ui/Card";
 import { Field, Input, Select } from "@/components/ui/Field";
 import { ChartBlock } from "@/panels/chart";
+import { CompareBlock } from "@/panels/compare";
 import { QuoteTable } from "@/panels/quotes";
 import { StatTiles } from "@/panels/indicators";
 import { PlotView } from "@/panels/plot";
@@ -113,6 +114,9 @@ export default function KitPage() {
           <Card slug="QB" title="Quote board" className="h-72" bodyClassName="overflow-auto">
             <QuoteTable symbols={["BRENT", "TTF", "JKM", "TD3C", "BDI"]} />
           </Card>
+          <Card slug="COMP" title="Comparison" className="h-72">
+            <CompareBlock symbols={["BRENT", "TTF", "TD3C"]} />
+          </Card>
           <Card slug="IND" title="Stat tiles" className="h-40">
             <StatTiles symbols={["HORMUZ.TX", "BAB.TX", "WAR.RS"]} />
           </Card>
@@ -131,8 +135,11 @@ export default function KitPage() {
       >
         <p className="mb-3 max-w-2xl font-ui text-xs text-ink-3">
           Each tile below is scoped with its own <code className="font-data">data-theme</code>, so the
-          tokens, the chrome dials and the series palette are exactly what that theme ships. Two
-          things do not survive the nesting and have to be judged on the real page:{" "}
+          tokens, the chrome dials, the series palette and the series <em>mode</em> are exactly
+          what that theme ships — the comparison block resolves its mode from the nearest
+          <code className="font-data"> data-theme</code>, not from the store, so it is the real
+          thing here. Two things do not survive the nesting and have to be judged on the real
+          page:{" "}
           <code className="font-data">--density</code> (rem resolves against the document root, not
           the nearest ancestor) and the CRT scanline and vignette overlays, which are fixed to the
           viewport.
@@ -151,6 +158,12 @@ export default function KitPage() {
               </div>
               <Card slug="GP" title="Brent" className="mb-2 h-60">
                 <ChartBlock symbol="BRENT" />
+              </Card>
+              {/* The comparison is the block that differs *structurally* between
+                  themes: hue themes spend four ring slots, form themes draw one
+                  colour and separate the lines by dash and end-marker shape. */}
+              <Card slug="COMP" title="Indexed" className="mb-2 h-60">
+                <CompareBlock symbols={["BRENT", "TTF", "TD3C"]} />
               </Card>
               <Card slug="QB" title="Quote board">
                 <QuoteTable symbols={["BRENT", "TTF", "TD3C"]} compact />

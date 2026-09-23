@@ -10,7 +10,8 @@
  * Invariants enforced here (a theme that breaks one fails the build):
  *   1. every theme declares exactly the same colour / shape / fx keys
  *   2. every font key a theme names exists in `fonts`
- *   3. a theme's own `series` (when present) has 8 valid hexes
+ *   3. a theme's own `series` (when present) has 8 valid hexes, and it declares a
+ *      `seriesMode` of hue or form
  *   4. ink, ink-2 and ink-3 each clear a contrast floor against bg-2, and each
  *      step of the ink scale is actually distinguishable from the one above it
  * The categorical series palettes are validated separately, against the dataviz
@@ -64,6 +65,10 @@ for (const id of ids) {
     if (bad.length) at(`series has invalid hex value(s): ${bad.join(", ")}`);
   }
   if (!["light", "dark"].includes(t.scheme)) at(`scheme "${t.scheme}" is not light or dark`);
+  // Every theme must declare how a multi-series chart carries identity, because
+  // a missing value would silently fall back to hue and put four colours on a
+  // tube that only ever had one.
+  if (!["hue", "form"].includes(t.seriesMode)) at(`seriesMode "${t.seriesMode}" is not hue or form`);
 
   const surface = t.color["bg-2"];
   if (HEX.test(surface ?? "")) {

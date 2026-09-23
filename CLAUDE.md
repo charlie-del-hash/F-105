@@ -36,7 +36,9 @@ honest: anything synthetic stays labelled synthetic.
 - **Dataviz rules** (from the dataviz skill): 2 px lines, ≥ 8 px end markers with a surface
   ring, hairline solid gridlines, text in text tokens never series colour, one axis, series
   colours in fixed order (`--series-1..8`), status colours (`up/down/warn/alert`) always paired
-  with a glyph or label.
+  with a glyph or label. More than one series → index to a common base (never a second axis),
+  always a legend carrying the theme's glyph, and **at most three**: the rings only clear the
+  validator's `--pairs all` normal-vision floor at three slots. See `docs/DESIGN.md`.
 - **Two builds.** The default build is the full app for Vercel. `pnpm build:static` is the
   GitHub Pages demo: `output: "export"` with `src/app/api`, `src/app/auth` and `src/proxy.ts`
   moved aside by `scripts/static-export.mjs`. So: keep pages statically exportable (no

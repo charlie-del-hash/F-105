@@ -285,3 +285,57 @@ House rules from the dataviz skill, encoded in `LineChart` and `Sparkline`: 2 px
 10 % area wash, ≥ 8 px end marker with a 2 px surface ring, hairline solid gridlines in
 `line`, labels in `ink-3`, crosshair and tooltip on hover with the whole plot as the hit
 target, one axis. A single series has no legend — the panel title names it.
+
+### More than one series
+
+`MultiLineChart` and the `COMP` panel. Two things govern it.
+
+**Different units share an axis only by indexing.** The instruments here are quoted in
+$/bbl, €/MWh, Worldscale, $/day, points and per-cent. Raw on one plot they say nothing,
+and a second y-axis is the one chart the rules forbid outright, so every series is
+indexed to its own first point — start = 100, or per-cent change from the start. One
+axis, one unit, and the question becomes relative movement, which is what a comparison
+is for. The baseline is always in frame: "did it end above where it started" is the
+question the chart exists to answer.
+
+**Identity is a per-theme mode, `seriesMode` in `tokens.json`.**
+
+| Mode | Themes | Identity |
+|---|---|---|
+| `hue` | Terminal, Cockpit, Bridge, Glass | the theme's ring in fixed order, solid lines, round markers |
+| `form` | Phosphor, Paper | every line in slot 1, separated by dash pattern and end-marker shape |
+
+A P1 tube and a broadsheet have one colour each; inventing a second is precisely what
+would make them read as a dashboard wearing a filter. The mode is discrete, so it is
+typed data in `tokens.ts` — never read back out of CSS. The component resolves it from
+the *nearest* `data-theme` ancestor rather than from the store, or the six scoped tiles
+in /kit's contact sheet would all draw in the document's theme and show nothing.
+
+**The legend is mandatory and carries the glyph, not a colour chip.** For two or more
+series it is the identity channel the rules require, it is the relief the validator
+obliges for Cockpit, Paper and Glass (whose middle ring slots fall under 3:1 against
+their own surface), and in `form` mode a plain swatch would be three identical squares.
+It carries each series' change, so it doubles as the table view.
+
+### Three series, and why it is not four
+
+The rings were validated pairwise on **adjacent** slots — the right test for a palette
+spent a couple of slots at a time. A comparison chart is the first thing here that puts
+every slot it uses on screen *simultaneously*, so the binding test becomes the dataviz
+validator's `--pairs all`. Under it, **no four-slot subset of any ring** clears the
+normal-vision floor of ΔE 15 in all four hue themes. Slots 2 and 4 fail every time:
+
+| Theme | worst all-pairs at 4 slots | |
+|---|---|---|
+| Terminal | `#008ae7` ↔ `#5096e9` | ΔE 5.5 — two blues |
+| Bridge | `#d85b15` ↔ `#c48600` | ΔE 10.2 |
+| Cockpit | `#d9506d` ↔ `#da7344` | ΔE 10.4 |
+| Glass | `#eb6836` ↔ `#eea102` | ΔE 13.8 |
+
+At three slots every ring passes with room: worst normal-vision 17.8 (Terminal), worst
+CVD 9.0 (Glass). Cutting the series count is the skill's own remedy for an all-pairs
+failure, and secondary encoding explicitly does **not** excuse that floor — so the form
+themes take the same three, which also keeps their dash patterns comfortably apart.
+
+Adding a fourth means re-stepping the rings and re-running `--pairs all` on every theme,
+not raising the cap.

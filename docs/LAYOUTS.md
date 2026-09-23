@@ -55,6 +55,7 @@ preset" calls; it keeps the layout's name and forks nothing.
 | `wire` | WIRE | `desk?`, `limit` | 3×10 |
 | `quotes` | QB | `symbols[]`, `compact` | 4×6 |
 | `chart` | GP | `symbol`, `range` (1m/3m/6m/1y) | 5×6 |
+| `compare` | COMP | `symbols[]` (2–3), `range`, `basis` (rebase/pct) | 5×6 |
 | `headlines` | TOP | `desk?`, `limit` | 4×6 |
 | `reader` | READ | `slug` or `"featured"` | 6×12 |
 | `dossier` | DES | `slug` | 4×8 |

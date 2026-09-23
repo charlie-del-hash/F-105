@@ -55,6 +55,22 @@ export function resolveTheme(choice: ThemeChoice, prefersDark: boolean): ThemeId
   return choice;
 }
 
+/**
+ * How a chart with more than one series carries identity in a given theme.
+ *
+ * `hue` spends the theme's validated ring in fixed order. `form` puts every line
+ * in slot 1 and separates them by dash pattern and end-marker shape instead — a
+ * P1 phosphor tube and a broadsheet each have exactly one colour, and faking a
+ * second is the thing that would make them read as a dashboard with a filter on
+ * it. A discrete mode, not a dial, so it is read here as typed data rather than
+ * off a CSS variable.
+ */
+export type SeriesMode = "hue" | "form";
+
+export function seriesMode(id: ThemeId): SeriesMode {
+  return tokens.themes[id].seriesMode as SeriesMode;
+}
+
 /** Categorical series palette for the given scheme (dataviz-validated order; never cycle past 8). */
 export function seriesPalette(scheme: "light" | "dark") {
   return tokens.series[scheme];
