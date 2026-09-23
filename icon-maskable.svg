@@ -1,0 +1,15 @@
+<!-- Maskable source. Android masks the icon to its own shape, so the background
+     is full-bleed (no rounded corners) and the glyph stays inside the safe zone:
+     a centred circle of 40% radius. Colours are the default theme's bg, accent
+     and line-strong from src/design/tokens.json; an SVG cannot read tokens, so
+     they are duplicated here and in src/app/icon.svg. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" fill="#0b0b0d"/>
+  <g transform="translate(32 32) scale(0.78) translate(-32 -32)">
+    <circle cx="32" cy="32" r="22" fill="none" stroke="#3a3a42" stroke-width="1.9"/>
+    <circle cx="32" cy="32" r="12" fill="none" stroke="#3a3a42" stroke-width="1.9"/>
+    <path d="M32 32 L32 8 A24 24 0 0 1 52.8 20 Z" fill="#ffb000" opacity="0.85"/>
+    <circle cx="32" cy="32" r="2.5" fill="#ffb000"/>
+    <circle cx="44" cy="40" r="2" fill="#ffb000"/>
+  </g>
+</svg>
