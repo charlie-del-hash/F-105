@@ -1,14 +1,17 @@
 "use client";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { themeIds } from "@/design/tokens";
+import { AUTO, THEME_STORAGE_KEY, resolveTheme, themeIds, type ThemeChoice } from "@/design/tokens";
 import { presetLayouts } from "@/layout-engine/presets";
-import { useWorkspace } from "@/layout-engine/store";
+import { useActiveLayout, useWorkspace } from "@/layout-engine/store";
 import { WorkspaceSync } from "@/layout-engine/sync";
 import { DialogHost, useDialogs } from "@/components/ui/dialogs";
+import { useMediaQuery } from "@/lib/useMediaQuery";
+import { useThemeOverride } from "@/lib/useThemeOverride";
 import type { CommandIndex } from "@/content/loader";
 import { CommandBar } from "./CommandBar";
 import { KeyboardHelp } from "./KeyboardHelp";
+import { BottomBar } from "./BottomBar";
 import { StatusBar } from "./StatusBar";
 import { Topbar } from "./Topbar";
 
@@ -23,7 +26,24 @@ export function Shell({ index, children }: { index: CommandIndex; children: Reac
   const router = useRouter();
   const pathname = usePathname();
   const hydrated = useWorkspace((s) => s.hydrated);
-  const theme = useWorkspace((s) => s.theme);
+  const choice = useWorkspace((s) => s.theme);
+  const pinned = useWorkspace((s) => s.themePinned);
+  const override = useThemeOverride((s) => s.overrideTheme);
+  const layout = useActiveLayout();
+  const prefersDark = useMediaQuery("(prefers-color-scheme: dark)");
+
+  /**
+   * The one place a theme is decided, in precedence order:
+   *   1. an in-page override — the reading surface's Paper toggle, ephemeral
+   *   2. the user's pick, once they have made one
+   *   3. the active layout's declared theme — Pocket asks for Glass, Bridge for
+   *      Bridge. This field has been in the layout schema all along and nothing
+   *      ever read it.
+   *   4. the pick as a fallback, which unpinned means Auto → the OS scheme
+   * Only 2 and 4 are persisted, so an unpinned device derives its own theme from
+   * whatever layout it is showing and never pushes that to another device.
+   */
+  const theme = override ?? (pinned ? resolveTheme(choice, prefersDark) : layout.theme ?? resolveTheme(choice, prefersDark));
 
   // Persisted state is applied after mount so server and client markup agree.
   useEffect(() => {
@@ -32,6 +52,11 @@ export function Shell({ index, children }: { index: CommandIndex; children: Reac
   useEffect(() => {
     if (!hydrated) return;
     document.documentElement.setAttribute("data-theme", theme);
+    // The boot script reads this back before first paint on the next visit, so it
+    // holds the resolved theme rather than the choice.
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {}
     // iOS status bar and the browser chrome follow the theme's background.
     const bg = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim();
     let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
@@ -75,8 +100,10 @@ export function Shell({ index, children }: { index: CommandIndex; children: Reac
           break;
         case "t":
         case "T": {
-          const i = themeIds.indexOf(s.theme);
-          s.setTheme(themeIds[(i + 1) % themeIds.length]);
+          // Auto sits at the head of the cycle, as it does in the picker.
+          const cycle: ThemeChoice[] = [AUTO, ...themeIds];
+          const i = cycle.indexOf(s.theme);
+          s.setTheme(cycle[(i + 1) % cycle.length]);
           break;
         }
         case "[":
@@ -100,6 +127,9 @@ export function Shell({ index, children }: { index: CommandIndex; children: Reac
       <Topbar onCommand={() => setCmd(true)} />
       <main className="flex-1">{children}</main>
       <StatusBar onHelp={() => setHelp(true)} />
+      {/* Phone navigation sits in the thumb zone; the page ends above it. */}
+      <div className="pad-bottom-bar md:hidden" aria-hidden />
+      <BottomBar />
       <CommandBar open={cmd} onClose={() => setCmd(false)} index={index} />
       <KeyboardHelp open={help} onClose={() => setHelp(false)} />
       <DialogHost />

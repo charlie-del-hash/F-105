@@ -25,7 +25,7 @@ import {
 } from "./schema";
 import { instruments } from "@/data/instruments";
 import { presetLayouts } from "@/layout-engine/presets";
-import { themes } from "@/design/tokens";
+import { AUTO, themes } from "@/design/tokens";
 import { panelCatalog } from "@/panels/catalog";
 
 const ROOT = path.join(process.cwd(), "content");
@@ -210,7 +210,11 @@ export async function getCommandIndex(): Promise<CommandIndex> {
     docs,
     instruments: instruments.map((i) => ({ symbol: i.symbol, name: i.name, unit: i.unit, group: i.group })),
     layouts: presetLayouts.map((l) => ({ id: l.id, name: l.name, description: l.description })),
-    themes: themes.map((t) => ({ id: t.id, name: t.name, tagline: t.tagline })),
+    // Auto is a choice like any other in ⌘K: "THEME AUTO".
+    themes: [
+      { id: AUTO, name: "Auto", tagline: "Follows the system colour scheme" },
+      ...themes.map((t) => ({ id: t.id, name: t.name, tagline: t.tagline })),
+    ],
     panels: panelCatalog.map((p) => ({ type: p.type, name: p.name, description: p.description })),
   };
 }

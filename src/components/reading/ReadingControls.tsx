@@ -1,27 +1,14 @@
 "use client";
 import { BookOpen } from "lucide-react";
 import { useReading, type ReadSize } from "@/lib/reading";
-import { useWorkspace } from "@/layout-engine/store";
 import { cn } from "@/lib/cn";
 
-/** Type size and a one-tap switch to the Paper theme (and back). */
+/** Type size and a one-tap switch to the Paper theme, for as long as you are reading. */
 export function ReadingControls({ className }: { className?: string }) {
   const size = useReading((s) => s.size);
   const setSize = useReading((s) => s.setSize);
-  const prevTheme = useReading((s) => s.prevTheme);
-  const setPrevTheme = useReading((s) => s.setPrevTheme);
-  const theme = useWorkspace((s) => s.theme);
-  const setTheme = useWorkspace((s) => s.setTheme);
-  const onPaper = theme === "paper";
-  const togglePaper = () => {
-    if (onPaper) {
-      setTheme(prevTheme && prevTheme !== "paper" ? prevTheme : "terminal");
-      setPrevTheme(null);
-    } else {
-      setPrevTheme(theme);
-      setTheme("paper");
-    }
-  };
+  const paper = useReading((s) => s.paper);
+  const setPaper = useReading((s) => s.setPaper);
   return (
     <div className={cn("flex items-center gap-2", className)}>
       <div className="seg" role="group" aria-label="Type size">
@@ -33,12 +20,15 @@ export function ReadingControls({ className }: { className?: string }) {
       </div>
       <button
         type="button"
-        onClick={togglePaper}
-        aria-pressed={onPaper}
-        className={cn("flex h-7 items-center gap-1.5 rounded-[var(--radius)] border px-2 font-ui text-xs", onPaper ? "border-accent text-accent" : "border-line text-ink-2 hover:border-line-strong hover:text-ink")}
-        title={onPaper ? "Back to the previous theme" : "Switch to the Paper theme for reading"}
+        onClick={() => setPaper(!paper)}
+        aria-pressed={paper}
+        className={cn(
+          "tap flex h-7 items-center gap-1.5 rounded-panel border px-2 font-ui text-xs",
+          paper ? "border-accent text-accent" : "border-line text-ink-2 hover:border-line-strong hover:text-ink",
+        )}
+        title={paper ? "Back to your own theme" : "Read this on the Paper theme"}
       >
-        <BookOpen size={13} /> {onPaper ? "Leave Paper" : "Read on Paper"}
+        <BookOpen size={13} /> {paper ? "Leave Paper" : "Read on Paper"}
       </button>
     </div>
   );

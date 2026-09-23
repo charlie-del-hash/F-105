@@ -1,6 +1,19 @@
 @import "tailwindcss";
 @import "../design/themes.css";
 
+/* Tailwind compiles `hover:` to a bare `:hover`, which on a touch screen sticks
+   after a tap until you tap somewhere else — every row, tab, menu item and icon
+   button in the app stays lit behind your finger. Redefining the variant guards
+   all ~100 of them at once; the hand-written `:hover` rules below are guarded
+   individually. */
+@custom-variant hover {
+  @media (hover: hover) {
+    &:hover {
+      @slot;
+    }
+  }
+}
+
 /* Map theme tokens (CSS variables set per [data-theme]) onto Tailwind utilities.
    Use `bg-bg-2 text-ink border-line font-data` etc. Never hard-code a colour in a component. */
 @theme inline {
@@ -30,6 +43,18 @@
   --font-data: var(--font-data);
   --font-read: var(--font-read);
   --radius-panel: var(--radius);
+
+  /* Two steps Tailwind's scale does not have. This UI lives between 10px and
+     15px, where the stock ladder jumps 10.1 → 11.8 → 13.5, so ~56 sizes had been
+     written as arbitrary `text-[11px]` values. Those are px, so they ignored
+     --density and the hierarchy inverted between themes: on Glass a panel title
+     grew to 10.71px while the slug beside it stayed at 10px, having been the
+     smaller of the two on Terminal. Everything is on the rem ladder now, so a
+     theme scales the whole instrument and the order never changes.
+     rem values are anchored to the default theme's 13.5px root, so Terminal
+     renders what it always did and the roomier themes finally scale with it. */
+  --text-meta: 0.815rem;
+  --text-item: 0.963rem;
 }
 
 /* ------------------------------------------------------------------ base */
@@ -50,16 +75,54 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
-::selection { background: var(--selection); color: var(--bg); }
-a { color: inherit; text-decoration: none; }
-button { font: inherit; color: inherit; }
-button, a, select, input { transition: color 120ms ease, background-color 120ms ease, border-color 120ms ease, opacity 120ms ease, box-shadow 120ms ease; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* These belong in @layer base. Unlayered, `button { font: inherit }` beat every
+   rule in @layer components — layer order wins over specificity — so the `font`
+   shorthand silently reset font-size and font-family on any component styling a
+   button. `.seg > button` kept its uppercase and letter-spacing but rendered in
+   the UI face at the inherited size instead of mono at 0.75rem, and `.menu-item`
+   the same. */
+@layer base {
+  ::selection { background: var(--selection); color: var(--bg); }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; }
+  button, a, select, input { transition: color 120ms ease, background-color 120ms ease, border-color 120ms ease, opacity 120ms ease, box-shadow 120ms ease; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+}
 
 /* thin scrollbars, themed */
 * { scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
 *::-webkit-scrollbar { width: 8px; height: 8px; }
 *::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 4px; }
+
+/* ------------------------------------------------------------- safe areas
+   viewportFit is "cover" and the iOS web-app status bar is translucent, so the
+   sticky masthead, the phone nav bar and the status bar have to keep clear of
+   the notch and the home indicator themselves. */
+.safe-t { padding-top: env(safe-area-inset-top, 0px); }
+.safe-b { padding-bottom: env(safe-area-inset-bottom, 0px); }
+/* The phone nav bar is fixed, so the page has to end above it. */
+.pad-bottom-bar { padding-bottom: calc(3rem + env(safe-area-inset-bottom, 0px)); }
+
+/* The grid picks its tree in JS, and a media query cannot be known on the server,
+   so SSR always emits the 12-column one. On a phone that paints a squashed desktop
+   grid for a frame before the client swaps to the stack. Hiding it until the swap
+   trades a visible wrong layout for an empty one; above the breakpoint the rule
+   never matches and nothing changes. */
+@media (max-width: 767px) {
+  .workspace-grid-wide { visibility: hidden; }
+}
+
+/* ------------------------------------------------------------- touch sizing
+   The desk is deliberately dense on a pointer. On a finger it cannot be: every
+   control below was under 24px. These grow only where the pointer is coarse, so
+   desktop density is untouched. */
+@media (pointer: coarse) {
+  .tap { min-height: 38px; min-width: 38px; }
+  .seg > button { height: 30px; padding: 0 12px; }
+  .tab { padding: 0 14px; }
+  .menu-item { padding: 10px 10px; }
+  .panel-head { min-height: 38px; }
+}
 
 /* ------------------------------------------------- skeuomorphic primitives
    Functional skeuomorphism: the bezel tells you where a panel ends, the LED
@@ -77,10 +140,26 @@ button, a, select, input { transition: color 120ms ease, background-color 120ms 
       0 1px 2px color-mix(in srgb, #000 calc(40% * var(--fx-bezel)), transparent);
   }
   .inset {
+    position: relative;
     background: var(--bg-3);
     border: 1px solid var(--line);
     border-radius: calc(var(--radius) - 1px);
     box-shadow: inset 0 2px 8px color-mix(in srgb, #000 calc(45% * var(--fx-bezel)), transparent);
+  }
+  /* Instrument ticks along the top edge of a screen. Cockpit and Bridge only;
+     every other theme sets --fx-ticks to 0 and the gradient disappears. */
+  .inset::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 4px;
+    pointer-events: none;
+    opacity: var(--fx-ticks);
+    background: repeating-linear-gradient(
+      90deg,
+      var(--line-strong) 0 1px,
+      transparent 1px 12px
+    );
   }
   .glow { text-shadow: 0 0 12px var(--glow); }
   .hairline { border-color: var(--line); }
@@ -134,47 +213,70 @@ button, a, select, input { transition: color 120ms ease, background-color 120ms 
   .seg > button {
     flex: none;
     height: 18px; padding: 0 7px; border-radius: var(--radius);
-    font-family: var(--font-data); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--ink-3);
+    font-family: var(--font-data); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase;
+    /* ink-3 on bg-3 falls under 3:1 on the light themes, which left the unselected
+       ranges nearly invisible on Paper and Glass. */
+    color: var(--ink-2);
   }
-  .seg > button:hover { color: var(--ink); }
-  .seg > button[aria-pressed="true"] { background: var(--bg-2); color: var(--accent); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35); }
+  @media (hover: hover) { .seg > button:hover { color: var(--ink); } }
+  .seg > button[aria-pressed="true"], .seg > button[aria-selected="true"] {
+    background: var(--bg-2);
+    color: var(--accent);
+    box-shadow: 0 1px 2px color-mix(in srgb, #000 calc(35% * var(--fx-bezel)), transparent);
+  }
 
   /* tabs with an accent underline (masthead nav, layout tabs) */
   .tab {
     position: relative; display: inline-flex; align-items: center; height: 100%; padding: 0 10px;
-    font-family: var(--font-ui); font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase;
+    font-family: var(--font-ui); font-size: var(--text-meta); letter-spacing: 0.1em; text-transform: uppercase;
     color: var(--ink-3); white-space: nowrap;
   }
   .tab::after {
     content: ""; position: absolute; left: 8px; right: 8px; bottom: -1px; height: 2px;
     background: transparent; border-radius: 1px; transition: background-color 120ms ease;
   }
-  .tab:hover { color: var(--ink); }
+  @media (hover: hover) { .tab:hover { color: var(--ink); } }
   .tab[aria-current="page"], .tab[aria-selected="true"] { color: var(--ink); }
   .tab[aria-current="page"]::after, .tab[aria-selected="true"]::after { background: var(--accent); box-shadow: 0 0 8px var(--glow); }
 
   /* a warm row highlight, one step above bg-2 */
   .row { transition: background-color 100ms ease; }
-  .row:hover { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+  @media (hover: hover) {
+    .row:hover { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+  }
 
-  /* panel chrome */
-  .panel-head { background: color-mix(in srgb, var(--bg-2) 80%, var(--bg-3)); }
+  /* panel chrome. --fx-headfill decides whether a panel header is a filled bar
+     (Terminal, Cockpit), a half-tint (Bridge, Glass) or nothing but the rule
+     beneath it (Phosphor, Paper) — which is what turns Paper into a broadsheet
+     and Phosphor into one continuous surface. */
+  .panel-head {
+    background: color-mix(
+      in srgb,
+      color-mix(in srgb, var(--bg-2) 80%, var(--bg-3)) calc(100% * var(--fx-headfill)),
+      transparent
+    );
+  }
   .panel-actions { opacity: 1; transition: opacity 120ms ease; }
   @media (hover: hover) {
     .panel:not([data-editing="true"]) .panel-actions { opacity: 0; }
     .panel:hover .panel-actions, .panel:focus-within .panel-actions { opacity: 1; }
   }
   .panel[data-editing="true"] { outline: 1px dashed color-mix(in srgb, var(--accent) 45%, transparent); outline-offset: 1px; }
-  .panel[data-dragging="true"] { outline: 1px solid var(--accent); box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45); }
+  .panel[data-dragging="true"] {
+    outline: 1px solid var(--accent);
+    box-shadow: 0 12px 32px color-mix(in srgb, #000 calc(45% * max(var(--fx-bezel), 0.4)), transparent);
+  }
 
   /* popover menus */
   .menu { min-width: 12rem; padding: 4px; }
   .menu-item {
     display: flex; width: 100%; align-items: center; gap: 8px; padding: 6px 8px; text-align: left;
-    border-radius: var(--radius); font-family: var(--font-ui); font-size: 12px; color: var(--ink-2);
+    border-radius: var(--radius); font-family: var(--font-ui); font-size: 0.875rem; color: var(--ink-2);
   }
-  .menu-item:hover, .menu-item[data-active="true"] { background: var(--bg-3); color: var(--ink); }
+  .menu-item[data-active="true"] { background: var(--bg-3); color: var(--ink); }
+  @media (hover: hover) {
+    .menu-item:hover { background: var(--bg-3); color: var(--ink); }
+  }
   .menu-sep { height: 1px; margin: 4px 0; background: var(--line); }
 
   /* CRT furniture — opacity driven entirely by theme tokens */

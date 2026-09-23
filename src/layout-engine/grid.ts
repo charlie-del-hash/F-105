@@ -85,6 +85,27 @@ export function findFreeSpot(panels: PanelInstance[], w: number, h: number): { x
   return { x: 0, y: maxY };
 }
 
+/**
+ * Swap two panels' slots in reading order — what the phone's move up/down does.
+ *
+ * The two panels trade rectangles outright (x, y, w, h). That keeps the set of
+ * occupied rectangles identical, so no overlap can be introduced and the desktop
+ * arrangement survives: two panels change places rather than the whole layout
+ * collapsing into one column. `dir` is -1 for up, +1 for down; out-of-range
+ * moves are a no-op.
+ */
+export function swapInReadingOrder(panels: PanelInstance[], id: string, dir: number): PanelInstance[] {
+  const order = readingOrder(panels);
+  const i = order.findIndex((p) => p.id === id);
+  const j = i + dir;
+  if (i < 0 || j < 0 || j >= order.length) return panels;
+  const a = order[i];
+  const b = order[j];
+  const slotOf = (p: PanelInstance) => ({ x: p.x, y: p.y, w: p.w, h: p.h });
+  const [slotA, slotB] = [slotOf(a), slotOf(b)];
+  return panels.map((p) => (p.id === a.id ? { ...p, ...slotB } : p.id === b.id ? { ...p, ...slotA } : p));
+}
+
 export function gridHeight(panels: PanelInstance[]) {
   return panels.reduce((m, p) => Math.max(m, p.y + p.h), 0);
 }

@@ -8,6 +8,7 @@ import { DocFooter, DocHeader } from "@/components/content/DocHeader";
 import { ReadingProgress } from "@/components/reading/ReadingProgress";
 import { ReadingSurface } from "@/components/reading/ReadingSurface";
 import { QuoteTable } from "@/panels/quotes";
+import { Card } from "@/components/ui/Card";
 import type { Article, Brief } from "@/content/schema";
 
 type Params = { params: Promise<{ slug: string }> };
@@ -50,10 +51,9 @@ export default async function ReadPage({ params }: Params) {
       </article>
       <aside className="min-w-0 space-y-4 md:sticky md:top-14 md:self-start">
         {doc.data.instruments.length > 0 && (
-          <section className="bezel overflow-hidden">
-            <div className="caps border-b border-line px-3 py-1.5 text-ink-3">Instruments in this piece</div>
+          <Card slug="QB" title="Instruments in this piece">
             <QuoteTable symbols={doc.data.instruments} compact />
-          </section>
+          </Card>
         )}
         <section className="bezel p-3 font-ui text-xs text-ink-2">
           <div className="caps mb-1 text-ink-3">On the desk</div>

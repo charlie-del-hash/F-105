@@ -6,6 +6,7 @@ import { getDocs, getEvents, getWire } from "@/content/loader";
 import { instruments } from "@/data/instruments";
 import { fmtDate, fmtTime } from "@/data/format";
 import { QuoteTable } from "@/panels/quotes";
+import { Card } from "@/components/ui/Card";
 import { Kicker } from "@/components/data/Kicker";
 
 type Params = { params: Promise<{ id: string }> };
@@ -52,17 +53,16 @@ export default async function DeskLanding({ params }: Params) {
           <ol className="bezel divide-y divide-line">
             {wire.map((w) => (
               <li key={w.id} className="row px-3 py-2 font-ui text-sm text-ink">
-                <span className="tabular mr-2 font-data text-[10.5px] text-ink-3">{fmtDate(w.ts)} {fmtTime(w.ts)}Z</span>{w.text}
+                <span className="tabular mr-2 font-data text-xs text-ink-3">{fmtDate(w.ts)} {fmtTime(w.ts)}Z</span>{w.text}
               </li>
             ))}
           </ol>
         </section>
         <aside className="space-y-4">
           {syms.length > 0 && (
-            <section className="bezel overflow-hidden">
-              <div className="caps border-b border-line px-3 py-1.5 text-ink-3">Instruments</div>
+            <Card slug="QB" title="Instruments">
               <QuoteTable symbols={syms} compact />
-            </section>
+            </Card>
           )}
           {events.length > 0 && (
             <section className="bezel p-3">

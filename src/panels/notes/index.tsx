@@ -16,7 +16,8 @@ function NotesPanel({ props, panelId }: { props: Props; panelId: string }) {
       onChange={(e) => setNote(panelId, e.target.value)}
       placeholder={props.placeholder}
       spellCheck={false}
-      className="h-full w-full resize-none bg-transparent px-3 py-2 font-data text-xs leading-relaxed text-ink outline-none placeholder:text-ink-3"
+      // min-h so the scratchpad is usable in a panel that sizes to its content.
+      className="h-full min-h-32 w-full resize-none bg-transparent px-3 py-2 font-data text-xs leading-relaxed text-ink outline-none placeholder:text-ink-3"
     />
   );
 }

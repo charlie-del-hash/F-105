@@ -8,6 +8,7 @@ import { z } from "zod";
 import { arrow, fmtNum } from "@/data/format";
 import { getInstrument } from "@/data/instruments";
 import { useQuotes } from "@/lib/useQuotes";
+import { useSize } from "@/lib/useSize";
 import { cn } from "@/lib/cn";
 import { Empty } from "@/components/ui/Tag";
 import { panelMetaMap } from "../catalog";
@@ -43,12 +44,19 @@ function TrackGlyph({ t }: { t: Track }) {
   );
 }
 
-export function PlotView({ areaId, showStatus = true }: { areaId: string; showStatus?: boolean }) {
+export function PlotView({ areaId, showStatus }: { areaId: string; showStatus?: boolean }) {
   const area = areas[areaId];
   const { quotes } = useQuotes(area?.instruments ?? []);
+  const [ref, size] = useSize<HTMLDivElement>();
+  /**
+   * The instrument strip below the plot appears when there is room for it —
+   * measured, not inferred from the panel's span on the desktop grid, which is
+   * not the box this is drawn in on a phone.
+   */
+  const withStatus = showStatus ?? size.height >= 220;
   if (!area) return <Empty>Unknown area “{areaId}”.</Empty>;
   return (
-    <div className="flex h-full flex-col">
+    <div ref={ref} className="flex h-full flex-col">
       <div className="inset relative m-2 min-h-0 flex-1 overflow-hidden">
         <svg viewBox="0 0 100 70" preserveAspectRatio="xMidYMid meet" className="block h-full w-full" role="img" aria-label={`${area.name} schematic plot`}>
           <defs>
@@ -90,13 +98,18 @@ export function PlotView({ areaId, showStatus = true }: { areaId: string; showSt
             <path d="M0 -3.5 L1.6 1.5 L0 0.6 L-1.6 1.5 Z" fill="var(--ink-2)" />
             <text y={5.6} textAnchor="middle" fontSize={2.4} fontFamily="var(--font-data)" fill="var(--ink-3)">N</text>
           </g>
-          <text x={2} y={68} fontSize={2.3} fontFamily="var(--font-data)" fill="var(--ink-3)">
-            {area.subtitle} · positions illustrative
-          </text>
         </svg>
       </div>
-      {showStatus && (
-        <div className="flex flex-wrap gap-x-4 gap-y-1 px-3 pb-2 font-data text-[11px]">
+      {/* The map's own labels belong in the viewBox — they are anchored to
+          features and should scale with the drawing. This one is not a label,
+          it is the honesty line, and inside the viewBox it shrank to about 8.6px
+          in a phone-width panel. Out here it is HTML on the rem ladder, so it
+          stays legible and scales with the theme like every other caption. */}
+      <p className="m-0 px-3 pb-1 font-data text-xs leading-tight text-ink-3">
+        {area.subtitle} · positions illustrative
+      </p>
+      {withStatus && (
+        <div className="flex flex-wrap gap-x-4 gap-y-1 px-3 pb-2 font-data text-meta">
           {area.instruments.map((s) => {
             const q = quotes[s];
             const inst = getInstrument(s);
@@ -116,8 +129,8 @@ export function PlotView({ areaId, showStatus = true }: { areaId: string; showSt
   );
 }
 
-function PlotPanel({ props, size }: { props: Props; size: { w: number; h: number } }) {
-  return <PlotView areaId={props.area} showStatus={size.h >= 5} />;
+function PlotPanel({ props }: { props: Props }) {
+  return <PlotView areaId={props.area} />;
 }
 
 export const plotDefinition: PanelDefinition<Props> = {

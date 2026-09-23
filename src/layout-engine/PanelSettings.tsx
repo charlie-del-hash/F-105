@@ -14,14 +14,14 @@ import type { PanelInstance } from "./schema";
 function CheckList({ options, value, onChange }: { options: { value: string; label: string; group?: string }[]; value: string[]; onChange: (v: string[]) => void }) {
   const groups = Array.from(new Set(options.map((o) => o.group ?? "")));
   return (
-    <div className="max-h-48 overflow-auto rounded-[var(--radius)] border border-line bg-bg-3 p-2">
+    <div className="max-h-48 overflow-auto rounded-panel border border-line bg-bg-3 p-2">
       {groups.map((g) => (
         <div key={g} className="mb-1.5">
           {g && <div className="caps mb-0.5 text-ink-3">{g}</div>}
           {options
             .filter((o) => (o.group ?? "") === g)
             .map((o) => (
-              <label key={o.value} className="flex cursor-pointer items-center gap-2 py-0.5 font-data text-[11.5px] text-ink-2 hover:text-ink">
+              <label key={o.value} className="flex cursor-pointer items-center gap-2 py-0.5 font-data text-meta text-ink-2 hover:text-ink">
                 <input
                   type="checkbox"
                   checked={value.includes(o.value)}

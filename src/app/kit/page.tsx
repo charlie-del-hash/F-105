@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { themes } from "@/design/tokens";
 import { Button, IconButton } from "@/components/ui/Button";
 import { Tag } from "@/components/ui/Tag";
+import { Card } from "@/components/ui/Card";
 import { Field, Input, Select } from "@/components/ui/Field";
 import { ChartBlock } from "@/panels/chart";
 import { QuoteTable } from "@/panels/quotes";
@@ -37,7 +38,7 @@ export default function KitPage() {
         <ul className="grid gap-2 sm:grid-cols-3">
           {themes.map((t) => (
             <li key={t.id} className="bezel flex items-center gap-3 p-3">
-              <span className="h-8 w-8 rounded-[var(--radius)] border border-line" style={{ background: `linear-gradient(135deg, ${t.bg} 50%, ${t.accent} 50%)` }} aria-hidden />
+              <span className="h-8 w-8 rounded-panel border border-line" style={{ background: `linear-gradient(135deg, ${t.bg} 50%, ${t.accent} 50%)` }} aria-hidden />
               <span>
                 <span className="block font-ui text-sm font-medium text-ink">{t.name} <span className="text-ink-3">· {t.scheme}</span></span>
                 <span className="block font-ui text-xs text-ink-2">{t.tagline}</span>
@@ -51,17 +52,17 @@ export default function KitPage() {
         <ul className="grid grid-cols-3 gap-2 sm:grid-cols-5 lg:grid-cols-7">
           {roles.map((r) => (
             <li key={r} className="bezel p-2">
-              <div className="h-8 rounded-[var(--radius)] border border-line" style={{ background: `var(--${r})` }} />
-              <div className="mt-1 font-data text-[10.5px] text-ink-2">--{r}</div>
+              <div className="h-8 rounded-panel border border-line" style={{ background: `var(--${r})` }} />
+              <div className="mt-1 font-data text-xs text-ink-2">--{r}</div>
             </li>
           ))}
         </ul>
         <div className="mt-2 flex gap-1">
           {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-            <span key={i} className="h-5 flex-1 rounded-[var(--radius)]" style={{ background: `var(--series-${i})` }} title={`--series-${i}`} />
+            <span key={i} className="h-5 flex-1 rounded-panel" style={{ background: `var(--series-${i})` }} title={`--series-${i}`} />
           ))}
         </div>
-        <p className="mt-1 font-ui text-[11px] text-ink-3">Series palette, in fixed order. Assign by entity, never by rank; never cycle past eight.</p>
+        <p className="mt-1 font-ui text-meta text-ink-3">Series palette, in fixed order. Assign by entity, never by rank; never cycle past eight.</p>
       </Section>
 
       <Section title="Type" note="ui · data · read">
@@ -106,11 +107,56 @@ export default function KitPage() {
 
       <Section title="Data blocks" note="live from /api">
         <div className="grid gap-3 lg:grid-cols-2">
-          <div className="bezel h-72 overflow-hidden"><div className="caps border-b border-line px-3 py-1.5 text-ink-3">Chart</div><div className="h-[calc(100%-2rem)]"><ChartBlock symbol="TTF" /></div></div>
-          <div className="bezel h-72 overflow-auto"><div className="caps border-b border-line px-3 py-1.5 text-ink-3">Quote board</div><QuoteTable symbols={["BRENT", "TTF", "JKM", "TD3C", "BDI"]} /></div>
-          <div className="bezel h-40 overflow-hidden"><div className="caps border-b border-line px-3 py-1.5 text-ink-3">Stat tiles</div><div className="h-[calc(100%-2rem)]"><StatTiles symbols={["HORMUZ.TX", "BAB.TX", "WAR.RS"]} /></div></div>
-          <div className="bezel h-40 overflow-hidden"><div className="caps border-b border-line px-3 py-1.5 text-ink-3">World clocks</div><div className="h-[calc(100%-2rem)]"><Clocks names={["London", "Dubai", "Singapore", "New York"]} /></div></div>
-          <div className="bezel h-96 overflow-hidden lg:col-span-2"><div className="caps border-b border-line px-3 py-1.5 text-ink-3">Plot</div><div className="h-[calc(100%-2rem)]"><PlotView areaId="hormuz" /></div></div>
+          <Card slug="GP" title="Chart" className="h-72">
+            <ChartBlock symbol="TTF" />
+          </Card>
+          <Card slug="QB" title="Quote board" className="h-72" bodyClassName="overflow-auto">
+            <QuoteTable symbols={["BRENT", "TTF", "JKM", "TD3C", "BDI"]} />
+          </Card>
+          <Card slug="IND" title="Stat tiles" className="h-40">
+            <StatTiles symbols={["HORMUZ.TX", "BAB.TX", "WAR.RS"]} />
+          </Card>
+          <Card slug="WCLK" title="World clocks" className="h-40">
+            <Clocks names={["London", "Dubai", "Singapore", "New York"]} />
+          </Card>
+          <Card slug="PLOT" title="Plot" className="h-96 lg:col-span-2">
+            <PlotView areaId="hormuz" />
+          </Card>
+        </div>
+      </Section>
+
+      <Section
+        title="Theme contact sheet"
+        note="the same three blocks in all six themes — compare, do not take on trust"
+      >
+        <p className="mb-3 max-w-2xl font-ui text-xs text-ink-3">
+          Each tile below is scoped with its own <code className="font-data">data-theme</code>, so the
+          tokens, the chrome dials and the series palette are exactly what that theme ships. Two
+          things do not survive the nesting and have to be judged on the real page:{" "}
+          <code className="font-data">--density</code> (rem resolves against the document root, not
+          the nearest ancestor) and the CRT scanline and vignette overlays, which are fixed to the
+          viewport.
+        </p>
+        <div className="grid gap-3 lg:grid-cols-2 xl:grid-cols-3">
+          {themes.map((t) => (
+            <div key={t.id} data-theme={t.id} className="bezel overflow-hidden bg-bg p-2">
+              <div className="mb-2 flex items-baseline gap-2 px-1">
+                <span className="font-ui text-sm font-medium text-ink">{t.name}</span>
+                <span className="font-data text-xs uppercase tracking-wider text-ink-3">{t.scheme}</span>
+                <span className="ml-auto flex gap-0.5" aria-hidden>
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                    <span key={i} className="h-2.5 w-2.5 rounded-[1px]" style={{ background: `var(--series-${i})` }} />
+                  ))}
+                </span>
+              </div>
+              <Card slug="GP" title="Brent" className="mb-2 h-60">
+                <ChartBlock symbol="BRENT" />
+              </Card>
+              <Card slug="QB" title="Quote board">
+                <QuoteTable symbols={["BRENT", "TTF", "TD3C"]} compact />
+              </Card>
+            </div>
+          ))}
         </div>
       </Section>
 

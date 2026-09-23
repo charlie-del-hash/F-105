@@ -91,7 +91,7 @@ export function WorkspaceSync() {
       }
       unsubscribeStore?.();
       unsubscribeStore = useWorkspace.subscribe((s, prev) => {
-        if (s.layouts !== prev.layouts || s.theme !== prev.theme || s.activeId !== prev.activeId || s.notes !== prev.notes || s.watchlist !== prev.watchlist) schedulePush();
+        if (s.layouts !== prev.layouts || s.theme !== prev.theme || s.themePinned !== prev.themePinned || s.activeId !== prev.activeId || s.notes !== prev.notes || s.watchlist !== prev.watchlist) schedulePush();
       });
     };
     const stop = () => {

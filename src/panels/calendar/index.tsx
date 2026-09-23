@@ -23,14 +23,14 @@ function CalendarPanel({ props }: { props: Props }) {
     <ol className="divide-y divide-line">
       {items.map((e) => (
         <li key={e.id} className="row flex gap-3 px-3 py-2">
-          <div className="w-[4.6rem] shrink-0 whitespace-nowrap font-data text-[11px] leading-tight">
+          <div className="w-[4.6rem] shrink-0 whitespace-nowrap font-data text-meta leading-tight">
             <div className="tabular text-ink">{fmtDate(e.date)}</div>
             <div className="text-ink-3">{e.time ? `${e.time} ${e.tz}` : "all day"}</div>
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5">
               <span className={cn("led", e.importance === "high" ? "led-alert" : e.importance === "medium" ? "led-warn" : "")} aria-hidden />
-              <span className="truncate font-ui text-[12.5px] font-medium text-ink">{e.title}</span>
+              <span className="truncate font-ui text-item font-medium text-ink">{e.title}</span>
             </div>
             <Kicker className="mt-0.5" items={[deskOf(e.desk as DeskId)?.short, e.note && <span className="normal-case tracking-normal">{e.note}</span>]} />
           </div>

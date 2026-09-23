@@ -35,6 +35,26 @@ export function isThemeId(x: unknown): x is ThemeId {
   return typeof x === "string" && (themeIds as string[]).includes(x);
 }
 
+/**
+ * What the user has *chosen*. `"auto"` follows the OS; everything else names an
+ * instrument. This is a preference, not the theme on screen: the applied theme
+ * also depends on whether the choice is pinned and on what the active layout
+ * asks for. `Shell` resolves it.
+ */
+export type ThemeChoice = ThemeId | "auto";
+export const AUTO = "auto" as const;
+export const autoPair = tokens.auto as { dark: ThemeId; light: ThemeId };
+
+export function isThemeChoice(x: unknown): x is ThemeChoice {
+  return x === AUTO || isThemeId(x);
+}
+
+/** Collapse a choice to the theme that should actually be on screen. */
+export function resolveTheme(choice: ThemeChoice, prefersDark: boolean): ThemeId {
+  if (choice === AUTO) return prefersDark ? autoPair.dark : autoPair.light;
+  return choice;
+}
+
 /** Categorical series palette for the given scheme (dataviz-validated order; never cycle past 8). */
 export function seriesPalette(scheme: "light" | "dark") {
   return tokens.series[scheme];

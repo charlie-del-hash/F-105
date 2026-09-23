@@ -10,6 +10,9 @@ honest: anything synthetic stays labelled synthetic.
 
 - **Tokens, not colours.** Components use Tailwind utilities mapped to theme variables
   (`bg-bg-2 text-ink border-line text-accent font-data`). Never a hex in a component.
+  Never a `text-[Npx]` either: `--density` scales the root font size, so a px value opts
+  out of it and the type hierarchy changes between themes. `text-meta` and `text-item`
+  fill the gap Tailwind's scale leaves in the 10–15px band.
   New colour role → add to every theme in `src/design/tokens.json`, run `pnpm tokens`,
   map it in `src/app/globals.css` `@theme inline`.
 - **Server reads content; clients get snapshots.** `src/content/loader.ts` is `server-only`.
@@ -17,6 +20,11 @@ honest: anything synthetic stays labelled synthetic.
 - **Design rules live in `docs/DESIGN.md`.** Metadata is a `Kicker` line, never a row of
   tags; every price and change goes through `Price` / `Change`; provenance is `LiveDot`.
   Quotes come from `useQuotes` (one shared poller); never `fetch("/api/quotes")` in a panel.
+- **Hover is guarded.** `globals.css` redefines Tailwind's `hover:` variant to sit inside
+  `@media (hover: hover)`, and every hand-written `:hover` rule is wrapped too — an
+  unguarded hover sticks after a tap on a touch screen. Corners use `rounded-panel`, not
+  `rounded-[var(--radius)]`. A panel decides its layout from `useSize`, never from its
+  `h` on the desktop grid.
 - **No browser dialogs.** `window.prompt`, `confirm` and `alert` are banned; use
   `dialogs.prompt` / `dialogs.confirm` from `src/components/ui/dialogs.tsx`, and `Modal` for
   anything else that overlays the page.
@@ -44,7 +52,8 @@ honest: anything synthetic stays labelled synthetic.
 1. `src/panels/catalog.ts` — add a row (type, name, description, category, mnemonic, sizes).
 2. `src/panels/<type>/index.tsx` — export a `PanelDefinition`: `schema` (Zod, with defaults),
    `fields` (settings form), `component`, `defaultTitle`, optional `href`.
-3. `src/panels/registry.tsx` — add it to `defs`.
+3. `src/panels/registry.tsx` — add it to `defs`. `pnpm panels:check` catches a row
+   with no component, a component with no row, and a duplicated mnemonic.
 4. Content panels read `useWorkspaceData()`; market panels use `useQuotes`/`useSeries`.
 5. Document it in `docs/LAYOUTS.md`. `pnpm layouts:check` will catch a preset that uses it wrongly.
 
@@ -92,6 +101,6 @@ Set `placeholder: false` only when a human has verified the piece.
 
 ```
 pnpm dev · pnpm build · pnpm build:static · pnpm check
-pnpm tokens · pnpm content:check · pnpm layouts:check · pnpm test
+pnpm tokens · pnpm content:check · pnpm layouts:check · pnpm panels:check · pnpm test
 curl -H "Authorization: Bearer $CRON_SECRET" "http://localhost:3000/api/alerts/run?dryRun=1"
 ```

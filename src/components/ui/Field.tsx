@@ -5,13 +5,13 @@ export function Field({ label, hint, children, className }: { label: string; hin
     <label className={cn("flex flex-col gap-1", className)}>
       <span className="caps text-ink-3">{label}</span>
       {children}
-      {hint && <span className="text-[11px] text-ink-3">{hint}</span>}
+      {hint && <span className="text-meta text-ink-3">{hint}</span>}
     </label>
   );
 }
 
 export const inputClass =
-  "h-8 w-full rounded-[var(--radius)] border border-line bg-bg-3 px-2 font-data text-xs text-ink outline-none focus:border-accent";
+  "h-8 w-full rounded-panel border border-line bg-bg-3 px-2 font-data text-xs text-ink outline-none focus:border-accent";
 
 export function Select(props: React.SelectHTMLAttributes<HTMLSelectElement>) {
   return <select {...props} className={cn(inputClass, props.className)} />;

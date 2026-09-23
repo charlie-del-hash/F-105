@@ -35,7 +35,7 @@ export function EmptyLayout({ layout }: { layout: Layout }) {
               <button type="button" onClick={() => adoptPreset(l.id)} className="row bezel flex h-full w-full flex-col items-stretch gap-2 p-2 text-left hover:border-line-strong">
                 <span className="inset flex h-24 items-center justify-center overflow-hidden p-1.5"><LayoutThumb layout={l} width={140} /></span>
                 <span className="font-ui text-xs font-medium text-ink">{l.name}</span>
-                <span className="line-clamp-2 font-ui text-[11px] leading-snug text-ink-3">{l.description}</span>
+                <span className="line-clamp-2 font-ui text-meta leading-snug text-ink-3">{l.description}</span>
               </button>
             </li>
           ))}
@@ -58,7 +58,7 @@ export function EmptyLayout({ layout }: { layout: Layout }) {
                 <span className="kbd mt-0.5 w-12 shrink-0 text-center">{p.mnemonic}</span>
                 <span className="min-w-0">
                   <span className="block font-ui text-xs font-medium text-ink">{p.name}</span>
-                  <span className="block font-ui text-[11px] leading-snug text-ink-3">{p.description}</span>
+                  <span className="block font-ui text-meta leading-snug text-ink-3">{p.description}</span>
                 </span>
               </button>
             </li>

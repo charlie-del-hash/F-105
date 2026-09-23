@@ -58,7 +58,7 @@ export function QuoteTable({ symbols, compact: compactProp = false }: { symbols:
                     <LiveDot synthetic={q?.synthetic} provider={q?.provider} />
                     <span className="min-w-0">
                       <span className="block font-medium text-ink">{s}</span>
-                      {!compact && <span className="block truncate font-ui text-[10.5px] text-ink-3">{inst?.name ?? "—"}</span>}
+                      {!compact && <span className="block truncate font-ui text-xs text-ink-3">{inst?.name ?? "—"}</span>}
                     </span>
                   </Link>
                 </td>
@@ -72,7 +72,7 @@ export function QuoteTable({ symbols, compact: compactProp = false }: { symbols:
         </tbody>
       </table>
       {loaded.length > 0 && (
-        <div className="mt-auto flex items-center gap-3 border-t border-line px-3 py-1.5 font-data text-[10px] text-ink-3">
+        <div className="mt-auto flex items-center gap-3 border-t border-line px-3 py-1.5 font-data text-xs text-ink-3">
           <span className="flex items-center gap-1.5"><span className="dot dot-live" /> observed{sources.length ? ` · ${sources.join(", ")}` : ""}</span>
           <span className="flex items-center gap-1.5"><span className="dot" /> synthetic</span>
           <span className="ml-auto tabular">{live.length}/{loaded.length} live</span>

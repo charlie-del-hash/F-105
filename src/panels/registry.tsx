@@ -1,8 +1,8 @@
 "use client";
 /**
  * Client-side panel registry: type → definition (schema + component + settings fields).
- * The server-safe metadata lives in catalog.ts. Keep both in sync (the test in
- * scripts/check-panels.ts fails the build if they drift).
+ * The server-safe metadata lives in catalog.ts. Keep both in sync —
+ * scripts/check-panels.ts (in `pnpm check`) fails the build if they drift.
  */
 import type { PanelDefinition } from "./types";
 import { wireDefinition } from "./wire";

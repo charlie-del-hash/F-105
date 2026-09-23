@@ -10,7 +10,7 @@ export function Tag({ children, tone = "neutral", className }: { children: React
     alert: "border-alert/60 text-alert",
   };
   return (
-    <span className={cn("caps inline-flex items-center gap-1 rounded-[var(--radius)] border px-1.5 py-[1px]", tones[tone], className)}>{children}</span>
+    <span className={cn("caps inline-flex items-center gap-1 rounded-panel border px-1.5 py-[1px]", tones[tone], className)}>{children}</span>
   );
 }
 

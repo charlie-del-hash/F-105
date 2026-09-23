@@ -11,8 +11,12 @@
    ink. Change is up/down with a glyph, never colour alone.
 4. **Every state has a face.** Loading, empty, error, bad settings, unknown panel — each is
    a designed message inside the frame, not a blank.
-5. **One design system, many instruments.** A theme changes the mood; it never changes
-   the layout, the type scale or the semantics.
+5. **One design system, many instruments.** A theme changes the mood and the chrome's
+   character; it never changes the layout, the relative type hierarchy or the semantics.
+   `--density` scales the whole instrument uniformly — type, padding, control heights —
+   so Terminal is a dense desk at 0.9 and Glass is a roomier phone at 1.05. Uniformly is
+   the load-bearing word: every size is on the rem ladder, so the *order* of sizes is the
+   same in every theme.
 
 ## The rules that keep it from looking generated
 
@@ -21,27 +25,140 @@
    that needs to interrupt: FLASH, URGENT, WATCH, "demo content".
 2. **Provenance is a dot.** ● observed, ◌ synthetic, beside every symbol, with the legend
    in the panel footer. Never a word like "demo" glued to a symbol.
-3. **Direction is a glyph plus colour**, rendered by one component (`Change`), so every
+3. **A lamp only where there is a state.** A panel header carries its command mnemonic
+   (`QB`, `GP`, `TOP`, `DES`), not an LED — a lamp on every panel says nothing, and
+   provenance is already the dot beside each symbol. LEDs are for a state that changes:
+   a flash wire item, an alert, a degraded feed, sync. The mnemonic is the same token
+   `⌘K` parses, so the chrome teaches the keyboard.
+4. **Direction is a glyph plus colour**, rendered by one component (`Change`), so every
    change on every screen reads the same.
-4. **Chrome recedes.** Panel actions appear on hover (always on touch). Headers sit one
-   step towards `bg-3`. Rows lift with a 6 % accent wash, not a grey block.
-5. **One accent, used as a line.** The active tab and layout tab carry a 2 px accent
-   underline with a soft glow; nothing else is filled with the accent except the primary
-   button and the LED that matters.
-6. **Terminal details, not terminal cosplay.** The dashed last-price line with its value
+5. **Chrome recedes.** Panel actions appear on hover (always on touch). How far a header
+   sits towards `bg-3` is `--fx-headfill`, so Paper and Phosphor have none at all. Rows
+   lift with a 6 % accent wash, not a grey block.
+6. **One accent, used as a line.** The active masthead tab and the active phone-bar item
+   carry a 2 px accent line with a soft glow; the selected segment of a `.seg` takes the
+   accent as text. Nothing else is filled with it except the primary button and the LED
+   that matters.
+7. **Terminal details, not terminal cosplay.** The dashed last-price line with its value
    tag, the segmented range control, the tabular figures — things a trader would miss.
    No fake scanlines outside the two themes built for them.
-7. **The first item is bigger.** Headline lists lead with a heavier title, then settle.
+8. **The first item is bigger.** Headline lists lead with a heavier title, then settle.
+
+## Chrome
+
+Two rows, and they must not look alike. The **masthead** is the site's navigation —
+identity, the five destinations, command, account, theme — drawn with `.tab` and its
+accent underline. The **workspace strip** below it, on `/` only, is controls for the
+layout in front of you: a `Layout` label, a `.seg` switcher, and the add/edit/more
+cluster. Both rows were `.tab` once and read as one confusing double nav; the rule now
+is that navigation is underlined tabs and controls are segmented.
+
+The quote strip rides in the masthead everywhere except `/`, where the quote board
+panel is a few pixels below it and would say the same thing twice.
+
+`/kit` is a contract page for building, not a destination. It lives in the status bar
+with the other build metadata, and in `⌘K`.
+
+On a phone the masthead carried a second nav row — the same five links again, 32px, as
+far from the thumb as the screen allows. That row is gone. Navigation is a fixed
+**bottom bar** in the thumb zone (Desk · Read · Wire · Markets), carrying the same
+accent line as a tab; the workspace strip collapses to one named control that opens a
+sheet, because six preset tabs plus a `+` overflowed 390px with no scroll cue and put
+the `+` off-screen.
+
+Touch sizing is a `@media (pointer: coarse)` block in `globals.css`, not a breakpoint:
+the desk stays dense on a pointer and grows only where the pointer is a finger. Safe
+areas are `.safe-t` / `.safe-b`, because `viewportFit` is `cover`.
+
+**Hover never fires on a finger.** Tailwind compiles `hover:` to a bare `:hover`, which on
+a touch screen sticks after a tap until you tap elsewhere — every row, tab and icon button
+stays lit behind your finger. `globals.css` redefines the variant with `@custom-variant` so
+all of them are wrapped in `@media (hover: hover)`, and each hand-written `:hover` rule is
+wrapped too. A hand-written rule that is *state* rather than hover — `.menu-item[data-active]`
+— stays outside the guard.
+
+Corners come from `rounded-panel`, the Tailwind token bound to `--radius`. Not
+`rounded-[var(--radius)]`: the token existed and had zero uses against 21 raw ones.
+
+**Text inside an SVG.** A chart drawn in measured pixels (`LineChart`) cannot use rem, so
+it converts by hand from `useRootFontSize()` — a fixed `fontSize={10}` opts out of
+`--density` exactly as a `text-[10px]` class did. Everything derived from the label size
+scales with it too: the mono advance that reserves the axis gutter and the price tag, the
+baseline offsets, the tag box. A *viewBox-scaled* SVG is different: the plot is a schematic,
+its labels are anchored to features and should scale with the drawing, so they stay in user
+units. What does not belong in a viewBox is a caption — the plot's "positions illustrative"
+line shrank to about 8.6px in a phone-width panel, and is HTML underneath the map now.
+
+## Which theme you get
+
+A theme is decided in one place, `Shell`, in precedence order:
+
+1. an **in-page override** — the reading surface's "read on Paper", which lasts only while
+   a reading page is mounted;
+2. the reader's **pinned** pick, once they have made one;
+3. the **active layout's** declared theme — Pocket asks for Glass, Bridge for Bridge,
+   Hangar for Cockpit. The field had been in the layout schema all along and nothing read
+   it;
+4. that pick as a fallback, which unpinned means **Auto** → `tokens.json`'s `auto` pair,
+   Terminal when the system is dark and Glass when it is light.
+
+Picking a theme in the picker pins it; "Follow the layout instead" hands it back. Only the
+pick and the pin are persisted, so an unpinned device derives its own theme from whatever
+layout it is showing and never pushes that to another device — which is why binding did not
+need a separate per-device override.
+
+The override is its own non-persisted store (`lib/useThemeOverride.ts`), not part of the
+workspace. It lived in the workspace briefly and that was a data-loss bug: the workspace
+persists with `skipHydration`, React runs child effects before parent ones, so a reading
+page setting the override on mount wrote defaults to localStorage before `Shell` had read
+the saved state back. **Never put ephemeral state in the persisted store.**
 
 ## Reading
 
 Long-form pages (`/read`, `/dossier`) are a reading surface first. The masthead slides
 away on phones as the reader scrolls down and returns on the first scroll up; a 2 px
-accent progress line sits at the top. `ReadingControls` in the header set the type size
-(S / M / L, remembered on the device) and switch to the Paper theme with one tap, then
-back to whatever the reader had. Paper opens with a single drop cap; no other theme does.
+accent progress line sits at the top. `ReadingControls` under the byline — not above the
+headline, where they used to push the piece a control row down a phone — set the type size
+(S / M / L, remembered on the device) and switch to Paper with one tap. That switch is
+scoped to the reading surface: see "Which theme you get". Paper opens with a single drop
+cap; no other theme does.
 Paragraphs use `text-wrap: pretty`, hyphenation and `overflow-wrap: anywhere`; headings
 balance. Tables scroll sideways rather than break the column.
+
+## Panels and panel-shaped blocks
+
+There is one panel chrome, in `components/ui/Card.tsx`. `PanelFrame` on the dashboard and
+every panel-shaped block on a static page — the market boards, a desk's instruments, the
+reading-page aside, the kit — share `CardHead`, so the theme dials and the mnemonic slug
+reach all of them. Never hand-roll `bezel` + a `caps border-b` header: ten copies of it
+meant Paper went boxless on the dashboard and kept its boxes everywhere else.
+
+`Card` is a flex column, so a card given a height passes what is left to its body. Do not
+size a body with `calc(100% - 2rem)` against a header whose height moves with `--density`.
+
+The grid picks its tree in JS, and a media query cannot be known on the server, so SSR
+always emits the 12-column one. `.workspace-grid-wide` is hidden under 768px so a phone
+never paints a squashed desktop grid in the frame before hydration.
+
+### On a phone
+
+A phone panel sizes to what it holds. Heights used to come from the *desktop* row
+span — `clamp(180, h × 52, 560)` — so a quote board authored `h:5` for a 12-column
+desk became a 260px box holding four rows, and a two-row clock panel was padded up to
+180px of mostly nothing.
+
+A panel decides its own layout from the box it is **measured** in, via `useSize` — never
+from its `h` on the desktop grid. A row span says nothing about a phone, where every panel
+is screen-width and sized to its content, so `clocks` and `plot` used to read the same
+geometry whatever they were actually drawn into.
+
+A panel that is a viewport rather than a list has no intrinsic height and still needs
+one: it declares `phoneAspect` in the catalog (chart 1.5, plot 100/70) and gets
+width ÷ aspect. Everything else flows, capped at `PHONE_PANEL_MAX` so one panel can
+never fill the screen — the next panel's header is always in view, which is what makes
+a stack of panels read as a stack rather than as one long page. A capped panel that
+clips its content shows a bottom fade (`useOverflow`), and its header already carries
+the ↗ link to the full page.
 
 ## Dialogs and overlays
 
@@ -63,14 +180,32 @@ while someone is typing; the shell checks the focused element.
 | `Kicker` | `components/data/Kicker.tsx` | the metadata line above any headline |
 | `Change`, `Price` | `components/data/Change.tsx` | every price and change |
 | `LiveDot` | `components/data/LiveDot.tsx` | provenance beside a symbol |
-| `.seg` | `globals.css` | segmented control (range, desk filter) |
-| `.tab` | `globals.css` | masthead nav and layout tabs, accent underline |
+| `.seg` | `globals.css` | segmented control (range, desk filter, layout switcher) |
+| `.tab` | `globals.css` | masthead nav, accent underline — navigation only |
+| `BottomBar` | `components/shell/BottomBar.tsx` | phone navigation, thumb zone |
+| `.safe-t`, `.safe-b` | `globals.css` | notch and home-indicator insets |
 | `.row` | `globals.css` | hover wash on list rows and table rows |
+| `Card`, `CardHead` | `components/ui/Card.tsx` | panel chrome — the only place it is written |
 | `.panel-head`, `.panel-actions` | `globals.css` | panel chrome and hover-revealed actions |
 | `.menu`, `.menu-item` | `globals.css` | popover menus (theme picker, layout menu, add panel) |
 | `.dot`, `.led` | `globals.css` | provenance and liveness |
 | `Modal`, `dialogs` | `components/ui/Modal.tsx`, `components/ui/dialogs.tsx` | every overlay; every prompt and confirm |
 | `ReadingSurface`, `ReadingControls`, `ReadingProgress` | `components/reading/` | long-form pages |
+
+## Type scale
+
+Everything is on the rem ladder, because `--density` multiplies the root font size and a
+`px` value silently opts out of it. About 56 sizes had been written as arbitrary
+`text-[11px]` values, so the hierarchy *inverted* between themes: a panel title
+(`.caps`, rem) grew from 9.18px on Terminal to 10.71px on Glass while the mnemonic slug
+beside it (px) stayed at 10px, flipping which one was larger. Every size now moves by the
+same 1.167× between those two themes.
+
+Tailwind's scale jumps 10.1 → 11.8 → 13.5px at the default density, which is too coarse
+for a UI that lives in that band — that gap is why the arbitrary values existed. Two steps
+fill it, in `globals.css` `@theme`: `text-meta` (0.815rem) and `text-item` (0.963rem). The
+rem values are anchored to the default theme's 13.5px root, so Terminal renders what it
+always did. **Never write `text-[Npx]`.**
 
 ## Tokens
 
@@ -81,22 +216,43 @@ while someone is typing; the shell checks the focused element.
 | `ink`, `ink-2`, `ink-3` | primary · secondary · muted |
 | `accent`, `accent-ink` | the one brand colour and text on it |
 | `up`, `down`, `warn`, `alert` | status; always paired with a glyph or label |
-| `series-1…8` | categorical data colours in fixed, validated order |
+| `series-1…8` | categorical data colours in fixed, validated order — **per theme** |
 | `glow` | text-shadow colour for brand/phosphor text |
 | `font-ui`, `font-data`, `font-read` | interface · numbers · long-form |
 | `radius`, `density` | corner radius · type scale multiplier |
-| `fx-scanlines`, `fx-vignette`, `fx-bezel` | 0–1 dials |
+| `fx-scanlines`, `fx-vignette`, `fx-bezel` | 0–1 dials: CRT furniture · panel depth |
+| `fx-headfill` | 0–1: panel header as a filled bar (1) or a bare rule (0) |
+| `fx-gridline` | 0–1: how present chart gridlines are |
+| `fx-ticks` | 0–1: instrument tick marks along the top edge of an inset |
+
+### Series colours are per theme
+
+Each theme declares its own `series` ring in `tokens.json`, and slot 1 is that theme's
+signature data colour — the line a single-series chart draws. Terminal draws amber,
+Phosphor draws P1 green, Cockpit cyan, Bridge blue-white, Paper the one red, Glass iOS
+blue. A theme that declares none falls back to the scheme-level list.
+
+Each ring is the validated reference palette **rotated** so slot 1 lands on the theme's
+hue. OKLab ΔE is rotation-invariant in the (a,b) plane, so a rotation inherits the
+reference's normal-vision separations exactly; CVD simulation is not, so every ring was
+re-validated against its own theme's `bg-2` with the dataviz validator, and repaired
+where needed. Adding or editing a ring means re-running that validator — `pnpm tokens`
+enforces the structural invariants (key parity, 8 valid hexes, ink contrast and ink-scale
+separation against `bg-2`) but cannot check a categorical palette.
 
 ## Themes
 
-| Theme | Scheme | For | Notes |
-|---|---|---|---|
-| Terminal | dark | the default desk | amber on black, Plex Mono for data |
-| Phosphor | dark | the scope | green P1, scanlines, mono everywhere |
-| Cockpit | dark | Hangar | grey panel, cyan cues, Geist Mono |
-| Bridge | dark | shipping and the plot | blue-white phosphor, brass accent, vignette |
-| Paper | light | reading | broadsheet stock, one red, no bezels |
-| Glass | light | phone | white cards, iOS blue, 12 px radius |
+A theme changes the mood *and the chrome's character* — never the layout, the type scale
+or the semantics. "Chrome" below is what the `fx` dials do to a panel.
+
+| Theme | Scheme | For | Chrome | Notes |
+|---|---|---|---|---|
+| Terminal | dark | the default desk | bezelled box, filled header | amber on black, Plex Mono for data |
+| Phosphor | dark | the scope | no bezel, no header fill — one continuous surface | green P1, scanlines, mono everywhere |
+| Cockpit | dark | Hangar | bezel, filled header, inset ticks, plotted grid | grey panel, cyan cues, Geist Mono |
+| Bridge | dark | shipping and the plot | bezel, half-tint header, strong grid | blue-white phosphor, brass accent, vignette |
+| Paper | light | reading | no bezel, no header fill, almost no grid | broadsheet stock, one red |
+| Glass | light | phone | soft shallow bezel | white cards, iOS blue, 12 px radius |
 
 ## Type
 

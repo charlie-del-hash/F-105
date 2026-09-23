@@ -8,7 +8,7 @@ import "@fontsource/ibm-plex-mono/600.css";
 import "@fontsource-variable/source-serif-4";
 import "./globals.css";
 import { site } from "@/config/site";
-import { THEME_STORAGE_KEY, defaultTheme } from "@/design/tokens";
+import { THEME_STORAGE_KEY, defaultTheme, themes } from "@/design/tokens";
 import { Shell } from "@/components/shell/Shell";
 import { getCommandIndex } from "@/content/loader";
 
@@ -24,7 +24,9 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#0b0b0d",
+  // The pre-boot colour only; Shell replaces it with the applied theme's --bg
+  // as soon as the app hydrates. Derived so it cannot drift from the default theme.
+  themeColor: themes.find((t) => t.id === defaultTheme)?.bg,
 };
 
 /* Applies the persisted theme before first paint so there is no flash.

@@ -7,6 +7,7 @@
 import { useRef, useState } from "react";
 import { useMediaQuery } from "@/lib/useMediaQuery";
 import { useSize } from "@/lib/useSize";
+import { panelMetaMap } from "@/panels/catalog";
 import { GRID_COLS, GRID_GAP, ROW_HEIGHT } from "./constants";
 import { gridHeight, readingOrder } from "./grid";
 import { EmptyLayout } from "./EmptyLayout";
@@ -22,6 +23,14 @@ interface Drag {
   origin: { x: number; y: number; w: number; h: number };
   last: { a: number; b: number };
 }
+
+/**
+ * A phone panel never fills the screen, so the next panel's header is always in
+ * view — you can tell a stack of panels from one long page, and scanning down
+ * costs nothing. Long lists scroll inside the panel and show a fade; their
+ * header also carries the ↗ link to the full page.
+ */
+const PHONE_PANEL_MAX = "60dvh";
 
 export function WorkspaceGrid({ layout }: { layout: Layout }) {
   const edit = useWorkspace((s) => s.editMode);
@@ -58,11 +67,28 @@ export function WorkspaceGrid({ layout }: { layout: Layout }) {
   if (layout.panels.length === 0) return <EmptyLayout layout={layout} />;
 
   if (mobile) {
+    // Panel heights used to come from the DESKTOP row span —
+    // clamp(180, h * 52, 560) — so a quote board authored h:5 for a 12-column
+    // desk became a 260px box holding four rows, and a 2-row clock panel was
+    // padded up to 180px. A phone panel sizes to what it holds, capped so one
+    // long list cannot own the screen; only a panel that is a viewport rather
+    // than a list (it declares a phoneAspect) still needs a height given to it.
     return (
-      <div className="flex flex-col gap-2">
-        {readingOrder(layout.panels).map((p) => (
-          <PanelFrame key={p.id} panel={p} edit={edit} mobile style={{ height: Math.max(180, Math.min(p.h * (ROW_HEIGHT + GRID_GAP), 560)) }} />
-        ))}
+      <div ref={ref} className="flex flex-col gap-2">
+        {readingOrder(layout.panels).map((p) => {
+          const aspect = panelMetaMap.get(p.type)?.phoneAspect;
+          const height = aspect && size.width > 0 ? Math.round(size.width / aspect) : undefined;
+          return (
+            <PanelFrame
+              key={p.id}
+              panel={p}
+              edit={edit}
+              mobile
+              autoHeight={!height}
+              style={height ? { height } : { maxHeight: PHONE_PANEL_MAX }}
+            />
+          );
+        })}
       </div>
     );
   }
@@ -71,7 +97,7 @@ export function WorkspaceGrid({ layout }: { layout: Layout }) {
   return (
     <div
       ref={ref}
-      className="grid"
+      className="workspace-grid-wide grid"
       style={{
         gridTemplateColumns: `repeat(${GRID_COLS}, minmax(0, 1fr))`,
         gridAutoRows: `${ROW_HEIGHT}px`,

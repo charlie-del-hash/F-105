@@ -8,15 +8,16 @@
 
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { THEME_STORAGE_KEY, defaultTheme, isThemeId, type ThemeId } from "@/design/tokens";
+import { AUTO, isThemeChoice, type ThemeChoice } from "@/design/tokens";
 import { panelMetaMap } from "@/panels/catalog";
-import { findFreeSpot, movePanel as gridMove, resizePanel as gridResize, compact, readingOrder } from "./grid";
+import { findFreeSpot, movePanel as gridMove, resizePanel as gridResize, compact, swapInReadingOrder } from "./grid";
 import { defaultLayoutId, getPreset, presetLayouts } from "./presets";
 import { newId, parseLayout, type Layout, type PanelInstance } from "./schema";
 
 /** Exactly what is persisted (on-device and, when signed in, in Supabase). */
 export interface PersistedShape {
-  theme: ThemeId;
+  theme: ThemeChoice;
+  themePinned: boolean;
   layouts: Layout[];
   activeId: string;
   notes: Record<string, string>;
@@ -25,7 +26,10 @@ export interface PersistedShape {
 
 export interface WorkspaceState {
   hydrated: boolean;
-  theme: ThemeId;
+  /** The user's preference, not what is on screen. See `resolveTheme`. */
+  theme: ThemeChoice;
+  /** True once the user picks a theme: layouts stop overriding it. */
+  themePinned: boolean;
   layouts: Layout[];
   activeId: string;
   editMode: boolean;
@@ -33,7 +37,10 @@ export interface WorkspaceState {
   watchlist: string[];
 
   setHydrated(): void;
-  setTheme(theme: ThemeId): void;
+  /** The user's own pick. Choosing one pins it, so layouts stop changing it. */
+  setTheme(theme: ThemeChoice): void;
+  /** Hand the theme back to the active layout. */
+  unpinTheme(): void;
   setActive(id: string): void;
   setEditMode(on: boolean): void;
   forkPreset(id: string, name?: string): Layout | undefined;
@@ -57,7 +64,7 @@ export interface WorkspaceState {
 }
 
 export function persistedShape(s: WorkspaceState): PersistedShape {
-  return { theme: s.theme, layouts: s.layouts, activeId: s.activeId, notes: s.notes, watchlist: s.watchlist };
+  return { theme: s.theme, themePinned: s.themePinned, layouts: s.layouts, activeId: s.activeId, notes: s.notes, watchlist: s.watchlist };
 }
 
 function stamp(layout: Layout): Layout {
@@ -82,7 +89,9 @@ export const useWorkspace = create<WorkspaceState>()(
 
       return {
         hydrated: false,
-        theme: defaultTheme,
+        // Unpinned by default, so a layout's declared theme is what you get.
+        theme: AUTO,
+        themePinned: false,
         layouts: [],
         activeId: defaultLayoutId,
         editMode: false,
@@ -90,14 +99,14 @@ export const useWorkspace = create<WorkspaceState>()(
         watchlist: ["BRENT", "TTF", "TD3C"],
 
         setHydrated: () => set({ hydrated: true }),
+        // Picking a theme is a statement of preference, so it pins. Applying it to
+        // the document is Shell's job — it is the only place that knows the OS
+        // colour scheme, the active layout and any in-page override.
         setTheme: (theme) => {
-          if (!isThemeId(theme)) return;
-          set({ theme });
-          try {
-            localStorage.setItem(THEME_STORAGE_KEY, theme);
-            document.documentElement.setAttribute("data-theme", theme);
-          } catch {}
+          if (!isThemeChoice(theme)) return;
+          set({ theme, themePinned: true });
         },
+        unpinTheme: () => set({ themePinned: false }),
         setActive: (id) => set({ activeId: id, editMode: false }),
         setEditMode: (on) => set({ editMode: on }),
 
@@ -161,21 +170,10 @@ export const useWorkspace = create<WorkspaceState>()(
         setPanelTitle: (panelId, title) =>
           update((l) => ({ ...l, panels: l.panels.map((p) => (p.id === panelId ? { ...p, title } : p)) })),
         nudgePanel: (panelId, dir) =>
-          update((l) => {
-            // Mobile reorder: swap with the neighbour in reading order, then re-lay out as a single column.
-            const order = readingOrder(l.panels);
-            const i = order.findIndex((p) => p.id === panelId);
-            const j = i + dir;
-            if (i < 0 || j < 0 || j >= order.length) return l;
-            [order[i], order[j]] = [order[j], order[i]];
-            let y = 0;
-            const relaid = order.map((p) => {
-              const np = { ...p, x: 0, y };
-              y += p.h;
-              return np;
-            });
-            return { ...l, panels: l.panels.map((p) => relaid.find((q) => q.id === p.id)!) };
-          }),
+          // Phone reorder. This used to re-lay every panel to x:0 full width, so one
+          // tap of "move down" permanently flattened a 12-column desk — and because
+          // the edit forks a preset first, the flattened version was what got saved.
+          update((l) => ({ ...l, panels: swapInReadingOrder(l.panels, panelId, dir) })),
 
         setNote: (panelId, text) => set((s) => ({ notes: { ...s.notes, [panelId]: text } })),
         toggleWatch: (symbol) =>
@@ -192,17 +190,14 @@ export const useWorkspace = create<WorkspaceState>()(
             }
           }
           set((s) => ({
-            theme: isThemeId(shape.theme) ? shape.theme : s.theme,
+            theme: isThemeChoice(shape.theme) ? shape.theme : s.theme,
+            themePinned: typeof shape.themePinned === "boolean" ? shape.themePinned : s.themePinned,
             layouts: shape.layouts ? layouts : s.layouts,
             activeId: typeof shape.activeId === "string" ? shape.activeId : s.activeId,
             notes: shape.notes && typeof shape.notes === "object" ? shape.notes : s.notes,
             watchlist: Array.isArray(shape.watchlist) ? shape.watchlist.filter((x) => typeof x === "string") : s.watchlist,
           }));
-          const theme = get().theme;
-          try {
-            localStorage.setItem(THEME_STORAGE_KEY, theme);
-            document.documentElement.setAttribute("data-theme", theme);
-          } catch {}
+          // Applying it to the document is Shell's job; it reacts to this state.
         },
       };
     },

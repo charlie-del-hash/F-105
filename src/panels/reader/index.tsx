@@ -27,14 +27,14 @@ function ReaderPanel({ props }: { props: Props }) {
       <h2 className="mt-2 font-ui text-lg font-semibold leading-tight text-ink">
         <Link href={doc.href}>{doc.title}</Link>
       </h2>
-      <p className="mt-1 font-read text-[15px] leading-snug text-ink-2">{doc.dek}</p>
+      <p className="mt-1 font-read text-lg leading-snug text-ink-2">{doc.dek}</p>
       {bottomLines[doc.slug] && (
         <div className="mt-3 border-l-2 border-accent bg-bg-3 px-3 py-2 font-ui text-sm">
           <div className="caps text-ink-3">Bottom line</div>
           <div className="text-ink">{bottomLines[doc.slug]}</div>
         </div>
       )}
-      <div className="prose-read mt-4 text-[15px] leading-[1.6]">{body ?? <Link href={doc.href} className="text-accent">Open the full piece →</Link>}</div>
+      <div className="prose-read mt-4 text-lg leading-[1.6]">{body ?? <Link href={doc.href} className="text-accent">Open the full piece →</Link>}</div>
     </article>
   );
 }
