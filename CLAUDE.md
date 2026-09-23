@@ -20,6 +20,11 @@ honest: anything synthetic stays labelled synthetic.
 - **Design rules live in `docs/DESIGN.md`.** Metadata is a `Kicker` line, never a row of
   tags; every price and change goes through `Price` / `Change`; provenance is `LiveDot`.
   Quotes come from `useQuotes` (one shared poller); never `fetch("/api/quotes")` in a panel.
+- **Hover is guarded.** `globals.css` redefines Tailwind's `hover:` variant to sit inside
+  `@media (hover: hover)`, and every hand-written `:hover` rule is wrapped too — an
+  unguarded hover sticks after a tap on a touch screen. Corners use `rounded-panel`, not
+  `rounded-[var(--radius)]`. A panel decides its layout from `useSize`, never from its
+  `h` on the desktop grid.
 - **No browser dialogs.** `window.prompt`, `confirm` and `alert` are banned; use
   `dialogs.prompt` / `dialogs.confirm` from `src/components/ui/dialogs.tsx`, and `Modal` for
   anything else that overlays the page.

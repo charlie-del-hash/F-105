@@ -23,13 +23,13 @@ export function ShareSheet({ title, text, path, size = "sm", className }: { titl
       <IconButton size={size} label="Share" onClick={() => setOpen((o) => !o)} active={open}>
         <Share2 size={size === "xs" ? 13 : 15} />
       </IconButton>
-      {note && <span className="caps absolute right-0 top-full mt-1 rounded-[var(--radius)] bg-accent px-1.5 py-0.5 text-accent-ink">{note}</span>}
+      {note && <span className="caps absolute right-0 top-full mt-1 rounded-panel bg-accent px-1.5 py-0.5 text-accent-ink">{note}</span>}
       {open && (
         <>
           <div className="fixed inset-0 z-30" onClick={() => setOpen(false)} aria-hidden />
           <div className="bezel absolute right-0 top-full z-40 mt-1 w-56 p-1" role="menu">
             {shareTargets.map((t) => (
-              <button key={t.id} type="button" role="menuitem" onClick={() => run(t.id)} className="block w-full rounded-[var(--radius)] px-2 py-1.5 text-left hover:bg-bg-3">
+              <button key={t.id} type="button" role="menuitem" onClick={() => run(t.id)} className="block w-full rounded-panel px-2 py-1.5 text-left hover:bg-bg-3">
                 <span className="block font-ui text-xs font-medium text-ink">{t.label}</span>
                 <span className="block font-ui text-xs text-ink-3">{t.hint}</span>
               </button>

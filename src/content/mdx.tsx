@@ -50,12 +50,12 @@ export function Figure({ src, alt = "", caption, credit, ratio = "wide" }: { src
     <figure className="my-6">
       {src ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={src} alt={alt} className="w-full rounded-[var(--radius)] border border-line" style={{ aspectRatio: ar, objectFit: "cover" }} />
+        <img src={src} alt={alt} className="w-full rounded-panel border border-line" style={{ aspectRatio: ar, objectFit: "cover" }} />
       ) : (
         <div
           role="img"
           aria-label={alt || "Placeholder image"}
-          className="flex w-full items-end justify-start rounded-[var(--radius)] border border-line p-2"
+          className="flex w-full items-end justify-start rounded-panel border border-line p-2"
           style={{
             aspectRatio: ar,
             background: "repeating-linear-gradient(135deg, var(--bg-3) 0 6px, var(--bg-2) 6px 12px)",

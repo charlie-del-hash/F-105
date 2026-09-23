@@ -24,7 +24,7 @@ interface Cmd {
 }
 
 const groups = ["Pages", "Actions", "Layouts", "Themes", "Instruments", "Content"];
-const itemClass = "flex cursor-pointer items-baseline gap-2 rounded-[var(--radius)] px-2 py-1.5 font-ui text-sm text-ink data-[selected=true]:bg-bg-3 data-[selected=true]:text-accent";
+const itemClass = "flex cursor-pointer items-baseline gap-2 rounded-panel px-2 py-1.5 font-ui text-sm text-ink data-[selected=true]:bg-bg-3 data-[selected=true]:text-accent";
 
 export function CommandBar({ open, onClose, index }: { open: boolean; onClose: () => void; index: CommandIndex }) {
   const router = useRouter();

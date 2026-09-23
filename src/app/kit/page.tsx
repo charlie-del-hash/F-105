@@ -38,7 +38,7 @@ export default function KitPage() {
         <ul className="grid gap-2 sm:grid-cols-3">
           {themes.map((t) => (
             <li key={t.id} className="bezel flex items-center gap-3 p-3">
-              <span className="h-8 w-8 rounded-[var(--radius)] border border-line" style={{ background: `linear-gradient(135deg, ${t.bg} 50%, ${t.accent} 50%)` }} aria-hidden />
+              <span className="h-8 w-8 rounded-panel border border-line" style={{ background: `linear-gradient(135deg, ${t.bg} 50%, ${t.accent} 50%)` }} aria-hidden />
               <span>
                 <span className="block font-ui text-sm font-medium text-ink">{t.name} <span className="text-ink-3">· {t.scheme}</span></span>
                 <span className="block font-ui text-xs text-ink-2">{t.tagline}</span>
@@ -52,14 +52,14 @@ export default function KitPage() {
         <ul className="grid grid-cols-3 gap-2 sm:grid-cols-5 lg:grid-cols-7">
           {roles.map((r) => (
             <li key={r} className="bezel p-2">
-              <div className="h-8 rounded-[var(--radius)] border border-line" style={{ background: `var(--${r})` }} />
+              <div className="h-8 rounded-panel border border-line" style={{ background: `var(--${r})` }} />
               <div className="mt-1 font-data text-xs text-ink-2">--{r}</div>
             </li>
           ))}
         </ul>
         <div className="mt-2 flex gap-1">
           {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-            <span key={i} className="h-5 flex-1 rounded-[var(--radius)]" style={{ background: `var(--series-${i})` }} title={`--series-${i}`} />
+            <span key={i} className="h-5 flex-1 rounded-panel" style={{ background: `var(--series-${i})` }} title={`--series-${i}`} />
           ))}
         </div>
         <p className="mt-1 font-ui text-meta text-ink-3">Series palette, in fixed order. Assign by entity, never by rank; never cycle past eight.</p>

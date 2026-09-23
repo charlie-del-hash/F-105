@@ -43,7 +43,7 @@ export default async function ReadIndex() {
       <ul className="grid gap-x-6 gap-y-5 sm:grid-cols-2">
         {rest.map((d) => (
           <li key={d.slug}>
-            <Link href={d.href} className="row -mx-2 block rounded-[var(--radius)] px-2 py-2">
+            <Link href={d.href} className="row -mx-2 block rounded-panel px-2 py-2">
               <Kicker
                 items={[deskShort(d.data.desk), d.kind, `${d.readingTime} min`]}
                 status={d.data.placeholder ? { label: "demo content", tone: "warn" } : undefined}

@@ -97,7 +97,7 @@ export function WorkspaceGrid({ layout }: { layout: Layout }) {
   return (
     <div
       ref={ref}
-      className="grid"
+      className="workspace-grid-wide grid"
       style={{
         gridTemplateColumns: `repeat(${GRID_COLS}, minmax(0, 1fr))`,
         gridAutoRows: `${ROW_HEIGHT}px`,

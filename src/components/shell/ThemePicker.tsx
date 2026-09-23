@@ -63,7 +63,7 @@ export function ThemePicker() {
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className="tap flex h-7 shrink-0 items-center gap-2 rounded-[var(--radius)] border border-line bg-bg-3 pl-2 pr-1.5 font-ui text-xs text-ink-2 hover:border-line-strong hover:text-ink"
+        className="tap flex h-7 shrink-0 items-center gap-2 rounded-panel border border-line bg-bg-3 pl-2 pr-1.5 font-ui text-xs text-ink-2 hover:border-line-strong hover:text-ink"
         title={pinned ? `${current.name} · pinned` : `${current.name} · following the layout`}
       >
         <Swatch bg={current.bg} accent={current.accent} ink={current.ink} />

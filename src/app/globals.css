@@ -1,6 +1,19 @@
 @import "tailwindcss";
 @import "../design/themes.css";
 
+/* Tailwind compiles `hover:` to a bare `:hover`, which on a touch screen sticks
+   after a tap until you tap somewhere else — every row, tab, menu item and icon
+   button in the app stays lit behind your finger. Redefining the variant guards
+   all ~100 of them at once; the hand-written `:hover` rules below are guarded
+   individually. */
+@custom-variant hover {
+  @media (hover: hover) {
+    &:hover {
+      @slot;
+    }
+  }
+}
+
 /* Map theme tokens (CSS variables set per [data-theme]) onto Tailwind utilities.
    Use `bg-bg-2 text-ink border-line font-data` etc. Never hard-code a colour in a component. */
 @theme inline {
@@ -89,6 +102,15 @@ body {
 .safe-b { padding-bottom: env(safe-area-inset-bottom, 0px); }
 /* The phone nav bar is fixed, so the page has to end above it. */
 .pad-bottom-bar { padding-bottom: calc(3rem + env(safe-area-inset-bottom, 0px)); }
+
+/* The grid picks its tree in JS, and a media query cannot be known on the server,
+   so SSR always emits the 12-column one. On a phone that paints a squashed desktop
+   grid for a frame before the client swaps to the stack. Hiding it until the swap
+   trades a visible wrong layout for an empty one; above the breakpoint the rule
+   never matches and nothing changes. */
+@media (max-width: 767px) {
+  .workspace-grid-wide { visibility: hidden; }
+}
 
 /* ------------------------------------------------------------- touch sizing
    The desk is deliberately dense on a pointer. On a finger it cannot be: every
@@ -196,7 +218,7 @@ body {
        ranges nearly invisible on Paper and Glass. */
     color: var(--ink-2);
   }
-  .seg > button:hover { color: var(--ink); }
+  @media (hover: hover) { .seg > button:hover { color: var(--ink); } }
   .seg > button[aria-pressed="true"], .seg > button[aria-selected="true"] {
     background: var(--bg-2);
     color: var(--accent);
@@ -213,13 +235,15 @@ body {
     content: ""; position: absolute; left: 8px; right: 8px; bottom: -1px; height: 2px;
     background: transparent; border-radius: 1px; transition: background-color 120ms ease;
   }
-  .tab:hover { color: var(--ink); }
+  @media (hover: hover) { .tab:hover { color: var(--ink); } }
   .tab[aria-current="page"], .tab[aria-selected="true"] { color: var(--ink); }
   .tab[aria-current="page"]::after, .tab[aria-selected="true"]::after { background: var(--accent); box-shadow: 0 0 8px var(--glow); }
 
   /* a warm row highlight, one step above bg-2 */
   .row { transition: background-color 100ms ease; }
-  .row:hover { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+  @media (hover: hover) {
+    .row:hover { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+  }
 
   /* panel chrome. --fx-headfill decides whether a panel header is a filled bar
      (Terminal, Cockpit), a half-tint (Bridge, Glass) or nothing but the rule
@@ -249,7 +273,10 @@ body {
     display: flex; width: 100%; align-items: center; gap: 8px; padding: 6px 8px; text-align: left;
     border-radius: var(--radius); font-family: var(--font-ui); font-size: 0.875rem; color: var(--ink-2);
   }
-  .menu-item:hover, .menu-item[data-active="true"] { background: var(--bg-3); color: var(--ink); }
+  .menu-item[data-active="true"] { background: var(--bg-3); color: var(--ink); }
+  @media (hover: hover) {
+    .menu-item:hover { background: var(--bg-3); color: var(--ink); }
+  }
   .menu-sep { height: 1px; margin: 4px 0; background: var(--line); }
 
   /* CRT furniture — opacity driven entirely by theme tokens */

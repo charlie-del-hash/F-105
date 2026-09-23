@@ -151,7 +151,7 @@ export function LineChart({
       )}
       {model && hp && hover != null && (
         <div
-          className="pointer-events-none absolute top-1 rounded-[var(--radius)] border border-line bg-bg-3 px-2 py-1 font-data text-meta leading-tight text-ink shadow"
+          className="pointer-events-none absolute top-1 rounded-panel border border-line bg-bg-3 px-2 py-1 font-data text-meta leading-tight text-ink shadow"
           style={{ left: Math.min(Math.max(model.x(hover) - 60, 0), W - 130) }}
         >
           <div className="text-ink-3">{fmtDate(hp.d, "long")}</div>

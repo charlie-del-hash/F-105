@@ -11,7 +11,7 @@ export function Field({ label, hint, children, className }: { label: string; hin
 }
 
 export const inputClass =
-  "h-8 w-full rounded-[var(--radius)] border border-line bg-bg-3 px-2 font-data text-xs text-ink outline-none focus:border-accent";
+  "h-8 w-full rounded-panel border border-line bg-bg-3 px-2 font-data text-xs text-ink outline-none focus:border-accent";
 
 export function Select(props: React.SelectHTMLAttributes<HTMLSelectElement>) {
   return <select {...props} className={cn(inputClass, props.className)} />;

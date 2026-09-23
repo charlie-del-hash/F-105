@@ -97,7 +97,7 @@ export function PanelFrame({ panel, edit, mobile, autoHeight, style, onDragStart
               </>
             )}
             {href && !edit && (
-              <Link href={href} className="inline-flex h-6 w-6 items-center justify-center rounded-[var(--radius)] text-ink-3 hover:bg-bg-3 hover:text-ink" aria-label="Open" title="Open">
+              <Link href={href} className="inline-flex h-6 w-6 items-center justify-center rounded-panel text-ink-3 hover:bg-bg-3 hover:text-ink" aria-label="Open" title="Open">
                 <ArrowUpRight size={13} />
               </Link>
             )}

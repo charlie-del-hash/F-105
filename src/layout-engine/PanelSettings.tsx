@@ -14,7 +14,7 @@ import type { PanelInstance } from "./schema";
 function CheckList({ options, value, onChange }: { options: { value: string; label: string; group?: string }[]; value: string[]; onChange: (v: string[]) => void }) {
   const groups = Array.from(new Set(options.map((o) => o.group ?? "")));
   return (
-    <div className="max-h-48 overflow-auto rounded-[var(--radius)] border border-line bg-bg-3 p-2">
+    <div className="max-h-48 overflow-auto rounded-panel border border-line bg-bg-3 p-2">
       {groups.map((g) => (
         <div key={g} className="mb-1.5">
           {g && <div className="caps mb-0.5 text-ink-3">{g}</div>}

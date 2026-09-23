@@ -23,7 +23,7 @@ export function ReadingControls({ className }: { className?: string }) {
         onClick={() => setPaper(!paper)}
         aria-pressed={paper}
         className={cn(
-          "tap flex h-7 items-center gap-1.5 rounded-[var(--radius)] border px-2 font-ui text-xs",
+          "tap flex h-7 items-center gap-1.5 rounded-panel border px-2 font-ui text-xs",
           paper ? "border-accent text-accent" : "border-line text-ink-2 hover:border-line-strong hover:text-ink",
         )}
         title={paper ? "Back to your own theme" : "Read this on the Paper theme"}

@@ -203,7 +203,7 @@ export function LayoutTabs() {
             onClick={() => setPlus((o) => !o)}
             aria-haspopup="menu"
             aria-expanded={plus}
-            className="tap flex min-w-0 items-center gap-1.5 rounded-[var(--radius)] border border-line bg-bg-3 px-2.5 font-ui text-xs text-ink"
+            className="tap flex min-w-0 items-center gap-1.5 rounded-panel border border-line bg-bg-3 px-2.5 font-ui text-xs text-ink"
           >
             <span className="caps shrink-0 text-ink-3">Layout</span>
             <span className="truncate font-medium">{layout.name}</span>

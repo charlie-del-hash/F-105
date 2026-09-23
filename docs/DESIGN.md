@@ -70,6 +70,16 @@ Touch sizing is a `@media (pointer: coarse)` block in `globals.css`, not a break
 the desk stays dense on a pointer and grows only where the pointer is a finger. Safe
 areas are `.safe-t` / `.safe-b`, because `viewportFit` is `cover`.
 
+**Hover never fires on a finger.** Tailwind compiles `hover:` to a bare `:hover`, which on
+a touch screen sticks after a tap until you tap elsewhere — every row, tab and icon button
+stays lit behind your finger. `globals.css` redefines the variant with `@custom-variant` so
+all of them are wrapped in `@media (hover: hover)`, and each hand-written `:hover` rule is
+wrapped too. A hand-written rule that is *state* rather than hover — `.menu-item[data-active]`
+— stays outside the guard.
+
+Corners come from `rounded-panel`, the Tailwind token bound to `--radius`. Not
+`rounded-[var(--radius)]`: the token existed and had zero uses against 21 raw ones.
+
 ## Which theme you get
 
 A theme is decided in one place, `Shell`, in precedence order:
@@ -117,12 +127,21 @@ meant Paper went boxless on the dashboard and kept its boxes everywhere else.
 `Card` is a flex column, so a card given a height passes what is left to its body. Do not
 size a body with `calc(100% - 2rem)` against a header whose height moves with `--density`.
 
+The grid picks its tree in JS, and a media query cannot be known on the server, so SSR
+always emits the 12-column one. `.workspace-grid-wide` is hidden under 768px so a phone
+never paints a squashed desktop grid in the frame before hydration.
+
 ### On a phone
 
 A phone panel sizes to what it holds. Heights used to come from the *desktop* row
 span — `clamp(180, h × 52, 560)` — so a quote board authored `h:5` for a 12-column
 desk became a 260px box holding four rows, and a two-row clock panel was padded up to
 180px of mostly nothing.
+
+A panel decides its own layout from the box it is **measured** in, via `useSize` — never
+from its `h` on the desktop grid. A row span says nothing about a phone, where every panel
+is screen-width and sized to its content, so `clocks` and `plot` used to read the same
+geometry whatever they were actually drawn into.
 
 A panel that is a viewport rather than a list has no intrinsic height and still needs
 one: it declares `phoneAspect` in the catalog (chart 1.5, plot 100/70) and gets

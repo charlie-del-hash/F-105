@@ -57,7 +57,7 @@ export function Topbar({ onCommand }: { onCommand: () => void }) {
           <button
             type="button"
             onClick={onCommand}
-            className="tap flex h-7 items-center gap-2 whitespace-nowrap rounded-[var(--radius)] border border-line bg-bg-3 px-2 font-ui text-xs text-ink-3 hover:border-line-strong hover:text-ink"
+            className="tap flex h-7 items-center gap-2 whitespace-nowrap rounded-panel border border-line bg-bg-3 px-2 font-ui text-xs text-ink-3 hover:border-line-strong hover:text-ink"
             aria-label="Open the command bar"
           >
             <Search size={13} />
@@ -66,7 +66,7 @@ export function Topbar({ onCommand }: { onCommand: () => void }) {
           </button>
           <Link
             href="/account"
-            className="tap flex h-7 items-center gap-1.5 rounded-[var(--radius)] border border-line bg-bg-3 px-2 font-ui text-xs text-ink-3 hover:border-line-strong hover:text-ink"
+            className="tap flex h-7 items-center gap-1.5 rounded-panel border border-line bg-bg-3 px-2 font-ui text-xs text-ink-3 hover:border-line-strong hover:text-ink"
             title="Account and sync"
             aria-label="Account and sync"
           >
