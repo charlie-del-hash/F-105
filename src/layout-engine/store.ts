@@ -63,6 +63,10 @@ export interface WorkspaceState {
   applyRemote(shape: Partial<PersistedShape>): void;
 }
 
+/** The localStorage key the persist middleware writes. Exported so a caller can
+ *  tell a first run from a returning device without guessing the string. */
+export const WORKSPACE_STORAGE_KEY = "f105.workspace";
+
 export function persistedShape(s: WorkspaceState): PersistedShape {
   return { theme: s.theme, themePinned: s.themePinned, layouts: s.layouts, activeId: s.activeId, notes: s.notes, watchlist: s.watchlist };
 }
@@ -149,7 +153,9 @@ export const useWorkspace = create<WorkspaceState>()(
             const meta = panelMetaMap.get(type);
             if (!meta) return l;
             const { x, y } = findFreeSpot(l.panels, meta.defaultSize.w, meta.defaultSize.h);
-            const panel: PanelInstance = { id: newId(type), type, title, x, y, ...meta.defaultSize, props };
+            // A panel you add is never the layout's primary; that is a deliberate
+            // mark on the one panel the layout exists for.
+            const panel: PanelInstance = { id: newId(type), type, title, x, y, ...meta.defaultSize, props, primary: false };
             return { ...l, panels: compact([...l.panels, panel]) };
           }),
         adoptPreset: (presetId) => {
@@ -202,7 +208,7 @@ export const useWorkspace = create<WorkspaceState>()(
       };
     },
     {
-      name: "f105.workspace",
+      name: WORKSPACE_STORAGE_KEY,
       version: 1,
       storage: createJSONStorage(() => localStorage),
       skipHydration: true,

@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { collides, compact, findFreeSpot, movePanel, readingOrder, resizePanel, swapInReadingOrder } from "./grid";
 import type { PanelInstance } from "./schema";
 
-const p = (id: string, x: number, y: number, w: number, h: number): PanelInstance => ({ id, type: "notes", x, y, w, h, props: {} });
+const p = (id: string, x: number, y: number, w: number, h: number): PanelInstance => ({ id, type: "notes", x, y, w, h, props: {}, primary: false });
 
 describe("grid", () => {
   it("detects overlap", () => {

@@ -12,7 +12,9 @@ honest: anything synthetic stays labelled synthetic.
   (`bg-bg-2 text-ink border-line text-accent font-data`). Never a hex in a component.
   Never a `text-[Npx]` either: `--density` scales the root font size, so a px value opts
   out of it and the type hierarchy changes between themes. `text-meta` and `text-item`
-  fill the gap Tailwind's scale leaves in the 10–15px band.
+  fill the gap Tailwind's scale leaves in the 10–15px band. The single exception is the
+  16px floor on `input, select, textarea` at coarse pointers — an iOS platform constant,
+  not a type-scale choice, and unlayered on purpose so it outranks `text-xs`.
   New colour role → add to every theme in `src/design/tokens.json`, run `pnpm tokens`,
   map it in `src/app/globals.css` `@theme inline`.
 - **Server reads content; clients get snapshots.** `src/content/loader.ts` is `server-only`.

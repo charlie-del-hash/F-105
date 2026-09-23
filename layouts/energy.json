@@ -6,7 +6,7 @@
   "theme": "terminal",
   "panels": [
     { "id": "qb", "type": "quotes", "x": 0, "y": 0, "w": 4, "h": 8, "props": { "symbols": ["BRENT", "WTI", "TTF", "NBP", "HH", "JKM", "EUA", "EURUSD"] } },
-    { "id": "ttf", "type": "chart", "x": 4, "y": 0, "w": 4, "h": 6, "props": { "symbol": "TTF", "range": "6m" } },
+    { "id": "ttf", "type": "chart", "x": 4, "y": 0, "w": 4, "h": 6, "props": { "symbol": "TTF", "range": "6m" }, "primary": true },
     { "id": "jkm", "type": "chart", "x": 8, "y": 0, "w": 4, "h": 6, "props": { "symbol": "JKM", "range": "6m" } },
     { "id": "ind", "type": "indicators", "x": 4, "y": 6, "w": 8, "h": 3, "props": { "symbols": ["EU.GASSTOR", "HORMUZ.TX", "LNGF.174", "EUA"] } },
     { "id": "wire", "type": "wire", "x": 0, "y": 8, "w": 4, "h": 9, "props": { "desk": "energy", "limit": 30 } },

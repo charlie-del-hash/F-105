@@ -5,7 +5,7 @@
   "theme": "glass",
   "panels": [
     { "id": "qb", "type": "quotes", "x": 0, "y": 0, "w": 12, "h": 5, "props": { "symbols": ["BRENT", "TTF", "TD3C", "BDI"], "compact": true } },
-    { "id": "wire", "type": "wire", "x": 0, "y": 5, "w": 12, "h": 8, "props": { "limit": 15 } },
+    { "id": "wire", "type": "wire", "x": 0, "y": 5, "w": 12, "h": 8, "props": { "limit": 15 }, "primary": true },
     { "id": "top", "type": "headlines", "x": 0, "y": 13, "w": 12, "h": 6, "props": { "limit": 5 } },
     { "id": "wclk", "type": "clocks", "x": 0, "y": 19, "w": 12, "h": 2, "props": { "zones": ["London", "Dubai", "Singapore"] } }
   ]

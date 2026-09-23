@@ -122,6 +122,28 @@ body {
   .tab { padding: 0 14px; }
   .menu-item { padding: 10px 10px; }
   .panel-head { min-height: 38px; }
+  /* iOS zooms the viewport whenever a focused form control is under 16px, and
+     does not restore the scale on blur — so one tap in a panel's settings field
+     left the whole app magnified. 16px is an iOS platform constant, not a step
+     on the type ladder, which is why this is the one sanctioned hard-coded size
+     in the app: it is scoped to coarse pointers, where the hierarchy around it
+     is already set by the surrounding text. The control grows with the type or
+     16px does not fit the h-8 box these use on a pointer.
+
+     This rule is deliberately unlayered, so it outranks the `text-xs` utility on
+     .inputClass. Moving it into @layer components would silently restore the
+     bug. */
+  input, select, textarea { font-size: 16px; min-height: 38px; }
+}
+
+/* The command bar floats in the upper third on a pointer, which is where the
+   eye already is. On a finger the keyboard is up the moment it opens, so that
+   offset is a quarter of the visible height spent on nothing — it starts at the
+   top instead. Both rules are unlayered so they outrank the `p-3` utility that
+   sets the other three sides. */
+.cmd-overlay { padding-top: 12dvh; }
+@media (pointer: coarse) {
+  .cmd-overlay { padding-top: 0.75rem; }
 }
 
 /* ------------------------------------------------- skeuomorphic primitives
@@ -256,6 +278,11 @@ body {
       transparent
     );
   }
+  /* The one panel a layout exists for. A line, not a fill: the accent means
+     "this is active" everywhere else in the app, and filling a header with it
+     would spend that meaning on decoration. It rides over the head's own
+     border-b, so the hairline is accent instead of --line. */
+  .panel-head[data-primary="true"] { box-shadow: inset 0 -1px 0 var(--accent); }
   .panel-actions { opacity: 1; transition: opacity 120ms ease; }
   @media (hover: hover) {
     .panel:not([data-editing="true"]) .panel-actions { opacity: 0; }

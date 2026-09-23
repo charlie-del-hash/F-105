@@ -5,7 +5,7 @@
   "desk": "shipping",
   "theme": "bridge",
   "panels": [
-    { "id": "plot", "type": "plot", "x": 0, "y": 0, "w": 6, "h": 8, "props": { "area": "hormuz" } },
+    { "id": "plot", "type": "plot", "x": 0, "y": 0, "w": 6, "h": 8, "props": { "area": "hormuz" }, "primary": true },
     { "id": "qb", "type": "quotes", "x": 6, "y": 0, "w": 6, "h": 8, "props": { "symbols": ["TD3C", "VLCC.TCE", "CAPE.5TC", "BDI", "LNGF.174", "SCFI", "SHIPX", "USDCNY"] } },
     { "id": "ind", "type": "indicators", "x": 0, "y": 8, "w": 6, "h": 3, "props": { "symbols": ["HORMUZ.TX", "BAB.TX", "WAR.RS"] } },
     { "id": "td3", "type": "chart", "x": 6, "y": 8, "w": 6, "h": 6, "props": { "symbol": "TD3C", "range": "6m" } },

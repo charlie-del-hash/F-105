@@ -37,8 +37,10 @@
    lift with a 6 % accent wash, not a grey block.
 6. **One accent, used as a line.** The active masthead tab and the active phone-bar item
    carry a 2 px accent line with a soft glow; the selected segment of a `.seg` takes the
-   accent as text. Nothing else is filled with it except the primary button and the LED
-   that matters.
+   accent as text; a layout's `primary` panel takes a hairline under its header, with its
+   title stepped from `ink-2` to `ink` while every other panel recedes — the "first item is
+   bigger" rule applied *between* panels rather than only inside a list. Nothing else is
+   filled with it except the primary button and the LED that matters.
 7. **Terminal details, not terminal cosplay.** The dashed last-price line with its value
    tag, the segmented range control, the tabular figures — things a trader would miss.
    No fake scanlines outside the two themes built for them.
@@ -206,6 +208,18 @@ for a UI that lives in that band — that gap is why the arbitrary values existe
 fill it, in `globals.css` `@theme`: `text-meta` (0.815rem) and `text-item` (0.963rem). The
 rem values are anchored to the default theme's 13.5px root, so Terminal renders what it
 always did. **Never write `text-[Npx]`.**
+
+### The one exception
+
+`input, select, textarea` take a hard `font-size: 16px` inside the `@media (pointer: coarse)`
+block in `globals.css`. iOS zooms the viewport whenever a focused form control is under
+16px and never restores the scale on blur, so a single tap in a panel's settings field left
+the whole app magnified with no way back. 16px is a platform constant rather than a step on
+the ladder, and the rule is scoped to coarse pointers, where the hierarchy around the field
+is already set by the text surrounding it.
+
+The rule is deliberately **unlayered** so it outranks the `text-xs` utility that
+`inputClass` carries. Moving it into `@layer components` restores the bug silently.
 
 ## Tokens
 

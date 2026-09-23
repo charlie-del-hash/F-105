@@ -20,6 +20,9 @@ export const PanelInstanceSchema = z.object({
   w: z.number().int().min(1).max(GRID_COLS),
   h: z.number().int().min(1),
   props: z.record(z.string(), z.unknown()).default({}),
+  /** The one panel this layout exists for. At most one per layout; it takes an
+   *  accent hairline and a full-strength title so the eye has somewhere to land. */
+  primary: z.boolean().default(false),
 });
 
 export const LayoutSchema = z.object({
@@ -44,6 +47,12 @@ export function parseLayout(input: unknown): Layout {
   const layout = LayoutSchema.parse(input);
   for (const p of layout.panels) {
     if (p.x + p.w > GRID_COLS) throw new Error(`Panel ${p.id} in layout ${layout.id} overflows the grid`);
+  }
+  // Two primaries is no hierarchy at all. Checked here rather than in the
+  // layouts script so a pasted layout and a synced remote row are held to it too.
+  const primaries = layout.panels.filter((p) => p.primary);
+  if (primaries.length > 1) {
+    throw new Error(`Layout ${layout.id} marks ${primaries.length} panels primary (${primaries.map((p) => p.id).join(", ")}); at most one`);
   }
   return layout;
 }

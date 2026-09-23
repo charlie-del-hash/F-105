@@ -2,8 +2,8 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { AUTO, THEME_STORAGE_KEY, resolveTheme, themeIds, type ThemeChoice } from "@/design/tokens";
-import { presetLayouts } from "@/layout-engine/presets";
-import { useActiveLayout, useWorkspace } from "@/layout-engine/store";
+import { getPreset, phoneLayoutId, presetLayouts } from "@/layout-engine/presets";
+import { WORKSPACE_STORAGE_KEY, useActiveLayout, useWorkspace } from "@/layout-engine/store";
 import { WorkspaceSync } from "@/layout-engine/sync";
 import { DialogHost, useDialogs } from "@/components/ui/dialogs";
 import { useMediaQuery } from "@/lib/useMediaQuery";
@@ -47,7 +47,29 @@ export function Shell({ index, children }: { index: CommandIndex; children: Reac
 
   // Persisted state is applied after mount so server and client markup agree.
   useEffect(() => {
-    useWorkspace.persist.rehydrate();
+    /**
+     * Whether this device has ever stored a workspace has to be sampled *before*
+     * rehydrate runs: afterwards there is no way to tell "no row" from "a row
+     * that happens to equal the defaults", and the difference decides whether a
+     * phone may be moved off Desk.
+     */
+    let firstRun = false;
+    try {
+      firstRun = localStorage.getItem(WORKSPACE_STORAGE_KEY) === null;
+    } catch {
+      // Blocked or private storage: treat it as a returning device and change
+      // nothing, rather than re-picking the layout on every single load.
+    }
+    void Promise.resolve(useWorkspace.persist.rehydrate()).then(() => {
+      // First run on a narrow viewport opens Pocket instead of the nine-panel
+      // Desk. First run only, and after rehydrate resolves — writing to the
+      // persisted store before it has loaded is what previously overwrote the
+      // saved row with defaults and cost a device its layouts, notes and
+      // watchlist. A reader who has since chosen Desk on their phone keeps it.
+      if (!firstRun) return;
+      if (!window.matchMedia("(max-width: 767px)").matches) return;
+      if (getPreset(phoneLayoutId)) useWorkspace.getState().setActive(phoneLayoutId);
+    });
   }, []);
   useEffect(() => {
     if (!hydrated) return;

@@ -17,6 +17,7 @@ export function CardHead({
   hint,
   leading,
   actions,
+  primary,
   className,
   ...rest
 }: {
@@ -30,6 +31,8 @@ export function CardHead({
   /** Anything before the slug — the drag grip, in edit mode. */
   leading?: React.ReactNode;
   actions?: React.ReactNode;
+  /** The one panel its layout exists for: accent hairline, full-strength title. */
+  primary?: boolean;
   className?: string;
 } & Omit<React.HTMLAttributes<HTMLElement>, "title">) {
   return (
@@ -39,6 +42,7 @@ export function CardHead({
         className,
       )}
       title={hint}
+      data-primary={primary ? "true" : undefined}
       {...rest}
     >
       {leading}
@@ -50,7 +54,7 @@ export function CardHead({
           <span className="h-3 w-px shrink-0 bg-line" aria-hidden />
         </>
       )}
-      <h3 className="caps min-w-0 flex-1 truncate text-ink-2" title={titleAttr}>
+      <h3 className={cn("caps min-w-0 flex-1 truncate", primary ? "text-ink" : "text-ink-2")} title={titleAttr}>
         {title}
       </h3>
       {actions}
@@ -67,6 +71,7 @@ export function Card({
   slug,
   title,
   actions,
+  primary,
   className,
   bodyClassName,
   children,
@@ -74,13 +79,14 @@ export function Card({
   slug?: string;
   title: React.ReactNode;
   actions?: React.ReactNode;
+  primary?: boolean;
   className?: string;
   bodyClassName?: string;
   children: React.ReactNode;
 }) {
   return (
     <section className={cn("bezel flex min-h-0 min-w-0 flex-col overflow-hidden", className)}>
-      <CardHead slug={slug} title={title} actions={actions} />
+      <CardHead slug={slug} title={title} actions={actions} primary={primary} />
       <div className={cn("min-h-0 flex-1", bodyClassName)}>{children}</div>
     </section>
   );

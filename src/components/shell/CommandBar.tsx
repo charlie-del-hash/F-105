@@ -11,6 +11,7 @@ import { panelCatalog } from "@/panels/catalog";
 import { getInstrument } from "@/data/instruments";
 import { isThemeChoice } from "@/design/tokens";
 import { useWorkspace } from "@/layout-engine/store";
+import { useVisualViewport } from "@/lib/useVisualViewport";
 import { parseMnemonic, type Command as Mnemonic } from "@/commands/mnemonics";
 import type { CommandIndex } from "@/content/loader";
 
@@ -96,16 +97,27 @@ export function CommandBar({ open, onClose, index }: { open: boolean; onClose: (
     [q, index],
   );
 
+  const vp = useVisualViewport();
+
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/55 p-3 pt-[12vh] backdrop-blur-[2px]" onClick={close} role="presentation">
-      <Command label="Command bar" className="bezel w-full max-w-xl overflow-hidden" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.key === "Escape" && close()} loop>
-        <div className="flex items-center gap-2 border-b border-line px-3">
+    <div
+      className="cmd-overlay fixed inset-x-0 z-50 flex items-start justify-center bg-black/55 p-3 backdrop-blur-[2px]"
+      /* The keyboard overlays the layout viewport on iOS rather than resizing
+         it, so no vh unit knows it is there. Take the height from the visual
+         viewport, and fall back to the full inset only where the API is
+         missing. Everything below sizes off this box. */
+      style={vp ? { top: vp.offsetTop, height: vp.height } : { top: 0, bottom: 0 }}
+      onClick={close}
+      role="presentation"
+    >
+      <Command label="Command bar" className="bezel flex max-h-full w-full max-w-xl flex-col overflow-hidden" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.key === "Escape" && close()} loop>
+        <div className="flex shrink-0 items-center gap-2 border-b border-line px-3">
           <span className="font-data text-accent" aria-hidden>›</span>
           <Command.Input autoFocus value={q} onValueChange={setQ} placeholder="Search, or type a mnemonic…" className="h-11 w-full bg-transparent font-data text-sm text-ink outline-none placeholder:text-ink-3" />
           <span className="kbd">esc</span>
         </div>
-        <Command.List className="max-h-[50vh] overflow-auto p-1 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:pb-0.5 [&_[cmdk-group-heading]]:pt-2 [&_[cmdk-group-heading]]:font-data [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-[0.14em] [&_[cmdk-group-heading]]:text-ink-3">
+        <Command.List className="min-h-0 flex-1 overflow-auto p-1 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:pb-0.5 [&_[cmdk-group-heading]]:pt-2 [&_[cmdk-group-heading]]:font-data [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-[0.14em] [&_[cmdk-group-heading]]:text-ink-3">
           <Command.Empty className="p-4 text-center font-ui text-xs text-ink-3">Nothing matches. Try a symbol, a title, or a mnemonic.</Command.Empty>
           {mnemonic && (
             <Command.Group heading="Command" forceMount>
@@ -127,7 +139,7 @@ export function CommandBar({ open, onClose, index }: { open: boolean; onClose: (
             </Command.Group>
           ))}
         </Command.List>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-line px-3 py-2 font-data text-xs text-ink-3">
+        <div className="hidden shrink-0 flex-wrap items-center gap-x-4 gap-y-1 border-t border-line px-3 py-2 font-data text-xs text-ink-3 sm:flex">
           <span><span className="text-ink-2">GP TTF</span> chart</span>
           <span><span className="text-ink-2">DES hormuz</span> dossier</span>
           <span><span className="text-ink-2">WIRE shp</span> add panel</span>

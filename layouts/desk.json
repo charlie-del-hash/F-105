@@ -4,7 +4,7 @@
   "description": "The default terminal: wire, quote board, two charts, the plot, calendar and clocks. Dense by design.",
   "theme": "terminal",
   "panels": [
-    { "id": "wire", "type": "wire", "x": 0, "y": 0, "w": 3, "h": 11, "props": { "limit": 40 } },
+    { "id": "wire", "type": "wire", "x": 0, "y": 0, "w": 3, "h": 11, "props": { "limit": 40 }, "primary": true },
     { "id": "qb", "type": "quotes", "x": 3, "y": 0, "w": 4, "h": 7, "props": { "symbols": ["BRENT", "TTF", "JKM", "EUA", "TD3C", "BDI", "SCFI", "EURUSD"] } },
     { "id": "gp1", "type": "chart", "x": 7, "y": 0, "w": 5, "h": 7, "props": { "symbol": "BRENT", "range": "3m" } },
     { "id": "top", "type": "headlines", "x": 3, "y": 7, "w": 4, "h": 7, "props": { "limit": 8 } },

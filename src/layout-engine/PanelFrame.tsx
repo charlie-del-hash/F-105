@@ -82,6 +82,7 @@ export function PanelFrame({ panel, edit, mobile, autoHeight, style, onDragStart
         slug={showMnemonic ? meta!.mnemonic : undefined}
         title={title}
         titleAttr={title}
+        primary={panel.primary}
         leading={edit && !mobile ? <GripVertical size={13} className="-ml-1 text-ink-3" aria-hidden /> : undefined}
         onPointerDown={edit && !mobile && onDragStart ? (e) => onDragStart(e, panel) : undefined}
         onKeyDown={onKey}
