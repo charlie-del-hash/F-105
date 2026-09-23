@@ -61,6 +61,27 @@ button, a, select, input { transition: color 120ms ease, background-color 120ms 
 *::-webkit-scrollbar { width: 8px; height: 8px; }
 *::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 4px; }
 
+/* ------------------------------------------------------------- safe areas
+   viewportFit is "cover" and the iOS web-app status bar is translucent, so the
+   sticky masthead, the phone nav bar and the status bar have to keep clear of
+   the notch and the home indicator themselves. */
+.safe-t { padding-top: env(safe-area-inset-top, 0px); }
+.safe-b { padding-bottom: env(safe-area-inset-bottom, 0px); }
+/* The phone nav bar is fixed, so the page has to end above it. */
+.pad-bottom-bar { padding-bottom: calc(3rem + env(safe-area-inset-bottom, 0px)); }
+
+/* ------------------------------------------------------------- touch sizing
+   The desk is deliberately dense on a pointer. On a finger it cannot be: every
+   control below was under 24px. These grow only where the pointer is coarse, so
+   desktop density is untouched. */
+@media (pointer: coarse) {
+  .tap { min-height: 38px; min-width: 38px; }
+  .seg > button { height: 30px; padding: 0 12px; }
+  .tab { padding: 0 14px; }
+  .menu-item { padding: 10px 10px; }
+  .panel-head { min-height: 38px; }
+}
+
 /* ------------------------------------------------- skeuomorphic primitives
    Functional skeuomorphism: the bezel tells you where a panel ends, the LED
    tells you a feed is alive, the inset tells you an area is a screen. Nothing
@@ -156,7 +177,7 @@ button, a, select, input { transition: color 120ms ease, background-color 120ms 
     color: var(--ink-2);
   }
   .seg > button:hover { color: var(--ink); }
-  .seg > button[aria-pressed="true"] {
+  .seg > button[aria-pressed="true"], .seg > button[aria-selected="true"] {
     background: var(--bg-2);
     color: var(--accent);
     box-shadow: 0 1px 2px color-mix(in srgb, #000 calc(35% * var(--fx-bezel)), transparent);

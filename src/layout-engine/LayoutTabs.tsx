@@ -4,7 +4,7 @@
  * for new/duplicate/import; the edit controls in a single cluster on the right.
  */
 import { useEffect, useRef, useState } from "react";
-import { Check, Copy, Download, MoreHorizontal, Pencil, Plus, Trash2, Upload } from "lucide-react";
+import { Check, ChevronDown, Copy, Download, MoreHorizontal, Pencil, Plus, Trash2, Upload } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { Button, IconButton } from "@/components/ui/Button";
 import { dialogs } from "@/components/ui/dialogs";
@@ -113,42 +113,131 @@ export function LayoutTabs() {
     }
   };
 
-  const Tab = ({ id, name, description }: { id: string; name: string; description: string }) => (
-    <button type="button" role="tab" aria-selected={layout.id === id} className="tab h-9" title={description} onClick={() => setActive(id)}>
+  const all = [...presetLayouts, ...mine];
+
+  // Shared by the desktop "+" popover and the phone layout sheet.
+  const plusItems = (
+    <>
+      <button
+        type="button"
+        role="menuitem"
+        className="menu-item"
+        onClick={async () => {
+          setPlus(false);
+          const name = await dialogs.prompt({ title: "New layout", label: "Name", defaultValue: "My desk", confirm: "Create" });
+          if (name) createLayout(name);
+        }}
+      >
+        <Plus size={13} /> New blank layout
+      </button>
+      <button
+        type="button"
+        role="menuitem"
+        className="menu-item"
+        onClick={() => {
+          if (layout.preset) forkPreset(layout.id);
+          else importLayout({ ...layout, name: `${layout.name} copy` });
+          setPlus(false);
+        }}
+      >
+        <Copy size={13} /> Duplicate “{layout.name}”
+      </button>
+      <button
+        type="button"
+        role="menuitem"
+        className="menu-item"
+        onClick={() => {
+          fileRef.current?.click();
+          setPlus(false);
+        }}
+      >
+        <Upload size={13} /> Import JSON…
+      </button>
+    </>
+  );
+
+  const Choice = ({ id, name, description }: { id: string; name: string; description: string }) => (
+    <button
+      type="button"
+      role="tab"
+      aria-selected={layout.id === id}
+      title={description}
+      onClick={() => setActive(id)}
+    >
       {name}
     </button>
   );
 
   return (
-    <div className="mb-2 flex items-end gap-2 border-b border-line">
-      <div className="flex min-w-0 flex-1 items-stretch overflow-x-auto" role="tablist" aria-label="Layouts">
-        {presetLayouts.map((l) => (
-          <Tab key={l.id} id={l.id} name={l.name} description={l.description} />
-        ))}
-        {mine.length > 0 && <span className="my-2.5 w-px shrink-0 bg-line-strong" aria-hidden />}
-        {mine.map((l) => (
-          <Tab key={l.id} id={l.id} name={l.name} description={l.description} />
-        ))}
-        <div className="relative flex items-stretch">
-          <button type="button" className="tab h-9 px-2" onClick={() => setPlus((o) => !o)} aria-haspopup="menu" aria-expanded={plus} title="New, duplicate or import a layout">
+    /* The workspace strip. The masthead above it is the site's navigation; this row
+       is controls for the layout in front of you, so it is built from .seg and a
+       label rather than from .tab — two rows of underlined tabs read as one
+       confusing double nav. */
+    <div className="mb-2 flex items-center gap-2 border-b border-line pb-1.5">
+      <div className="flex min-w-0 flex-1 items-center gap-2">
+        <span className="caps hidden shrink-0 text-ink-3 lg:inline">Layout</span>
+
+        <div className="seg hidden min-w-0 md:flex" role="tablist" aria-label="Layouts">
+          {presetLayouts.map((l) => (
+            <Choice key={l.id} id={l.id} name={l.name} description={l.description} />
+          ))}
+          {mine.length > 0 && <span className="mx-0.5 h-3.5 w-px shrink-0 bg-line-strong" aria-hidden />}
+          {mine.map((l) => (
+            <Choice key={l.id} id={l.id} name={l.name} description={l.description} />
+          ))}
+        </div>
+        <div className="relative hidden md:block">
+          <IconButton size="sm" label="New, duplicate or import a layout" onClick={() => setPlus((o) => !o)} aria-haspopup="menu" aria-expanded={plus}>
             <Plus size={14} />
-          </button>
+          </IconButton>
           <Menu open={plus} onClose={() => setPlus(false)} align="left" className="w-60">
-            <button type="button" role="menuitem" className="menu-item" onClick={async () => { setPlus(false); const name = await dialogs.prompt({ title: "New layout", label: "Name", defaultValue: "My desk", confirm: "Create" }); if (name) createLayout(name); }}>
-              <Plus size={13} /> New blank layout
-            </button>
-            <button type="button" role="menuitem" className="menu-item" onClick={() => { if (layout.preset) forkPreset(layout.id); else importLayout({ ...layout, name: `${layout.name} copy` }); setPlus(false); }}>
-              <Copy size={13} /> Duplicate “{layout.name}”
-            </button>
-            <button type="button" role="menuitem" className="menu-item" onClick={() => { fileRef.current?.click(); setPlus(false); }}>
-              <Upload size={13} /> Import JSON…
-            </button>
+            {plusItems}
           </Menu>
-          <input ref={fileRef} type="file" accept="application/json" className="hidden" onChange={(e) => onImport(e.target.files?.[0])} />
+        </div>
+
+        {/* On a phone the six presets overflowed the row with no scroll cue and
+            pushed the "+" off-screen. One named control, one sheet. */}
+        <div className="relative min-w-0 md:hidden">
+          <button
+            type="button"
+            onClick={() => setPlus((o) => !o)}
+            aria-haspopup="menu"
+            aria-expanded={plus}
+            className="tap flex min-w-0 items-center gap-1.5 rounded-[var(--radius)] border border-line bg-bg-3 px-2.5 font-ui text-xs text-ink"
+          >
+            <span className="caps shrink-0 text-ink-3">Layout</span>
+            <span className="truncate font-medium">{layout.name}</span>
+            <ChevronDown size={13} className="shrink-0 text-ink-3" />
+          </button>
+          <Menu open={plus} onClose={() => setPlus(false)} align="left" className="w-64">
+            {all.map((l) => (
+              <button
+                key={l.id}
+                type="button"
+                role="menuitem"
+                className="menu-item"
+                data-active={l.id === layout.id}
+                onClick={() => {
+                  setActive(l.id);
+                  setPlus(false);
+                }}
+              >
+                <span className="min-w-0 flex-1">
+                  <span className="block font-medium text-ink">{l.name}</span>
+                  <span className="block truncate text-[11px] text-ink-3">{l.description}</span>
+                </span>
+                <Check size={14} className={cn("shrink-0 text-accent", l.id !== layout.id && "invisible")} />
+              </button>
+            ))}
+            <div className="menu-sep" />
+            {plusItems}
+          </Menu>
         </div>
       </div>
 
-      <div className="flex shrink-0 items-center gap-1 pb-1.5">
+      <input ref={fileRef} type="file" accept="application/json" className="hidden" onChange={(e) => onImport(e.target.files?.[0])} />
+
+      <div className="flex shrink-0 items-center gap-1">
         <AddPanelMenu />
         <Button size="sm" variant={edit ? "solid" : "outline"} onClick={() => setEditMode(!edit)} aria-pressed={edit} title={edit ? "Finish editing" : "Edit layout"}>
           {edit ? <Check size={13} /> : <Pencil size={13} />} <span className="hidden sm:inline">{edit ? "Done" : "Edit"}</span>

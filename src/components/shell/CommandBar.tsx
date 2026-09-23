@@ -69,7 +69,7 @@ export function CommandBar({ open, onClose, index }: { open: boolean; onClose: (
 
   const commands = useMemo<Cmd[]>(() => {
     const out: Cmd[] = [];
-    for (const p of [{ href: "/", label: "Desk" }, { href: "/wire", label: "Wire" }, { href: "/markets", label: "Markets" }, { href: "/layouts", label: "Layouts" }, { href: "/kit", label: "Kit" }, { href: "/account", label: "Account" }]) {
+    for (const p of [{ href: "/", label: "Desk" }, { href: "/read", label: "Read" }, { href: "/wire", label: "Wire" }, { href: "/markets", label: "Markets" }, { href: "/layouts", label: "Layouts" }, { href: "/kit", label: "Kit" }, { href: "/account", label: "Account" }]) {
       out.push({ id: `page:${p.href}`, label: p.label, group: "Pages", run: () => go(p.href) });
     }
     for (const d of site.desks) out.push({ id: `desk:${d.id}`, label: `${d.name} desk`, hint: d.blurb, group: "Pages", keywords: [d.short], run: () => go(`/desk/${d.id}`) });

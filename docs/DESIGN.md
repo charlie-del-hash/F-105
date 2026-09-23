@@ -38,6 +38,32 @@
    No fake scanlines outside the two themes built for them.
 7. **The first item is bigger.** Headline lists lead with a heavier title, then settle.
 
+## Chrome
+
+Two rows, and they must not look alike. The **masthead** is the site's navigation —
+identity, the five destinations, command, account, theme — drawn with `.tab` and its
+accent underline. The **workspace strip** below it, on `/` only, is controls for the
+layout in front of you: a `Layout` label, a `.seg` switcher, and the add/edit/more
+cluster. Both rows were `.tab` once and read as one confusing double nav; the rule now
+is that navigation is underlined tabs and controls are segmented.
+
+The quote strip rides in the masthead everywhere except `/`, where the quote board
+panel is a few pixels below it and would say the same thing twice.
+
+`/kit` is a contract page for building, not a destination. It lives in the status bar
+with the other build metadata, and in `⌘K`.
+
+On a phone the masthead carried a second nav row — the same five links again, 32px, as
+far from the thumb as the screen allows. That row is gone. Navigation is a fixed
+**bottom bar** in the thumb zone (Desk · Read · Wire · Markets), carrying the same
+accent line as a tab; the workspace strip collapses to one named control that opens a
+sheet, because six preset tabs plus a `+` overflowed 390px with no scroll cue and put
+the `+` off-screen.
+
+Touch sizing is a `@media (pointer: coarse)` block in `globals.css`, not a breakpoint:
+the desk stays dense on a pointer and grows only where the pointer is a finger. Safe
+areas are `.safe-t` / `.safe-b`, because `viewportFit` is `cover`.
+
 ## Reading
 
 Long-form pages (`/read`, `/dossier`) are a reading surface first. The masthead slides

@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { site } from "@/config/site";
 import { useNow } from "@/lib/useNow";
 import { useWorkspace } from "@/layout-engine/store";
@@ -48,6 +49,11 @@ export function StatusBar({ onHelp }: { onHelp?: () => void }) {
         <span className="tabular">UTC {utc}</span>
         <span>THEME {theme.toUpperCase()}</span>
         <span className="hidden sm:inline">{site.name} {site.product} v{site.version}</span>
+        {/* The kit is a contract page for building, not a destination, so it lives
+            here with the other build metadata rather than in the masthead. */}
+        <Link href="/kit" className="hidden hover:text-ink sm:inline">
+          Kit
+        </Link>
         <button type="button" onClick={onHelp} className="ml-auto hidden items-center gap-1.5 hover:text-ink md:inline-flex" title="Keyboard shortcuts">
           <span className="kbd">?</span> keys
         </button>

@@ -9,6 +9,7 @@ import { DialogHost, useDialogs } from "@/components/ui/dialogs";
 import type { CommandIndex } from "@/content/loader";
 import { CommandBar } from "./CommandBar";
 import { KeyboardHelp } from "./KeyboardHelp";
+import { BottomBar } from "./BottomBar";
 import { StatusBar } from "./StatusBar";
 import { Topbar } from "./Topbar";
 
@@ -100,6 +101,9 @@ export function Shell({ index, children }: { index: CommandIndex; children: Reac
       <Topbar onCommand={() => setCmd(true)} />
       <main className="flex-1">{children}</main>
       <StatusBar onHelp={() => setHelp(true)} />
+      {/* Phone navigation sits in the thumb zone; the page ends above it. */}
+      <div className="pad-bottom-bar md:hidden" aria-hidden />
+      <BottomBar />
       <CommandBar open={cmd} onClose={() => setCmd(false)} index={index} />
       <KeyboardHelp open={help} onClose={() => setHelp(false)} />
       <DialogHost />
