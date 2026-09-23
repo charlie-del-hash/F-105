@@ -25,8 +25,8 @@ function HeadlinesPanel({ props }: { props: Props }) {
         <li key={d.slug} className="row">
           <Link href={d.href} className="block px-3 py-2.5">
             <Kicker items={[deskOf(d.desk as DeskId)?.short, d.kind, d.designation]} right={fmtDate(d.date)} />
-            <div className={i === 0 ? "mt-1 font-ui text-[14px] font-semibold leading-snug text-ink" : "mt-1 font-ui text-[13px] font-medium leading-snug text-ink"}>{d.title}</div>
-            <div className="mt-0.5 line-clamp-2 font-ui text-[11.5px] leading-snug text-ink-2">{d.dek}</div>
+            <div className={i === 0 ? "mt-1 font-ui text-base font-semibold leading-snug text-ink" : "mt-1 font-ui text-item font-medium leading-snug text-ink"}>{d.title}</div>
+            <div className="mt-0.5 line-clamp-2 font-ui text-meta leading-snug text-ink-2">{d.dek}</div>
           </Link>
         </li>
       ))}

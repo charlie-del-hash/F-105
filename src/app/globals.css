@@ -30,6 +30,18 @@
   --font-data: var(--font-data);
   --font-read: var(--font-read);
   --radius-panel: var(--radius);
+
+  /* Two steps Tailwind's scale does not have. This UI lives between 10px and
+     15px, where the stock ladder jumps 10.1 → 11.8 → 13.5, so ~56 sizes had been
+     written as arbitrary `text-[11px]` values. Those are px, so they ignored
+     --density and the hierarchy inverted between themes: on Glass a panel title
+     grew to 10.71px while the slug beside it stayed at 10px, having been the
+     smaller of the two on Terminal. Everything is on the rem ladder now, so a
+     theme scales the whole instrument and the order never changes.
+     rem values are anchored to the default theme's 13.5px root, so Terminal
+     renders what it always did and the roomier themes finally scale with it. */
+  --text-meta: 0.815rem;
+  --text-item: 0.963rem;
 }
 
 /* ------------------------------------------------------------------ base */
@@ -50,11 +62,19 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
-::selection { background: var(--selection); color: var(--bg); }
-a { color: inherit; text-decoration: none; }
-button { font: inherit; color: inherit; }
-button, a, select, input { transition: color 120ms ease, background-color 120ms ease, border-color 120ms ease, opacity 120ms ease, box-shadow 120ms ease; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* These belong in @layer base. Unlayered, `button { font: inherit }` beat every
+   rule in @layer components — layer order wins over specificity — so the `font`
+   shorthand silently reset font-size and font-family on any component styling a
+   button. `.seg > button` kept its uppercase and letter-spacing but rendered in
+   the UI face at the inherited size instead of mono at 0.75rem, and `.menu-item`
+   the same. */
+@layer base {
+  ::selection { background: var(--selection); color: var(--bg); }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; }
+  button, a, select, input { transition: color 120ms ease, background-color 120ms ease, border-color 120ms ease, opacity 120ms ease, box-shadow 120ms ease; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+}
 
 /* thin scrollbars, themed */
 * { scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
@@ -171,7 +191,7 @@ button, a, select, input { transition: color 120ms ease, background-color 120ms 
   .seg > button {
     flex: none;
     height: 18px; padding: 0 7px; border-radius: var(--radius);
-    font-family: var(--font-data); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase;
+    font-family: var(--font-data); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase;
     /* ink-3 on bg-3 falls under 3:1 on the light themes, which left the unselected
        ranges nearly invisible on Paper and Glass. */
     color: var(--ink-2);
@@ -186,7 +206,7 @@ button, a, select, input { transition: color 120ms ease, background-color 120ms 
   /* tabs with an accent underline (masthead nav, layout tabs) */
   .tab {
     position: relative; display: inline-flex; align-items: center; height: 100%; padding: 0 10px;
-    font-family: var(--font-ui); font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase;
+    font-family: var(--font-ui); font-size: var(--text-meta); letter-spacing: 0.1em; text-transform: uppercase;
     color: var(--ink-3); white-space: nowrap;
   }
   .tab::after {
@@ -227,7 +247,7 @@ button, a, select, input { transition: color 120ms ease, background-color 120ms 
   .menu { min-width: 12rem; padding: 4px; }
   .menu-item {
     display: flex; width: 100%; align-items: center; gap: 8px; padding: 6px 8px; text-align: left;
-    border-radius: var(--radius); font-family: var(--font-ui); font-size: 12px; color: var(--ink-2);
+    border-radius: var(--radius); font-family: var(--font-ui); font-size: 0.875rem; color: var(--ink-2);
   }
   .menu-item:hover, .menu-item[data-active="true"] { background: var(--bg-3); color: var(--ink); }
   .menu-sep { height: 1px; margin: 4px 0; background: var(--line); }

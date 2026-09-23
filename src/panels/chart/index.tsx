@@ -51,7 +51,7 @@ export function ChartBlock({ symbol, initialRange = "3m", tall = false }: { symb
       <div className="min-h-0 flex-1 px-1 pb-1">
         {error ? <Empty>Series unavailable: {error}</Empty> : series ? <LineChart points={series.points} decimals={inst.decimals} unit={inst.unit} lastValue={q?.last} /> : <Empty>Loading…</Empty>}
       </div>
-      <div className="flex items-center gap-2 px-3 pb-1.5 font-data text-[10px] text-ink-3">
+      <div className="flex items-center gap-2 px-3 pb-1.5 font-data text-xs text-ink-3">
         <LiveDot synthetic={series?.synthetic} provider={series?.provider} />
         <span className="truncate">{series ? (series.synthetic ? "synthetic demo series" : `${series.provider.toUpperCase()} · observed`) : inst.source}</span>
         {lastPoint && <span className="ml-auto tabular shrink-0">as of {fmtDate(lastPoint.d, "long")}</span>}

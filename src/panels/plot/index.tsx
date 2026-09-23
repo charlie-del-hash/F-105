@@ -96,7 +96,7 @@ export function PlotView({ areaId, showStatus = true }: { areaId: string; showSt
         </svg>
       </div>
       {showStatus && (
-        <div className="flex flex-wrap gap-x-4 gap-y-1 px-3 pb-2 font-data text-[11px]">
+        <div className="flex flex-wrap gap-x-4 gap-y-1 px-3 pb-2 font-data text-meta">
           {area.instruments.map((s) => {
             const q = quotes[s];
             const inst = getInstrument(s);

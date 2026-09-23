@@ -21,7 +21,7 @@ function CheckList({ options, value, onChange }: { options: { value: string; lab
           {options
             .filter((o) => (o.group ?? "") === g)
             .map((o) => (
-              <label key={o.value} className="flex cursor-pointer items-center gap-2 py-0.5 font-data text-[11.5px] text-ink-2 hover:text-ink">
+              <label key={o.value} className="flex cursor-pointer items-center gap-2 py-0.5 font-data text-meta text-ink-2 hover:text-ink">
                 <input
                   type="checkbox"
                   checked={value.includes(o.value)}

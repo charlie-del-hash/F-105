@@ -32,7 +32,7 @@ export function StatusBar({ onHelp }: { onHelp?: () => void }) {
   const degraded = data?.degraded?.length ?? 0;
   return (
     <footer className="mt-auto border-t border-line bg-bg-2">
-      <div className="mx-auto flex max-w-[1800px] flex-wrap items-center gap-x-4 gap-y-1 px-3 py-1 font-data text-[10.5px] text-ink-3">
+      <div className="mx-auto flex max-w-[1800px] flex-wrap items-center gap-x-4 gap-y-1 px-3 py-1 font-data text-xs text-ink-3">
         {data && data.live.length > 0 ? (
           <span className="flex items-center gap-1.5" title={`Live: ${data.live.join(", ")}`}>
             <span className="led led-ok" aria-hidden /> LIVE {data.live.length} · {liveNames.join(", ")} · SYNTHETIC {data.synthetic.length} · placeholder content

@@ -5,7 +5,7 @@ export function Field({ label, hint, children, className }: { label: string; hin
     <label className={cn("flex flex-col gap-1", className)}>
       <span className="caps text-ink-3">{label}</span>
       {children}
-      {hint && <span className="text-[11px] text-ink-3">{hint}</span>}
+      {hint && <span className="text-meta text-ink-3">{hint}</span>}
     </label>
   );
 }

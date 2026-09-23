@@ -21,7 +21,7 @@ export function Kicker({
   const parts = items.filter((x): x is React.ReactNode => x !== undefined && x !== null && x !== false && x !== "");
   const tones = { warn: "text-warn", alert: "text-alert", accent: "text-accent", up: "text-up", down: "text-down" };
   return (
-    <div className={cn("flex min-w-0 max-w-full items-baseline gap-2 font-data text-[10.5px] uppercase tracking-[0.12em] text-ink-3", className)}>
+    <div className={cn("flex min-w-0 max-w-full items-baseline gap-2 font-data text-xs uppercase tracking-[0.12em] text-ink-3", className)}>
       <span className={cn("min-w-0", wrap ? "[text-wrap:pretty]" : "truncate")}>
         {parts.map((p, i) => (
           <span key={i}>

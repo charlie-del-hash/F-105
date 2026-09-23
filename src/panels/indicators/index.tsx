@@ -26,7 +26,7 @@ export function StatTiles({ symbols }: { symbols: string[] }) {
         const pct = ref ? (delta / ref) * 100 : 0;
         return (
           <Link key={s} href={`/markets/${s}`} className="inset flex min-w-0 flex-col justify-between px-3 py-2 hover:border-line-strong">
-            <div className="flex items-center gap-1.5 font-ui text-[11px] text-ink-3">
+            <div className="flex items-center gap-1.5 font-ui text-meta text-ink-3">
               <LiveDot synthetic={q?.synthetic} provider={q?.provider} />
               <span className="truncate">{inst?.name ?? s}</span>
             </div>
@@ -34,9 +34,9 @@ export function StatTiles({ symbols }: { symbols: string[] }) {
               <div>
                 <div className="font-data text-xl leading-none text-ink">
                   {q ? fmtNum(q.last, inst?.decimals ?? 0, { compact: true }) : "…"}
-                  <span className="ml-1 text-[10px] text-ink-3">{inst?.unit}</span>
+                  <span className="ml-1 text-xs text-ink-3">{inst?.unit}</span>
                 </div>
-                <div className="mt-1 font-data text-[11px]">
+                <div className="mt-1 font-data text-meta">
                   {q && ref !== undefined && (
                     <>
                       <Change value={delta} pct={pct} mode="pct" /> <span className="text-ink-3">5d</span>

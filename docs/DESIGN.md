@@ -11,8 +11,12 @@
    ink. Change is up/down with a glyph, never colour alone.
 4. **Every state has a face.** Loading, empty, error, bad settings, unknown panel — each is
    a designed message inside the frame, not a blank.
-5. **One design system, many instruments.** A theme changes the mood; it never changes
-   the layout, the type scale or the semantics.
+5. **One design system, many instruments.** A theme changes the mood and the chrome's
+   character; it never changes the layout, the relative type hierarchy or the semantics.
+   `--density` scales the whole instrument uniformly — type, padding, control heights —
+   so Terminal is a dense desk at 0.9 and Glass is a roomier phone at 1.05. Uniformly is
+   the load-bearing word: every size is on the rem ladder, so the *order* of sizes is the
+   same in every theme.
 
 ## The rules that keep it from looking generated
 
@@ -133,6 +137,21 @@ while someone is typing; the shell checks the focused element.
 | `.dot`, `.led` | `globals.css` | provenance and liveness |
 | `Modal`, `dialogs` | `components/ui/Modal.tsx`, `components/ui/dialogs.tsx` | every overlay; every prompt and confirm |
 | `ReadingSurface`, `ReadingControls`, `ReadingProgress` | `components/reading/` | long-form pages |
+
+## Type scale
+
+Everything is on the rem ladder, because `--density` multiplies the root font size and a
+`px` value silently opts out of it. About 56 sizes had been written as arbitrary
+`text-[11px]` values, so the hierarchy *inverted* between themes: a panel title
+(`.caps`, rem) grew from 9.18px on Terminal to 10.71px on Glass while the mnemonic slug
+beside it (px) stayed at 10px, flipping which one was larger. Every size now moves by the
+same 1.167× between those two themes.
+
+Tailwind's scale jumps 10.1 → 11.8 → 13.5px at the default density, which is too coarse
+for a UI that lives in that band — that gap is why the arbitrary values existed. Two steps
+fill it, in `globals.css` `@theme`: `text-meta` (0.815rem) and `text-item` (0.963rem). The
+rem values are anchored to the default theme's 13.5px root, so Terminal renders what it
+always did. **Never write `text-[Npx]`.**
 
 ## Tokens
 

@@ -27,7 +27,7 @@ function WirePanel({ props }: { props: Props }) {
   const items = (props.desk ? wire.filter((w) => w.desk === props.desk) : wire).slice(0, props.limit);
   if (!items.length) return <Empty>No wire items yet.</Empty>;
   return (
-    <ol className="divide-y divide-line font-ui text-[12.5px] leading-snug">
+    <ol className="divide-y divide-line font-ui text-item leading-snug">
       {items.map((w) => {
         const body = (
           <>

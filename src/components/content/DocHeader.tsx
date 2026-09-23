@@ -17,7 +17,7 @@ export function DocHeader({ doc, extra }: { doc: Doc; extra?: React.ReactNode })
           status={doc.data.placeholder ? { label: "demo content · verify before use", tone: "warn" } : undefined}
         />
         {extra}
-        <span className="ml-auto flex items-center gap-2 font-data text-[11px] text-ink-3">
+        <span className="ml-auto flex items-center gap-2 font-data text-meta text-ink-3">
           <span className="tabular">{fmtDate(doc.data.date, "long")}</span>
           <ShareSheet title={doc.data.title} text={doc.data.dek} path={doc.href} size="sm" />
         </span>
@@ -59,7 +59,7 @@ export function DocFooter({ doc, related }: { doc: Doc; related: Doc[] }) {
         </section>
       )}
       {doc.data.tags.length > 0 && (
-        <p className="mb-6 font-data text-[11px] uppercase tracking-[0.12em] text-ink-3">{doc.data.tags.join(" · ")}</p>
+        <p className="mb-6 font-data text-meta uppercase tracking-[0.12em] text-ink-3">{doc.data.tags.join(" · ")}</p>
       )}
       {related.length > 0 && (
         <section>

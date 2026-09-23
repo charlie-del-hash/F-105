@@ -44,7 +44,7 @@ export function CardHead({
       {leading}
       {slug && (
         <>
-          <span className="shrink-0 font-data text-[10px] uppercase tracking-[0.12em] text-ink-3" aria-hidden>
+          <span className="shrink-0 font-data text-xs uppercase tracking-[0.12em] text-ink-3" aria-hidden>
             {slug}
           </span>
           <span className="h-3 w-px shrink-0 bg-line" aria-hidden />

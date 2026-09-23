@@ -31,7 +31,7 @@ export function ShareSheet({ title, text, path, size = "sm", className }: { titl
             {shareTargets.map((t) => (
               <button key={t.id} type="button" role="menuitem" onClick={() => run(t.id)} className="block w-full rounded-[var(--radius)] px-2 py-1.5 text-left hover:bg-bg-3">
                 <span className="block font-ui text-xs font-medium text-ink">{t.label}</span>
-                <span className="block font-ui text-[10.5px] text-ink-3">{t.hint}</span>
+                <span className="block font-ui text-xs text-ink-3">{t.hint}</span>
               </button>
             ))}
           </div>

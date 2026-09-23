@@ -11,7 +11,7 @@ const variants: Record<Variant, string> = {
   ghost: "text-ink-2 hover:bg-bg-3 hover:text-ink",
 };
 const sizes: Record<Size, string> = {
-  xs: "h-6 px-1.5 text-[11px]",
+  xs: "h-6 px-1.5 text-meta",
   sm: "h-7 px-2.5 text-xs",
   md: "h-9 px-3.5 text-sm",
 };

@@ -53,7 +53,7 @@ export default function KitPage() {
           {roles.map((r) => (
             <li key={r} className="bezel p-2">
               <div className="h-8 rounded-[var(--radius)] border border-line" style={{ background: `var(--${r})` }} />
-              <div className="mt-1 font-data text-[10.5px] text-ink-2">--{r}</div>
+              <div className="mt-1 font-data text-xs text-ink-2">--{r}</div>
             </li>
           ))}
         </ul>
@@ -62,7 +62,7 @@ export default function KitPage() {
             <span key={i} className="h-5 flex-1 rounded-[var(--radius)]" style={{ background: `var(--series-${i})` }} title={`--series-${i}`} />
           ))}
         </div>
-        <p className="mt-1 font-ui text-[11px] text-ink-3">Series palette, in fixed order. Assign by entity, never by rank; never cycle past eight.</p>
+        <p className="mt-1 font-ui text-meta text-ink-3">Series palette, in fixed order. Assign by entity, never by rank; never cycle past eight.</p>
       </Section>
 
       <Section title="Type" note="ui · data · read">
@@ -142,7 +142,7 @@ export default function KitPage() {
             <div key={t.id} data-theme={t.id} className="bezel overflow-hidden bg-bg p-2">
               <div className="mb-2 flex items-baseline gap-2 px-1">
                 <span className="font-ui text-sm font-medium text-ink">{t.name}</span>
-                <span className="font-data text-[10px] uppercase tracking-wider text-ink-3">{t.scheme}</span>
+                <span className="font-data text-xs uppercase tracking-wider text-ink-3">{t.scheme}</span>
                 <span className="ml-auto flex gap-0.5" aria-hidden>
                   {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
                     <span key={i} className="h-2.5 w-2.5 rounded-[1px]" style={{ background: `var(--series-${i})` }} />

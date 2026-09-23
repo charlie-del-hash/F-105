@@ -23,7 +23,7 @@ export function Clocks({ names, big = false }: { names: string[]; big?: boolean 
         const office = hour >= 7 && hour < 19;
         return (
           <div key={name} className="min-w-0">
-            <div className="flex items-center gap-1.5 truncate font-ui text-[11px] text-ink-3">
+            <div className="flex items-center gap-1.5 truncate font-ui text-meta text-ink-3">
               <span className={cn("led", office ? "led-ok" : "")} aria-hidden title={office ? "office hours" : "after hours"} />
               {name} <span className="text-ink-3/70">{day}</span>
             </div>

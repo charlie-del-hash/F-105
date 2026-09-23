@@ -63,7 +63,7 @@ export default async function InstrumentPage({ params }: Params) {
                 {docs.map((d) => (
                   <li key={d.slug}>
                     <Link href={d.href} className="block hover:text-accent">
-                      <div className="font-data text-[10.5px] text-ink-3">{d.kind} · {fmtDate(d.data.date)}</div>
+                      <div className="font-data text-xs text-ink-3">{d.kind} · {fmtDate(d.data.date)}</div>
                       <div className="font-ui text-sm text-ink">{d.data.title}</div>
                     </Link>
                   </li>
@@ -77,7 +77,7 @@ export default async function InstrumentPage({ params }: Params) {
               <ul className="space-y-2 font-ui text-xs">
                 {wire.map((w) => (
                   <li key={w.id}>
-                    <span className="tabular font-data text-[10.5px] text-ink-3">{fmtDate(w.ts)} {fmtTime(w.ts)}Z</span>
+                    <span className="tabular font-data text-xs text-ink-3">{fmtDate(w.ts)} {fmtTime(w.ts)}Z</span>
                     <div className="text-ink">{w.text}</div>
                   </li>
                 ))}

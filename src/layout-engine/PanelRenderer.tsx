@@ -15,7 +15,7 @@ class PanelErrorBoundary extends Component<{ children: ReactNode; label: string 
         <Empty>
           <div>
             <div className="caps text-alert">Panel failed</div>
-            <div className="mt-1 font-data text-[11px]">{this.state.error.message}</div>
+            <div className="mt-1 font-data text-meta">{this.state.error.message}</div>
           </div>
         </Empty>
       );
@@ -33,7 +33,7 @@ export function PanelRenderer({ panel, edit }: { panel: PanelInstance; edit: boo
       <Empty>
         <div>
           <div className="caps text-warn">Bad settings</div>
-          <div className="mt-1 font-data text-[11px]">{parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ")}</div>
+          <div className="mt-1 font-data text-meta">{parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ")}</div>
         </div>
       </Empty>
     );

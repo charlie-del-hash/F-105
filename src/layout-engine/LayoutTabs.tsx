@@ -69,7 +69,7 @@ function AddPanelMenu() {
                   <span className="kbd mt-0.5 w-11 shrink-0 text-center">{p.mnemonic}</span>
                   <span className="min-w-0">
                     <span className="block font-medium text-ink">{p.name}</span>
-                    <span className="block text-[11px] leading-snug text-ink-3">{p.description}</span>
+                    <span className="block text-meta leading-snug text-ink-3">{p.description}</span>
                   </span>
                 </button>
               ))}
@@ -224,7 +224,7 @@ export function LayoutTabs() {
               >
                 <span className="min-w-0 flex-1">
                   <span className="block font-medium text-ink">{l.name}</span>
-                  <span className="block truncate text-[11px] text-ink-3">{l.description}</span>
+                  <span className="block truncate text-meta text-ink-3">{l.description}</span>
                 </span>
                 <Check size={14} className={cn("shrink-0 text-accent", l.id !== layout.id && "invisible")} />
               </button>
@@ -249,8 +249,8 @@ export function LayoutTabs() {
           <Menu open={more} onClose={() => setMore(false)} className="w-64">
             <div className="px-2 pb-1.5 pt-1">
               <div className="font-ui text-xs font-medium text-ink">{layout.name}</div>
-              {layout.description && <div className="mt-0.5 font-ui text-[11px] leading-snug text-ink-3">{layout.description}</div>}
-              {layout.preset && <div className="mt-1 font-data text-[10px] uppercase tracking-wider text-ink-3">Preset · edits fork a copy</div>}
+              {layout.description && <div className="mt-0.5 font-ui text-meta leading-snug text-ink-3">{layout.description}</div>}
+              {layout.preset && <div className="mt-1 font-data text-xs uppercase tracking-wider text-ink-3">Preset · edits fork a copy</div>}
             </div>
             <div className="menu-sep" />
             {!layout.preset && (

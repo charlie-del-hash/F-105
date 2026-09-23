@@ -67,9 +67,9 @@ export function ThemePicker() {
               <Swatch bg={t.bg} accent={t.accent} ink={t.ink} size={18} />
               <span className="min-w-0 flex-1">
                 <span className="block font-medium text-ink">
-                  {t.name} <span className="ml-1 font-data text-[10px] uppercase tracking-wider text-ink-3">{t.scheme}</span>
+                  {t.name} <span className="ml-1 font-data text-xs uppercase tracking-wider text-ink-3">{t.scheme}</span>
                 </span>
-                <span className="block truncate text-[11px] text-ink-3">{t.tagline}</span>
+                <span className="block truncate text-meta text-ink-3">{t.tagline}</span>
               </span>
               <Check size={14} className={cn("shrink-0 text-accent", t.id !== theme && "invisible")} />
             </button>

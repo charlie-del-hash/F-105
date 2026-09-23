@@ -38,7 +38,7 @@ export function Topbar({ onCommand }: { onCommand: () => void }) {
       <div className="mx-auto flex h-11 max-w-[1800px] items-stretch gap-1 px-3">
         <Link href="/" className="mr-2 flex shrink-0 items-center gap-2 whitespace-nowrap text-accent">
           <Roundel />
-          <span className="glow font-data text-[15px] font-semibold tracking-tight">{site.name}</span>
+          <span className="glow font-data text-lg font-semibold tracking-tight">{site.name}</span>
           <span className="caps mt-px hidden text-ink-3 sm:inline">{site.product}</span>
         </Link>
         <nav className="hidden items-stretch md:flex" aria-label="Primary">

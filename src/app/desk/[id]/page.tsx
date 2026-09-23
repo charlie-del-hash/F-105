@@ -53,7 +53,7 @@ export default async function DeskLanding({ params }: Params) {
           <ol className="bezel divide-y divide-line">
             {wire.map((w) => (
               <li key={w.id} className="row px-3 py-2 font-ui text-sm text-ink">
-                <span className="tabular mr-2 font-data text-[10.5px] text-ink-3">{fmtDate(w.ts)} {fmtTime(w.ts)}Z</span>{w.text}
+                <span className="tabular mr-2 font-data text-xs text-ink-3">{fmtDate(w.ts)} {fmtTime(w.ts)}Z</span>{w.text}
               </li>
             ))}
           </ol>

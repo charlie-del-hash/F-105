@@ -105,7 +105,7 @@ export function CommandBar({ open, onClose, index }: { open: boolean; onClose: (
           <Command.Input autoFocus value={q} onValueChange={setQ} placeholder="Search, or type a mnemonic…" className="h-11 w-full bg-transparent font-data text-sm text-ink outline-none placeholder:text-ink-3" />
           <span className="kbd">esc</span>
         </div>
-        <Command.List className="max-h-[50vh] overflow-auto p-1 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:pb-0.5 [&_[cmdk-group-heading]]:pt-2 [&_[cmdk-group-heading]]:font-data [&_[cmdk-group-heading]]:text-[10px] [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-[0.14em] [&_[cmdk-group-heading]]:text-ink-3">
+        <Command.List className="max-h-[50vh] overflow-auto p-1 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:pb-0.5 [&_[cmdk-group-heading]]:pt-2 [&_[cmdk-group-heading]]:font-data [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-[0.14em] [&_[cmdk-group-heading]]:text-ink-3">
           <Command.Empty className="p-4 text-center font-ui text-xs text-ink-3">Nothing matches. Try a symbol, a title, or a mnemonic.</Command.Empty>
           {mnemonic && (
             <Command.Group heading="Command" forceMount>
@@ -121,13 +121,13 @@ export function CommandBar({ open, onClose, index }: { open: boolean; onClose: (
                 .map((c) => (
                   <Command.Item key={c.id} value={`${c.label} ${c.hint ?? ""} ${(c.keywords ?? []).join(" ")}`} onSelect={c.run} className={itemClass}>
                     <span className="truncate">{c.label}</span>
-                    {c.hint && <span className="ml-auto max-w-[45%] truncate text-[11px] text-ink-3">{c.hint}</span>}
+                    {c.hint && <span className="ml-auto max-w-[45%] truncate text-meta text-ink-3">{c.hint}</span>}
                   </Command.Item>
                 ))}
             </Command.Group>
           ))}
         </Command.List>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-line px-3 py-2 font-data text-[10.5px] text-ink-3">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-line px-3 py-2 font-data text-xs text-ink-3">
           <span><span className="text-ink-2">GP TTF</span> chart</span>
           <span><span className="text-ink-2">DES hormuz</span> dossier</span>
           <span><span className="text-ink-2">WIRE shp</span> add panel</span>

@@ -47,7 +47,7 @@ export function BottomBar() {
                   )}
                 />
                 <Icon size={17} aria-hidden />
-                <span className="font-ui text-[10px] uppercase tracking-[0.1em]">{label}</span>
+                <span className="font-ui text-xs uppercase tracking-[0.1em]">{label}</span>
               </Link>
             </li>
           );
