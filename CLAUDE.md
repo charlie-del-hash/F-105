@@ -44,7 +44,8 @@ honest: anything synthetic stays labelled synthetic.
 1. `src/panels/catalog.ts` — add a row (type, name, description, category, mnemonic, sizes).
 2. `src/panels/<type>/index.tsx` — export a `PanelDefinition`: `schema` (Zod, with defaults),
    `fields` (settings form), `component`, `defaultTitle`, optional `href`.
-3. `src/panels/registry.tsx` — add it to `defs`.
+3. `src/panels/registry.tsx` — add it to `defs`. `pnpm panels:check` catches a row
+   with no component, a component with no row, and a duplicated mnemonic.
 4. Content panels read `useWorkspaceData()`; market panels use `useQuotes`/`useSeries`.
 5. Document it in `docs/LAYOUTS.md`. `pnpm layouts:check` will catch a preset that uses it wrongly.
 
@@ -92,6 +93,6 @@ Set `placeholder: false` only when a human has verified the piece.
 
 ```
 pnpm dev · pnpm build · pnpm build:static · pnpm check
-pnpm tokens · pnpm content:check · pnpm layouts:check · pnpm test
+pnpm tokens · pnpm content:check · pnpm layouts:check · pnpm panels:check · pnpm test
 curl -H "Authorization: Bearer $CRON_SECRET" "http://localhost:3000/api/alerts/run?dryRun=1"
 ```

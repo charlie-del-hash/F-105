@@ -13,8 +13,9 @@
     "prebuild": "node scripts/tokens-to-css.mjs",
     "content:check": "tsx scripts/validate-content.ts",
     "layouts:check": "tsx scripts/check-layouts.ts",
+    "panels:check": "tsx scripts/check-panels.ts",
     "test": "tsx --test \"src/**/*.test.ts\"",
-    "check": "pnpm tokens:check && pnpm lint && pnpm typecheck && pnpm content:check && pnpm layouts:check && pnpm test",
+    "check": "pnpm tokens:check && pnpm lint && pnpm typecheck && pnpm content:check && pnpm layouts:check && pnpm panels:check && pnpm test",
     "build:static": "node scripts/static-export.mjs"
   },
   "dependencies": {

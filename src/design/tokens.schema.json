@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "F-105 design tokens",
+  "description": "Shape only — an editor validates as you type. The checks a schema cannot express (every theme carrying the same keys, ink contrast against bg-2, ink-scale separation) live in scripts/tokens-to-css.mjs and run in `pnpm check`. Categorical series palettes are validated separately against the dataviz validator; see docs/DESIGN.md.",
+  "type": "object",
+  "required": ["version", "defaultTheme", "fonts", "series", "themes"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "type": "integer", "minimum": 1 },
+    "description": { "type": "string" },
+    "seriesNote": { "type": "string" },
+    "fxNote": { "type": "string" },
+    "defaultTheme": { "type": "string" },
+    "fonts": {
+      "type": "object",
+      "description": "Named font stacks a theme can point at.",
+      "additionalProperties": { "type": "string" },
+      "minProperties": 1
+    },
+    "series": {
+      "type": "object",
+      "description": "Fallback categorical palettes, used by a theme that declares no series of its own.",
+      "required": ["dark", "light"],
+      "additionalProperties": false,
+      "properties": {
+        "dark": { "$ref": "#/$defs/palette" },
+        "light": { "$ref": "#/$defs/palette" }
+      }
+    },
+    "themes": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/$defs/theme" }
+    }
+  },
+  "$defs": {
+    "hex": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+    "colour": {
+      "type": "string",
+      "description": "A hex colour, or an rgba()/color-mix() string for glow.",
+      "pattern": "^(#[0-9a-fA-F]{6}|rgba?\\(.*\\)|color-mix\\(.*\\))$"
+    },
+    "dial": {
+      "type": "string",
+      "description": "A 0–1 effect dial, as a string so it lands in CSS verbatim.",
+      "pattern": "^(0|1|0?\\.[0-9]+)$"
+    },
+    "palette": {
+      "type": "array",
+      "description": "Eight categorical colours in fixed order. Assign by entity, never by rank; never cycle past eight.",
+      "items": { "$ref": "#/$defs/hex" },
+      "minItems": 8,
+      "maxItems": 8
+    },
+    "theme": {
+      "type": "object",
+      "required": ["name", "tagline", "scheme", "fonts", "color", "shape", "fx"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "tagline": { "type": "string" },
+        "scheme": { "enum": ["light", "dark"] },
+        "fonts": {
+          "type": "object",
+          "required": ["ui", "data", "read"],
+          "additionalProperties": false,
+          "properties": {
+            "ui": { "type": "string" },
+            "data": { "type": "string" },
+            "read": { "type": "string" }
+          }
+        },
+        "color": {
+          "type": "object",
+          "required": [
+            "bg", "bg-2", "bg-3", "line", "line-strong", "ink", "ink-2", "ink-3",
+            "accent", "accent-ink", "up", "down", "warn", "alert", "glow", "selection"
+          ],
+          "additionalProperties": { "$ref": "#/$defs/colour" }
+        },
+        "shape": {
+          "type": "object",
+          "required": ["radius", "density"],
+          "additionalProperties": false,
+          "properties": {
+            "radius": { "type": "string", "pattern": "^[0-9]+px$" },
+            "density": { "type": "string", "pattern": "^[0-9]+(\\.[0-9]+)?$" }
+          }
+        },
+        "fx": {
+          "type": "object",
+          "required": ["scanlines", "vignette", "bezel", "headfill", "gridline", "ticks"],
+          "additionalProperties": { "$ref": "#/$defs/dial" }
+        },
+        "series": { "$ref": "#/$defs/palette" }
+      }
+    }
+  }
+}
