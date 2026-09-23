@@ -10,6 +10,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowDown, ArrowUp, ArrowUpRight, GripVertical, Settings2, X } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { useOverflow } from "@/lib/useOverflow";
 import { IconButton } from "@/components/ui/Button";
 import { CardHead } from "@/components/ui/Card";
 import { ShareSheet } from "@/components/shell/ShareSheet";
@@ -23,6 +24,8 @@ interface Props {
   panel: PanelInstance;
   edit: boolean;
   mobile?: boolean;
+  /** Body flows at its natural height instead of filling a fixed frame. */
+  autoHeight?: boolean;
   style?: React.CSSProperties;
   onDragStart?: (e: React.PointerEvent, panel: PanelInstance) => void;
   onResizeStart?: (e: React.PointerEvent, panel: PanelInstance) => void;
@@ -31,8 +34,9 @@ interface Props {
 
 const keys: Record<string, [number, number]> = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
 
-export function PanelFrame({ panel, edit, mobile, style, onDragStart, onResizeStart, dragging }: Props) {
+export function PanelFrame({ panel, edit, mobile, autoHeight, style, onDragStart, onResizeStart, dragging }: Props) {
   const [settings, setSettings] = useState(false);
+  const [bodyRef, moreBelow] = useOverflow<HTMLDivElement>();
   const removePanel = useWorkspace((s) => s.removePanel);
   const nudgePanel = useWorkspace((s) => s.nudgePanel);
   const movePanel = useWorkspace((s) => s.movePanel);
@@ -107,10 +111,24 @@ export function PanelFrame({ panel, edit, mobile, style, onDragStart, onResizeSt
           </div>
         }
       />
-      <div className="relative min-h-0 flex-1">
-        <div className="absolute inset-0 overflow-auto">
+      {/* Filling a fixed frame needs the absolute inner box; flowing at the
+          panel's own height needs the body in normal flow, or it collapses. */}
+      <div ref={autoHeight ? bodyRef : undefined} className={cn("relative min-h-0 flex-1", autoHeight && "overflow-auto")}>
+        {autoHeight ? (
           <PanelRenderer panel={panel} edit={edit} />
-        </div>
+        ) : (
+          <div className="absolute inset-0 overflow-auto">
+            <PanelRenderer panel={panel} edit={edit} />
+          </div>
+        )}
+        {/* A capped panel that clips its last row needs to say so. */}
+        {autoHeight && moreBelow && (
+          <div
+            aria-hidden
+            className="pointer-events-none sticky bottom-0 -mt-8 h-8"
+            style={{ background: "linear-gradient(to top, var(--bg-2), transparent)" }}
+          />
+        )}
         {settings && (
           <div className="absolute inset-0 z-10 bg-bg-2">
             <PanelSettings panel={panel} onClose={() => setSettings(false)} />

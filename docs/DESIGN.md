@@ -87,6 +87,21 @@ meant Paper went boxless on the dashboard and kept its boxes everywhere else.
 `Card` is a flex column, so a card given a height passes what is left to its body. Do not
 size a body with `calc(100% - 2rem)` against a header whose height moves with `--density`.
 
+### On a phone
+
+A phone panel sizes to what it holds. Heights used to come from the *desktop* row
+span — `clamp(180, h × 52, 560)` — so a quote board authored `h:5` for a 12-column
+desk became a 260px box holding four rows, and a two-row clock panel was padded up to
+180px of mostly nothing.
+
+A panel that is a viewport rather than a list has no intrinsic height and still needs
+one: it declares `phoneAspect` in the catalog (chart 1.5, plot 100/70) and gets
+width ÷ aspect. Everything else flows, capped at `PHONE_PANEL_MAX` so one panel can
+never fill the screen — the next panel's header is always in view, which is what makes
+a stack of panels read as a stack rather than as one long page. A capped panel that
+clips its content shows a bottom fade (`useOverflow`), and its header already carries
+the ↗ link to the full page.
+
 ## Dialogs and overlays
 
 One `Modal` primitive. Naming, renaming and deleting go through the promise-based
