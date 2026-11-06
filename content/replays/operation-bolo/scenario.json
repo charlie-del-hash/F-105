@@ -1,0 +1,109 @@
+{
+  "id": "operation-bolo",
+  "title": "Operation Bolo",
+  "date": "1967-01-02",
+  "tz": "+07:00",
+  "t0": {
+    "local": "15:00:00",
+    "what": "Olds flight over Phuc Yen",
+    "basis": "documented",
+    "sources": ["lyon-bolo", "aviationist-2014"],
+    "dispute": "time-of-arrival"
+  },
+  "weather": {
+    "undercastTopsFt": 7000,
+    "coverage": "Solid undercast over the target area",
+    "note": "Breaks over Thud Ridge in the film are illustrative: the sources describe the target area, not the ingress.",
+    "basis": "documented",
+    "sources": ["warhistory-bolo", "wikipedia-bolo"]
+  },
+  "sources": [
+    { "id": "aces-1976", "citation": "Futrell, R. F., et al. Aces and Aerial Victories: The United States Air Force in Southeast Asia 1965–1973. Office of Air Force History, 1976.", "url": "https://www.dafhistory.af.mil/Portals/16/documents/Studies/101-150/AFD-090529-060.pdf", "kind": "primary", "consulted": "not-yet", "note": "First-hand accounts. The reference every 'to verify' item is checked against; blocked from the cloud sandbox." },
+    { "id": "nmusaf-bolo", "citation": "National Museum of the United States Air Force. “Operation Bolo” (fact sheet).", "url": "https://www.nationalmuseum.af.mil/Visit/Museum-Exhibits/Fact-Sheets/Display/Article/196006/operation-bolo/", "kind": "secondary", "consulted": "summary" },
+    { "id": "airforcemag-1998", "citation": "“MiG Sweep.” Air Force Magazine, November 1998.", "url": "https://www.airandspaceforces.com/article/1198sweep/", "kind": "secondary", "consulted": "summary", "note": "Author to confirm." },
+    { "id": "wikipedia-bolo", "citation": "“Operation Bolo.” Wikipedia.", "url": "https://en.wikipedia.org/wiki/Operation_Bolo", "kind": "secondary", "consulted": "summary", "note": "Carries the VPAF construction numbers, citing Toperczer." },
+    { "id": "wikipedia-victories", "citation": "“List of United States aerial victories of the Vietnam War.” Wikipedia.", "url": "https://en.wikipedia.org/wiki/List_of_United_States_aerial_victories_of_the_Vietnam_War", "kind": "secondary", "consulted": "summary" },
+    { "id": "acepilots-bolo", "citation": "“Operation Bolo, 2 Jan 1967.” acepilots.com.", "url": "https://acepilots.com/vietnam/olds_bolo.html", "kind": "secondary", "consulted": "summary", "note": "Quotes a Ford flight pilot: “At 15:04 my flight was attacked by three MiGs”." },
+    { "id": "lyon-bolo", "citation": "Lyon Air Museum. “Operation ‘Bolo’: Clash of Generations Over North Vietnam.”", "url": "https://lyonairmuseum.org/blog/operation-bolo-clash-generations-over-north-vietnam/", "kind": "secondary", "consulted": "summary" },
+    { "id": "aviationist-2014", "citation": "The Aviationist. “Operation Bolo: how U.S. F-4C Phantoms disguised as F-105 bombers set a trap for North Vietnam’s MiG-21s,” 9 October 2014.", "url": "https://theaviationist.com/2014/10/09/operation-bolo-f-4c/", "kind": "secondary", "consulted": "summary" },
+    { "id": "warhistory-bolo", "citation": "WarHistory.org. “Operation Bolo.”", "url": "https://warhistory.org/article/operation-bolo", "kind": "secondary", "consulted": "summary" },
+    { "id": "pearlharbor-bolo", "citation": "Pearl Harbor Aviation Museum. “Operation Bolo.”", "url": "https://www.pearlharboraviationmuseum.org/news/blog-home/operation-bolo/", "kind": "secondary", "consulted": "summary" },
+    { "id": "avgeek-f104", "citation": "The Aviation Geek Club. “The Unknown Role Played by the F-104 Starfighter During Operation Bolo.”", "url": "https://theaviationgeekclub.com/the-unknown-role-played-by-the-f-104-starfighter-during-operation-bolo/", "kind": "secondary", "consulted": "summary" },
+    { "id": "tdia-637680", "citation": "This Day in Aviation. Tag archive “63-7680”.", "url": "https://thisdayinaviation.com/tag/63-7680", "kind": "secondary", "consulted": "summary", "note": "Olds’s Bolo aircraft; SCAT XXVII (64-0829) is a different airframe." },
+    { "id": "fpu-bolo", "citation": "Fighter Pilot University. “Operation Bolo.”", "url": "http://www.fighterpilotuniversity.com/wtfo/operation-bolo", "kind": "secondary", "consulted": "summary", "note": "Rambler flight positions and crews." },
+    { "id": "secondary-unattributed", "citation": "Secondary accounts surfaced in web research on 6 Nov 2026 whose exact attribution is still pending.", "kind": "secondary", "consulted": "summary", "note": "A placeholder for a disagreement we know exists but cannot yet cite precisely. Nothing rests on it alone." },
+    { "id": "michel-1997", "citation": "Michel, Marshall L., III. Clashes: Air Combat over North Vietnam 1965–1972. Naval Institute Press, 1997.", "kind": "reference", "consulted": "not-yet" },
+    { "id": "olds-2010", "citation": "Olds, Robin, with Christina Olds and Ed Rasimus. Fighter Pilot. St. Martin’s Press, 2010.", "kind": "reference", "consulted": "not-yet" },
+    { "id": "davies-2004", "citation": "Davies, Peter E. USAF F-4 Phantom II MiG Killers 1965–68. Osprey, 2004.", "kind": "reference", "consulted": "summary" },
+    { "id": "toperczer-2001", "citation": "Toperczer, István. MiG-21 Units of the Vietnam War. Osprey, 2001.", "kind": "reference", "consulted": "not-yet", "note": "The VPAF side: losses by construction number." },
+    { "id": "ourairports", "citation": "OurAirports open data (public domain).", "url": "https://github.com/davidmegginson/ourairports-data", "kind": "dataset", "consulted": "read" },
+    { "id": "noaa-solar", "citation": "NOAA Solar Calculator algorithm (after Meeus, Astronomical Algorithms).", "kind": "dataset", "consulted": "read" }
+  ],
+  "flights": [
+    { "id": "olds", "callsign": "Olds", "role": "west-force", "unit": "555th TFS, 8th TFW", "base": "ubon", "engaged": true, "members": ["olds-1", "olds-wetterhahn", "olds-3", "olds-radeker"], "basis": "documented", "sources": ["nmusaf-bolo", "wikipedia-victories"] },
+    { "id": "ford", "callsign": "Ford", "role": "west-force", "unit": "8th TFW", "base": "ubon", "engaged": true, "members": ["ford-1", "ford-raspberry", "ford-3", "ford-4"], "note": "Led by the wing’s deputy commander for operations, Col. Daniel “Chappie” James Jr.", "basis": "documented", "sources": ["lyon-bolo", "wikipedia-victories"] },
+    { "id": "rambler", "callsign": "Rambler", "role": "west-force", "unit": "433rd TFS, 8th TFW", "base": "ubon", "engaged": true, "members": ["rambler-1", "rambler-glynn", "rambler-3", "rambler-combies"], "note": "Arrived on time — into the middle of the fight.", "basis": "documented", "sources": ["warhistory-bolo", "wikipedia-victories"] },
+    { "id": "west-others", "callsign": "Lincoln · Tempo · Plymouth · Vespa", "role": "west-force", "unit": "8th TFW", "base": "ubon", "engaged": false, "note": "The rest of the west force; weather kept them out of the fight. The list differs between sources.", "basis": "documented", "sources": ["secondary-unattributed"] },
+    { "id": "east-force", "callsign": "366th TFW flights", "role": "east-force", "unit": "366th TFW", "base": "danang", "engaged": false, "note": "Planned to cover Kep and Cat Bi and block retreat towards China; weather kept them from their patrol areas.", "basis": "documented", "sources": ["avgeek-f104", "davies-2004", "wikipedia-bolo"] },
+    { "id": "iron-hand", "callsign": "F-105 Iron Hand", "role": "iron-hand", "unit": "F-105 wings, Korat and Takhli", "engaged": false, "note": "Six flights against the SA-2 sites.", "basis": "documented", "sources": ["wikipedia-bolo"] },
+    { "id": "f104-cap", "callsign": "F-104C CAP", "role": "cap", "unit": "435th TFS", "engaged": false, "note": "Combat air patrol near the Black River for the egress.", "basis": "documented", "sources": ["avgeek-f104", "wikipedia-bolo"] },
+    { "id": "support", "callsign": "EC-121 · EB-66 · KC-135", "role": "support", "engaged": false, "note": "Airborne radar (College Eye), jamming and tankers.", "basis": "documented", "sources": ["wikipedia-bolo"] }
+  ],
+  "actors": [
+    { "id": "olds-1", "side": "usaf", "type": "F-4C", "callsign": "Olds 01", "flight": "olds", "serial": "63-7680", "unit": "8th TFW", "crew": [{ "name": "Robin Olds", "rank": "Col.", "seat": "front" }, { "name": "Charles Clifton", "rank": "1st Lt.", "seat": "rear" }], "basis": "documented", "sources": ["wikipedia-victories", "tdia-637680"] },
+    { "id": "olds-wetterhahn", "side": "usaf", "type": "F-4C", "callsign": "Olds 02", "flight": "olds", "unit": "555th TFS", "crew": [{ "name": "Ralph Wetterhahn", "seat": "front" }, { "name": "Jerry Sharp", "seat": "rear" }], "note": "Olds’s wingman. Ranks and middle initials to confirm.", "basis": "documented", "sources": ["wikipedia-victories", "airforcemag-1998"] },
+    { "id": "olds-3", "side": "usaf", "type": "F-4C", "flight": "olds", "note": "Crew not yet sourced.", "basis": "inferred", "sources": ["nmusaf-bolo"] },
+    { "id": "olds-radeker", "side": "usaf", "type": "F-4C", "callsign": "Olds 04", "flight": "olds", "unit": "555th TFS", "crew": [{ "name": "Walter Radeker", "rank": "Capt.", "seat": "front" }, { "name": "James Murray", "seat": "rear" }], "note": "Call sign from one secondary source; name suffixes differ between sources (II / III).", "basis": "documented", "sources": ["wikipedia-victories", "secondary-unattributed"] },
+    { "id": "ford-1", "side": "usaf", "type": "F-4C", "callsign": "Ford 01", "flight": "ford", "crew": [{ "name": "Daniel “Chappie” James Jr.", "seat": "front" }], "note": "Back-seater not yet sourced. Rank differs between sources (Col. / Lt. Col.).", "basis": "documented", "sources": ["lyon-bolo"] },
+    { "id": "ford-raspberry", "side": "usaf", "type": "F-4C", "callsign": "Ford 02", "flight": "ford", "unit": "555th TFS", "crew": [{ "name": "Everett Raspberry", "seat": "front" }, { "name": "Western", "rank": "1st Lt.", "seat": "rear" }], "note": "Western’s given name to confirm.", "basis": "documented", "sources": ["wikipedia-victories", "airforcemag-1998"] },
+    { "id": "ford-3", "side": "usaf", "type": "F-4C", "flight": "ford", "note": "Crew not yet sourced.", "basis": "inferred", "sources": ["lyon-bolo"] },
+    { "id": "ford-4", "side": "usaf", "type": "F-4C", "flight": "ford", "note": "Crew not yet sourced.", "basis": "inferred", "sources": ["lyon-bolo"] },
+    { "id": "rambler-1", "side": "usaf", "type": "F-4C", "callsign": "Rambler 01", "flight": "rambler", "unit": "433rd TFS", "crew": [{ "name": "John B. Stone", "rank": "Capt.", "seat": "front" }, { "name": "Clifton P. Dunnegan Jr.", "rank": "1st Lt.", "seat": "rear" }], "basis": "documented", "sources": ["wikipedia-victories", "fpu-bolo"] },
+    { "id": "rambler-glynn", "side": "usaf", "type": "F-4C", "callsign": "Rambler 02", "flight": "rambler", "unit": "433rd TFS", "crew": [{ "name": "Lawrence J. Glynn Jr.", "rank": "1st Lt.", "seat": "front" }, { "name": "Lawrence E. Cary", "rank": "1st Lt.", "seat": "rear" }], "basis": "documented", "sources": ["wikipedia-victories", "fpu-bolo"] },
+    { "id": "rambler-combies", "side": "usaf", "type": "F-4C", "callsign": "Rambler 04", "flight": "rambler", "unit": "433rd TFS", "crew": [{ "name": "Philip P. Combies", "rank": "Maj.", "seat": "front" }, { "name": "Lee R. Dutton", "rank": "1st Lt.", "seat": "rear" }], "basis": "documented", "sources": ["wikipedia-victories", "fpu-bolo"] },
+    { "id": "rambler-3", "side": "usaf", "type": "F-4C", "callsign": "Rambler 03", "flight": "rambler", "note": "Crew not yet sourced.", "basis": "inferred", "sources": ["fpu-bolo"] },
+    { "id": "mig-a", "side": "vpaf", "type": "MiG-21", "unit": "921st FR", "note": "MiG-21 credited to Wetterhahn/Sharp. Which credited MiG matches which VPAF loss is unknown.", "basis": "documented", "sources": ["wikipedia-victories"] },
+    { "id": "mig-b", "side": "vpaf", "type": "MiG-21", "unit": "921st FR", "note": "MiG-21 credited to Olds/Clifton.", "basis": "documented", "sources": ["wikipedia-victories"] },
+    { "id": "mig-c", "side": "vpaf", "type": "MiG-21", "unit": "921st FR", "note": "MiG-21 credited to Radeker/Murray.", "basis": "documented", "sources": ["wikipedia-victories"] },
+    { "id": "mig-d", "side": "vpaf", "type": "MiG-21", "unit": "921st FR", "note": "MiG-21 credited to Raspberry/Western.", "basis": "documented", "sources": ["wikipedia-victories"] },
+    { "id": "mig-e", "side": "vpaf", "type": "MiG-21", "unit": "921st FR", "note": "MiG-21 credited to Stone/Dunnegan.", "basis": "documented", "sources": ["wikipedia-victories"] },
+    { "id": "mig-f", "side": "vpaf", "type": "MiG-21", "unit": "921st FR", "note": "MiG-21 credited to Glynn/Cary.", "basis": "documented", "sources": ["wikipedia-victories"] },
+    { "id": "mig-g", "side": "vpaf", "type": "MiG-21", "unit": "921st FR", "note": "MiG-21 credited to Combies/Dutton.", "basis": "documented", "sources": ["wikipedia-victories"] }
+  ],
+  "tracks": [
+    {
+      "actor": "olds-1",
+      "note": "Inbound down Thud Ridge. Route and speed from secondary accounts; the altitude is assumed (F-105 ingress, to verify).",
+      "points": [
+        { "t": -279, "lat": 21.68, "lon": 105.36, "altFt": 15000, "kt": 480, "basis": "inferred", "sources": ["warhistory-bolo", "acepilots-bolo"] },
+        { "t": -150, "lat": 21.468, "lon": 105.567, "altFt": 15000, "kt": 480, "basis": "inferred", "sources": ["warhistory-bolo", "acepilots-bolo"] },
+        { "t": 0, "lat": 21.2212, "lon": 105.807, "altFt": 15000, "kt": 480, "basis": "inferred", "sources": ["lyon-bolo", "ourairports"] }
+      ]
+    }
+  ],
+  "events": [
+    { "id": "plan", "kind": "context", "when": "December 1966", "text": "8th TFW F-4Cs would fly F-105 strike routes, altitudes, speeds and call signs, carrying the F-105’s QRC-160 jamming pods, to draw the MiG-21s up.", "dispute": "qrc-160", "basis": "documented", "sources": ["pearlharbor-bolo", "aviationist-2014", "nmusaf-bolo"] },
+    { "id": "slip", "kind": "weather", "when": "1 January 1967", "text": "Weather delays Bolo by 24 hours.", "basis": "documented", "sources": ["lyon-bolo", "wikipedia-bolo"] },
+    { "id": "migs-held", "kind": "context", "when": "Afternoon, 2 January", "text": "Ground controllers hold the MiG-21s about fifteen minutes because of the undercast.", "basis": "documented", "sources": ["warhistory-bolo", "wikipedia-bolo"] },
+    { "id": "olds-arrives", "kind": "arrive", "t": 0, "actor": "olds-1", "flight": "olds", "text": "Olds flight arrives over Phuc Yen on schedule. No MiGs yet.", "dispute": "time-of-arrival", "basis": "documented", "sources": ["lyon-bolo", "aviationist-2014"] },
+    { "id": "migs-up", "kind": "launch", "t": 90, "tBasis": "illustrative", "text": "MiG-21s of the 921st Fighter Regiment pop up through the undercast.", "basis": "documented", "sources": ["warhistory-bolo", "airforcemag-1998"] },
+    { "id": "kill-wetterhahn", "kind": "kill", "t": 150, "tBasis": "illustrative", "actor": "olds-wetterhahn", "target": "mig-a", "weapon": "AIM-7", "text": "Wetterhahn and Sharp: MiG-21 destroyed (USAF credit).", "basis": "documented", "sources": ["wikipedia-victories"] },
+    { "id": "kill-olds", "kind": "kill", "t": 200, "tBasis": "illustrative", "actor": "olds-1", "target": "mig-b", "weapon": "AIM-9", "text": "Olds and Clifton: MiG-21 destroyed (USAF credit).", "basis": "documented", "sources": ["wikipedia-victories"] },
+    { "id": "ford-attacked", "kind": "tally", "t": 240, "flight": "ford", "text": "“At 15:04 my flight was attacked by three MiGs” — a Ford pilot’s account.", "basis": "documented", "sources": ["acepilots-bolo"] },
+    { "id": "kill-radeker", "kind": "kill", "t": 260, "tBasis": "illustrative", "actor": "olds-radeker", "target": "mig-c", "weapon": "AIM-9", "text": "Radeker and Murray: MiG-21 destroyed (USAF credit).", "basis": "documented", "sources": ["wikipedia-victories"] },
+    { "id": "kill-raspberry", "kind": "kill", "t": 320, "tBasis": "illustrative", "actor": "ford-raspberry", "target": "mig-d", "weapon": "AIM-9", "text": "Raspberry and Western: MiG-21 destroyed (USAF credit).", "basis": "documented", "sources": ["wikipedia-victories"] },
+    { "id": "rambler-arrives", "kind": "arrive", "t": 600, "tBasis": "inferred", "flight": "rambler", "text": "Rambler flight arrives exactly on time, into the middle of the fight.", "basis": "documented", "sources": ["warhistory-bolo"] },
+    { "id": "kill-stone", "kind": "kill", "t": 620, "tBasis": "illustrative", "actor": "rambler-1", "target": "mig-e", "weapon": "AIM-7", "text": "Stone and Dunnegan: MiG-21 destroyed (USAF credit).", "basis": "documented", "sources": ["wikipedia-victories"] },
+    { "id": "kill-glynn", "kind": "kill", "t": 660, "tBasis": "illustrative", "actor": "rambler-glynn", "target": "mig-f", "weapon": "AIM-7", "text": "Glynn and Cary: MiG-21 destroyed (USAF credit).", "basis": "documented", "sources": ["wikipedia-victories"] },
+    { "id": "kill-combies", "kind": "kill", "t": 700, "tBasis": "illustrative", "actor": "rambler-combies", "target": "mig-g", "weapon": "AIM-7", "text": "Combies and Dutton: MiG-21 destroyed (USAF credit).", "basis": "documented", "sources": ["wikipedia-victories"] },
+    { "id": "ejections", "kind": "eject", "when": "During the fight", "text": "VPAF records list every pilot of the five MiG-21s it lost as having ejected.", "basis": "documented", "sources": ["wikipedia-bolo"] },
+    { "id": "fight-over", "kind": "egress", "t": 720, "tBasis": "inferred", "text": "About twelve minutes after it began, the fight is over. No USAF losses.", "basis": "documented", "sources": ["wikipedia-bolo", "nmusaf-bolo"] },
+    { "id": "stand-down", "kind": "context", "when": "Early 1967", "text": "The 921st Fighter Regiment is withdrawn from combat for several months.", "basis": "documented", "sources": ["wikipedia-bolo"] }
+  ],
+  "disputes": [
+    { "id": "time-of-arrival", "topic": "When Olds flight reached Phuc Yen", "positions": [{ "claim": "About 15:00 local", "sources": ["lyon-bolo", "aviationist-2014"] }, { "claim": "14:00, or “1400” with the zone unstated or given as Zulu", "sources": ["secondary-unattributed"] }], "onScreen": "≈15:00 L — sources differ" },
+    { "id": "losses", "topic": "How many MiG-21s were lost", "positions": [{ "claim": "USAF credited seven MiG-21s destroyed", "sources": ["wikipedia-victories", "nmusaf-bolo"] }, { "claim": "VPAF records five MiG-21PFLs lost: c/n 1812, 1908, 1909, 2106, 2206", "sources": ["wikipedia-bolo", "toperczer-2001"] }], "onScreen": "USAF credited 7 · VPAF records 5 lost" },
+    { "id": "qrc-160", "topic": "Whether the Phantoms carried QRC-160 pods", "positions": [{ "claim": "They carried the F-105’s QRC-160 pods, so their emissions matched", "sources": ["pearlharbor-bolo", "aviationist-2014"] }, { "claim": "Pods were short and some flew without", "sources": ["secondary-unattributed"] }], "onScreen": "QRC-160 pods — fit to verify" },
+    { "id": "east-force-size", "topic": "Size of the 366th TFW east force", "positions": [{ "claim": "Seven flights", "sources": ["wikipedia-bolo"] }, { "claim": "Five flights", "sources": ["davies-2004"] }], "onScreen": "East force (366th TFW), kept out by weather" }
+  ]
+}

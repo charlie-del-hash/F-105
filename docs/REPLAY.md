@@ -36,6 +36,21 @@ look and the overlays. The milestones are at the end of this page.
   so it needs no UVs, and any model takes the scheme. Markings the record does not support
   are not painted.
 
+## The data
+
+`content/replays/operation-bolo/scenario.json` is the record the film is drawn from:
+
+- flights, actors (crews, call signs, serials), tracks and events;
+- each with a `basis` (documented / inferred / illustrative) and its sources;
+- each source marked `read`, `summary` or `not-yet`;
+- the disagreements kept as `disputes`, each with the line the film shows until the
+  primary record settles it.
+
+Kill events must be documented and carry the weapon. Their *times* are illustrative
+(`tBasis`) until the pilots' accounts in *Aces and Aerial Victories* pin them down.
+`pnpm replay:check` (part of `pnpm check`) enforces this, together with the credits
+ledger.
+
 ## Honesty
 
 - The film always carries the line `RECONSTRUCTION · …`. Every event is marked ●
@@ -116,7 +131,7 @@ says.
 | | | |
 |---|---|---|
 | M0 | Look-dev spike: "Above the undercast" | ✓ this branch |
-| M1 | `scenario.json` + sources, Zod schema, `check-replay`, engine tests (track, timemap, captions) | |
+| M1 | `scenario.json` + sources, Zod schema, `check-replay`, engine tests (track, timemap, captions) | ✓ data and checks; primary-source pass pending |
 | M2 | Assets: terrain LODs, vectors, CC models with the livery shader, F-105 loft, credits audit | |
 | M3 | Act III "The fight" end to end, plus `/replay/operation-bolo`, the `RPL` panel, the article | |
 | M4 | Cold open, Acts I, II and IV, credits; full captions, VO slot | |
