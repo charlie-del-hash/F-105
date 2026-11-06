@@ -1,0 +1,72 @@
+{
+  "$comment": "One row per asset the Operation Bolo replay ships or renders with. M1 adds scripts/check-replay.ts, which fails the build on any file under public/replay/** without a row here, or with a licence outside the allowlist. Reference books are listed in the scenario's sources, not here.",
+  "assets": [
+    {
+      "file": "public/replay/operation-bolo/terrain/thud-ridge/height.png",
+      "title": "Copernicus DEM GLO-30, tile N21 E105",
+      "author": "DLR e.V. and Airbus Defence and Space GmbH, provided under COPERNICUS by the European Union and ESA",
+      "source": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N21_00_E105_00_DEM/Copernicus_DSM_COG_10_N21_00_E105_00_DEM.tif",
+      "licence": "Copernicus",
+      "attribution": "© DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA; all rights reserved",
+      "modifications": "Cropped to 21.0–21.8 N, 105.25–106.0 E; resampled to 1024×1173; voids clamped to 0 m; terrarium-encoded (scripts/replay/bake-terrain.mjs)"
+    },
+    {
+      "file": "public/replay/operation-bolo/terrain/thud-ridge/normal.webp",
+      "title": "Normals derived from Copernicus DEM GLO-30, tile N21 E105",
+      "author": "DLR e.V. and Airbus Defence and Space GmbH, provided under COPERNICUS by the European Union and ESA",
+      "source": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N21_00_E105_00_DEM/Copernicus_DSM_COG_10_N21_00_E105_00_DEM.tif",
+      "licence": "Copernicus",
+      "attribution": "© DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA; all rights reserved",
+      "modifications": "Object-space normals at 2048×2346 from the bilinear-resampled DEM"
+    },
+    {
+      "file": "public/replay/operation-bolo/terrain/thud-ridge/albedo.webp",
+      "title": "Land colour from ESA WorldCover 10 m 2021 v200 and Copernicus DEM GLO-30",
+      "author": "ESA WorldCover consortium; DLR e.V. and Airbus Defence and Space GmbH",
+      "source": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N21E105_Map.tif",
+      "licence": "CC-BY-4.0",
+      "attribution": "© ESA WorldCover project 2021 / Contains modified Copernicus Sentinel data (2021) processed by ESA WorldCover consortium",
+      "modifications": "Classes mapped to a muted palette; built-up land repainted as cropland and the 1970s Núi Cốc reservoir repainted as land, so 2021 features do not appear in 1967; valleys darkened from the DEM"
+    },
+    {
+      "file": "public/replay/operation-bolo/terrain/thud-ridge/terrain.json",
+      "title": "Tile manifest",
+      "author": "F-105 replay pipeline",
+      "source": "scripts/replay/bake-terrain.mjs",
+      "licence": "original",
+      "modifications": "Generated"
+    },
+    {
+      "file": "(code) src/replay/models/f4c.ts",
+      "title": "F-4C Phantom II placeholder, lofted in code",
+      "author": "F-105 replay",
+      "source": "src/replay/models/f4c.ts",
+      "licence": "original",
+      "modifications": "Look-dev placeholder; M2 replaces it with a CC-licensed model credited here"
+    },
+    {
+      "file": "(npm) @fontsource-variable/geist, @fontsource-variable/geist-mono",
+      "title": "Geist and Geist Mono",
+      "author": "Vercel",
+      "source": "https://www.npmjs.com/package/@fontsource-variable/geist",
+      "licence": "OFL-1.1",
+      "modifications": "None"
+    },
+    {
+      "file": "(npm) @fontsource/ibm-plex-mono",
+      "title": "IBM Plex Mono",
+      "author": "IBM",
+      "source": "https://www.npmjs.com/package/@fontsource/ibm-plex-mono",
+      "licence": "OFL-1.1",
+      "modifications": "None"
+    },
+    {
+      "file": "(npm) @fontsource-variable/source-serif-4",
+      "title": "Source Serif 4",
+      "author": "Adobe",
+      "source": "https://www.npmjs.com/package/@fontsource-variable/source-serif-4",
+      "licence": "OFL-1.1",
+      "modifications": "None"
+    }
+  ]
+}

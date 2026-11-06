@@ -5,6 +5,14 @@ import nextTs from "eslint-config-next/typescript";
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
+  // three.js is an imperative scene graph: React Three Fiber code sets camera
+  // poses, uniforms and scene.environment on objects it got from hooks, inside
+  // effects and useFrame. That is the library's model, not an accident, so the
+  // compiler's "values from hooks are immutable" rule is off here — and only here.
+  {
+    files: ["src/replay/scene/**", "src/replay/compositions/**"],
+    rules: { "react-hooks/immutability": "off" },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:

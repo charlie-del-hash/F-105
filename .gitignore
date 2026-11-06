@@ -43,3 +43,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# replay asset cache (raw downloads; only baked outputs are committed)
+/.cache/
