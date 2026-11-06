@@ -80,10 +80,11 @@ pnpm replay:render Undercast out.mp4 --scale=0.5 --crf=18
 ### In the cloud sandbox (no GPU)
 
 Remotion cannot download its own browser here, so point it at Playwright's headless shell.
-Renders use SwiftShader on the CPU: **drafts only**. Measured:
+Renders use SwiftShader on the CPU: **drafts only**. Measured on the M0 shot:
 
-- about 5–7 s per frame at 960×540 when the machine is otherwise idle;
-- about 12 s per frame with concurrency 2 while other jobs run.
+- a 960×540 still takes about 15 s, a 1080p still about 35 s, each including start-up;
+- the full 10 s draft (300 frames at 960×540, concurrency 2) took 46 min, about
+  9.3 s per frame, with other jobs sharing the CPU.
 
 ```sh
 export REMOTION_BROWSER=/opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell
